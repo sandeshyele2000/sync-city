@@ -72,6 +72,7 @@ function Player({ roomId }) {
     }
   };
 
+
   const setCurrentVideo = (video) => {
     dispatch({ type: "SET_CURRENT_VIDEO", payload: video });
     room.broadcastEvent({ type: "SET_CURRENT_VIDEO", data: video });
@@ -120,9 +121,7 @@ function Player({ roomId }) {
 
   useEffect(() => {
     const unsubscribe = room.subscribe("event", ({ event }) => {
-      if (event.type === "ADD_VIDEO_TO_PLAYLIST") {
-        dispatch({ type: "SET_VIDEO_TO_PLAYLIST", payload: event.data });
-      } else if (event.type === "SET_CURRENT_VIDEO") {
+      if (event.type === "SET_CURRENT_VIDEO") {
         dispatch({ type: "SET_CURRENT_VIDEO", payload: event.data });
       } else if (event.type === "SYNC_PLAYBACK") {
         const { time, state } = event.data;
@@ -130,14 +129,14 @@ function Player({ roomId }) {
           player.seekTo(time);
         }
         if (state === 1 && playerState !== 1) {
-          player.playVideo();
+          player?.playVideo();
         } else if (state === 2 && playerState !== 2) {
-          player.pauseVideo();
+          player?.pauseVideo();
         }
       } else if (event.type === "PLAYER_SEEK") {
         const seekToTime = event.data;
         if (player && Math.abs(player.getCurrentTime() - seekToTime) > 0.5) {
-          player.seekTo(seekToTime, true);
+          player?.seekTo(seekToTime, true);
         }
       } else if (event.type === "PLAYER_STATE_CHANGE") {
         const newState = event.data;
@@ -180,14 +179,14 @@ function Player({ roomId }) {
           name="search"
           id="search"
           placeholder="Search..."
-          className="flex w-full p-3 h-[50px] rounded-lg bg-transparent outline-none border-[1px] border-gray-600"
+          className="flex w-full p-3 h-[50px] rounded-lg bg-transparent outline-none border-[1px] border-background-cyanMedium"
         />
-        <button className="text-white h-[50px] w-[50px] bg-background-cyanDark border-[1px] border-gray-700 hover:bg-background-dark pr-2 pl-2 rounded-lg flex items-center justify-center">
+        <button className="text-white h-[50px] w-[50px] bg-background-cyanDark border-[1px] border-background-cyanMedium hover:bg-background-dark pr-2 pl-2 rounded-lg flex items-center justify-center">
           <IoSearch color={"white"} size={"20px"} />
         </button>
       </form>
 
-      <div className="flex w-full flex-col p-3 h-full justify-between items-center border-[1px] border-gray-700 rounded-lg">
+      <div className="flex w-full flex-col p-3 h-full justify-between items-center border-[1px] border-background-cyanMedium rounded-lg">
         <div className="w-full h-full relative rounded-lg overflow-hidden" style={{ paddingTop: "56%" }}>
           <Youtube
             videoId={currentVideo ? currentVideo.videoId : "RzVvThhjAKw"}
@@ -230,7 +229,7 @@ function Player({ roomId }) {
                 <div className="flex w-full items-center justify-between flex-wrap relative h-[40px]">
                   <p className="text-text-dark text-[0.8rem]">{dateTimeConverter(video.publishedAt)}</p>
                   <button
-                    className="w-fit p-2 border-[1px] rounded-lg border-gray-700 hover:bg-background text-text-dark text-[0.9rem]"
+                    className="w-fit p-2 border-[1px] rounded-lg border-background-cyanMedium hover:bg-background text-text-dark text-[0.9rem]"
                     onClick={() => handleAddtoPlaylist(video)}
                   >
                     + Add to Playlist

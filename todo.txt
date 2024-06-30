@@ -22,3 +22,7 @@ room settings
   - leave room : redirect to dashboard
   - change room name
 
+
+
+anime mode 
+  - https://api.allanime.day

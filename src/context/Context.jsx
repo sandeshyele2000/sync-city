@@ -51,6 +51,19 @@ const reducer = (state, action) => {
         videos: [...state.videos, action.payload],
       };
 
+      case "REMOVE_VIDEO_FROM_PLAYLIST":{
+
+        let id = action.payload;
+        let updatedVideos = [...state.videos];
+
+        updatedVideos = updatedVideos.filter((video)=> video.id!=id);
+        
+        return {
+          ...state,
+          videos: updatedVideos,
+        };
+      }
+
     case "SET_CURRENT_VIDEO":
       return {
         ...state,

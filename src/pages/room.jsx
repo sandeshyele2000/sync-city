@@ -9,7 +9,7 @@ import ChatRoom from "@/components/ChatRoom";
 import { useContextAPI } from "@/context/Context";
 import Notification from "@/components/common/Notification";
 import Playlist from "@/components/Playlist";
-import { LiveblocksProvider, RoomProvider, useRoom } from "@liveblocks/react";
+import { LiveblocksProvider, RoomProvider } from "@liveblocks/react";
 
 export default function Room() {
   const router = useRouter();
@@ -31,7 +31,9 @@ export default function Room() {
 
   useEffect(() => {
     if (id) {
+
       fetchRoomDetails(id);
+
     }
   }, [id]);
 

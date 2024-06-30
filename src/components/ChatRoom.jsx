@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useRoom } from "@liveblocks/react";
+import { useRoom, useOthers, useUpdateMyPresence } from "@liveblocks/react";
 import axios from "axios";
 import { IoSend } from "react-icons/io5";
 import { useContextAPI } from "@/context/Context";
@@ -9,6 +9,9 @@ function LiveblocksChat({ roomId, userId }) {
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { state, dispatch } = useContextAPI();
+  const user = state.user;
+  const updateMyPresence = useUpdateMyPresence();
+  const others = useOthers();
   const room = useRoom();
   const messageRef = useRef();
 
@@ -44,7 +47,8 @@ function LiveblocksChat({ roomId, userId }) {
         roomId,
         userId,
       });
-      await room.broadcastEvent({ type: "NEW_MESSAGE", data: savedMessage });
+
+      room.broadcastEvent({ type: "NEW_MESSAGE", data: savedMessage });
 
       setMessages((prevMessages) =>
         prevMessages.map((msg) =>
@@ -73,16 +77,35 @@ function LiveblocksChat({ roomId, userId }) {
       }
     });
 
+    updateMyPresence(user);
+
     return unsubscribe;
-  }, [room, roomId]);
+  }, [room, roomId, user]);
 
   useEffect(() => {
     messageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
+  console.log("others", others);
+
   return (
-    <div className="liveblocks-chat relative">
-      <div className="messages flex flex-col space-y-4 p-4 h-[520px] overflow-auto">
+    <div className="liveblocks-chat relative h-full">
+      <div className="flex gap-2 flex-col border-background-cyanMedium  border p-2 rounded-lg">
+        <p className="text-gray-500 text-sm">Online Users:</p>
+        <div className="flex gap-2">
+          <img
+            className="user-avatar w-11 h-11 rounded-full  border-[#0ff] border-2"
+            src={user.profileImage}
+          ></img>
+          {others.map((otherUser) => (
+            <img
+              className="user-avatar w-11 h-11 rounded-full"
+              src={otherUser.presence.profileImage}
+            ></img>
+          ))}
+        </div>
+      </div>
+      <div className="messages flex flex-col space-y-4 p-4 h-[470px] overflow-auto  mt-2 rounded-lg bg-[#000000c2]">
         {isLoading ? (
           <p>Loading messages...</p>
         ) : (
