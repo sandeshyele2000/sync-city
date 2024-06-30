@@ -1,0 +1,71 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  transition: all ease 0.1s;
+}
+
+.text-outline {
+  text-shadow: 0 0px 1px #00ffff, 0 0 2px #00ffff;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #4a4a4a;
+  border-radius: 10px;
+}
+
+/* The draggable part of the scrollbar (the thumb) */
+::-webkit-scrollbar-thumb {
+  background: #212121; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners */
+  cursor: grab;
+}
+
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
+  font-style: normal;
+  transition: all ease 0.1s;
+}
+
+.text-outline {
+  text-shadow: 0 0px 1px #00ffff, 0 0 2px #00ffff;
+}
+
+/* Hide scrollbar by default */
+.hidden-scrollbar::-webkit-scrollbar {
+  width: 0; /* or display: none; */
+}
+
+/* Show scrollbar on hover */
+.hidden-scrollbar:hover::-webkit-scrollbar {
+  width: 8px;
+}
+
+.hidden-scrollbar::-webkit-scrollbar-track {
+  background: #4a4a4a;
+  border-radius: 10px;
+}
+
+/* The draggable part of the scrollbar (the thumb) */
+.hidden-scrollbar::-webkit-scrollbar-thumb {
+  background: #212121; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded corners */
+  cursor: grab;
+}
