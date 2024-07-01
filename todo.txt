@@ -1,6 +1,15 @@
+playlist -
+   when switched to playlist tab it should load the current videos from db and add to the playlist
+   currently we have to manually load to get the changes made to playlist
+
+
 currentVideo which is playing should be available as a state in the room
 so that on reload or initial load user can directly view the video played in the room
 
+
+delete room 
+
+toast dark theme
 
 
 sync playback time of videos on seek or change

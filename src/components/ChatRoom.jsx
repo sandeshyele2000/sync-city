@@ -99,7 +99,6 @@ function LiveblocksChat({ roomId, userId }) {
           ></img>
           {others.map((otherUser) => (
             <img
-              key={otherUser.presence.id}
               className="user-avatar w-11 h-11 rounded-full"
               src={otherUser.presence.profileImage}
             ></img>

@@ -64,11 +64,11 @@ function Playlist() {
   },[room, dispatch,videos]);
 
   return (
-    <div className="flex flex-col gap-3 ml-1 overflow-auto">
+    <div className="flex flex-col  ml-1 overflow-auto h-full">
       {videos.map((video) => (
         <div
           key={video.videoId}
-          className="flex flex-col w-full justify-center bg-background-cyanDark cursor-pointer rounded-lg p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
+          className="flex flex-col w-full border-background-cyanMedium border-b-[1px] justify-center bg-background-cyanDark cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
         >
           <div className="flex gap-3">
             <img

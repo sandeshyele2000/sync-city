@@ -31,11 +31,9 @@ export default function Room() {
 
   useEffect(() => {
     if (id) {
-
       fetchRoomDetails(id);
-
     }
-  }, [id]);
+  }, [id, tab]);
 
   return (
     <>
@@ -53,7 +51,6 @@ export default function Room() {
                     <IoMdMenu
                       className="cursor-pointer"
                       size={"20px"}
-                      onClick={() => setTab(!tab)}
                     />
                   </div>
                   <Player roomId={id} />

@@ -124,18 +124,16 @@ function Player({ roomId }) {
       if (event.type === "SET_CURRENT_VIDEO") {
         dispatch({ type: "SET_CURRENT_VIDEO", payload: event.data });
       } else if (event.type === "SYNC_PLAYBACK") {
-        const { time, state } = event.data;
-        if (player && Math.abs(player.getCurrentTime() - time) > 2) {
-          player.seekTo(time);
-        }
-        if (state === 1 && playerState !== 1) {
-          player?.playVideo();
-        } else if (state === 2 && playerState !== 2) {
-          player?.pauseVideo();
-        }
+        // const { time, state } = event.data;
+        
+        // if (state === 1 && playerState !== 1) {
+        //   player?.playVideo();
+        // } else if (state === 2 && playerState !== 2) {
+        //   player?.pauseVideo();
+        // }
       } else if (event.type === "PLAYER_SEEK") {
         const seekToTime = event.data;
-        if (player && Math.abs(player.getCurrentTime() - seekToTime) > 0.5) {
+        if (player && Math.abs(player.getCurrentTime() - seekToTime) > 10) {
           player?.seekTo(seekToTime, true);
         }
       } else if (event.type === "PLAYER_STATE_CHANGE") {

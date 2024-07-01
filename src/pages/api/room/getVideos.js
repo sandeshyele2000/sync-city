@@ -5,24 +5,20 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { roomId } = req.query; 
-
-  if (!roomId) {
-    return res.status(400).json({ error: "Missing roomId" });
-  }
+  const { id } = req.query; 
 
   try {
-    const videos = await prisma.room.findMany({
+    const room = await prisma.room.findUnique({
       where: {
-        id: roomId,
+        id,
       },
       include: {
         videos: true,
       },
     });
 
-    console.log(videos);
-    return res.status(200).json(videos);
+    console.log(room.videos);
+    return res.status(200).json(room.videos);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
