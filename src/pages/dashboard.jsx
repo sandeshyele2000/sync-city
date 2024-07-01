@@ -9,6 +9,7 @@ import Navbar from "../components/common/Navbar";
 import Notification from "@/components/common/Notification";
 import { useContextAPI } from "../context/Context";
 import { useRouter } from "next/router";
+import { IoEnterOutline } from "react-icons/io5";
 
 const DashBoardPage = () => {
   const { state, dispatch } = useContextAPI();
@@ -27,6 +28,17 @@ const DashBoardPage = () => {
     } catch (error) {
       console.error(error);
       toast.error("Error creating room");
+    }
+  };
+  const deleteRoom = async (roomId) => {
+    try {
+      const response = await axios.delete("/api/room/deleteRoom", {
+        data: roomId,
+      });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
     }
   };
 
@@ -48,9 +60,20 @@ const DashBoardPage = () => {
         setUserRooms((prev) => [...prev, newRoom]);
         // dispatch({ type: "ADD_USER_ROOM", payload: newRoom });
       }
-      toast.success('Room created successfully!');
+      toast.success("Room created successfully!");
     } catch (error) {
       toast.error("Error creating room");
+    }
+  };
+
+  const handleDeleteRoom = async (roomId) => {
+    try {
+      await deleteRoom(roomId);
+      setUserRooms((prev) => prev.filter((item) => item.id != roomId));
+      toast.success("Room deleted successfully!");
+    } catch (error) {
+      console.log(error);
+      toast.error(error);
     }
   };
 
@@ -90,19 +113,28 @@ const DashBoardPage = () => {
                 <p className="text-text-dark">Your Rooms</p>
                 <div className="flex h-[80%] w-full flex-col gap-3 overflow-auto">
                   {userRooms.map((room) => (
-                    <Link
-                      href={{
-                        pathname: "/room",
-                        query: { id: room.id },
-                      }}
+                    <div
                       key={room.id}
-                      className="flex items-center justify-between p-3 bg-background-cyanDark border-[1px] border-background-cyanMedium cursor-pointer rounded-lg m-2 hover:bg-[#08262654]"
+                      className="flex items-center justify-between p-3 bg-background-cyanDark border-[1px] border-background-cyanMedium  rounded-lg m-2 hover:bg-[#08262654]"
                     >
                       <p>{room.name}</p>
-                      <button className="text-gray-700 hover:text-red-700">
-                        <IoMdTrash />
-                      </button>
-                    </Link>
+                      <div className="flex gap-2">
+                        <Link
+                          href={{
+                            pathname: "/room",
+                            query: { id: room.id },
+                          }}
+                        >
+                          <IoEnterOutline size={"1.5rem"} color="gray" />
+                        </Link>
+                        <button
+                          className="text-gray-700 hover:text-red-700"
+                          onClick={() => handleDeleteRoom(room.id)}
+                        >
+                          <IoMdTrash size={"1.5rem"} />
+                        </button>
+                      </div>
+                    </div>
                   ))}
                 </div>
                 <form
@@ -130,16 +162,22 @@ const DashBoardPage = () => {
                     rooms
                       .filter((room) => room.hostId != user.id)
                       .map((room) => (
-                        <Link
-                          href={{
-                            pathname: "/room",
-                            query: { id: room.id },
-                          }}
+                        <div
                           key={room.id}
-                          className="flex items-center justify-between p-3 bg-background-cyanDark border-[1px] border-background-cyanMedium cursor-pointer rounded-lg m-2 hover:bg-[#08262654]"
+                          className="flex items-center justify-between p-3 bg-background-cyanDark border-[1px] border-background-cyanMedium  rounded-lg m-2 hover:bg-[#08262654]"
                         >
                           <p>{room.name}</p>
-                        </Link>
+                          <div className="flex gap-2">
+                            <Link
+                              href={{
+                                pathname: "/room",
+                                query: { id: room.id },
+                              }}
+                            >
+                              <IoEnterOutline size={"1.5rem"} color="gray" />
+                            </Link>
+                          </div>
+                        </div>
                       ))}
                 </div>
               </div>

@@ -12,6 +12,7 @@ function LiveblocksChat({ roomId, userId }) {
   const [isLoading, setIsLoading] = useState(false);
   const { state } = useContextAPI();
   const user = state.user;
+  const currentRoom = state.currentRoom;
   const updateMyPresence = useUpdateMyPresence();
   const others = useOthers();
   const room = useRoom();
@@ -95,16 +96,17 @@ function LiveblocksChat({ roomId, userId }) {
   return (
     <div className="liveblocks-chat relative h-full">
       <div className="flex gap-2 flex-col border-background-cyanMedium  border p-2 rounded-lg">
-        <p className="text-gray-500 text-sm">Online Users:</p>
+        <p className="text-gray-500 text-xs">Citizens in {currentRoom.name}</p>
         <div className="flex gap-2">
           <img
-            className="user-avatar w-11 h-11 rounded-full  border-[#0ff] border-2"
+            title="You"
+            className="user-avatar w-10 h-10 rounded-full  border-[#0ff] border-2"
             src={user.profileImage}
           ></img>
           {others.map((otherUser) => (
             <img
              key={otherUser.id}
-              className="user-avatar w-11 h-11 rounded-full"
+              className="user-avatar w-10 h-10 rounded-full"
               src={otherUser.presence.profileImage}
             ></img>
           ))}

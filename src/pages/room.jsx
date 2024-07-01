@@ -56,7 +56,7 @@ export default function Room() {
                   <Player roomId={id} />
                 </div>
 
-                <div className="flex flex-col w-[30%] h-full border-[1px] rounded-lg border-background-cyanMedium bg-background-cyanDark">
+                <div className="flex flex-col w-[30%] h-full border-[1px]  rounded-lg border-background-cyanMedium bg-background-cyanDark">
                   <div className="flex w-full border-gray-400 p-3">
                     <p
                       className={`p-2 border-b-[1px] h-[40px] cursor-pointer ${

@@ -28,7 +28,7 @@ function Navbar() {
     
   };
 
-  if (!user) return null; // Return null if there's no user
+  if (!user) return null; 
 
   return (
     <div className="flex h-[70px] w-full justify-center fixed bg-gray-400 bg-opacity-10 backdrop-blur-md z-50">

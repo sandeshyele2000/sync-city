@@ -8,15 +8,15 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(auto()) @map("_id") @db.ObjectId
-  nickname   String    
-  firebaseId String    @unique
-  email      String    @unique
-  profileImage String  
-  username   String
-  roomIds    String[]  @db.ObjectId
-  rooms      Room[]    @relation(fields: [roomIds], references: [id])
-  messages    Message[]
+  id           String    @id @default(auto()) @map("_id") @db.ObjectId
+  nickname     String
+  firebaseId   String    @unique
+  email        String    @unique
+  profileImage String
+  username     String
+  roomIds      String[]  @db.ObjectId
+  rooms        Room[]    @relation(fields: [roomIds], references: [id])
+  messages     Message[]
 }
 
 model Room {
@@ -38,16 +38,16 @@ model Message {
   userId    String   @db.ObjectId
   roomId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id])
-  room      Room     @relation(fields: [roomId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }
 
 model Video {
-  id      String   @id @default(auto()) @map("_id") @db.ObjectId
-  videoId     String
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  videoId        String
   thumbnailImage String
-  channelName String
-  publishedAt String
-  title   String
-  roomIds String[] @db.ObjectId
-  rooms   Room[]   @relation(fields: [roomIds], references: [id])
+  channelName    String
+  publishedAt    String
+  title          String
+  roomIds        String[] @db.ObjectId
+  rooms          Room[]   @relation(fields: [roomIds], references: [id])
 }
