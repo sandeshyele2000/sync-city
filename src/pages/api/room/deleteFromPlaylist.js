@@ -8,9 +8,6 @@ export default async function handler(req, res) {
   try {
     const { room, video } = req.body;
 
-    console.log('Room:', room);
-    console.log('Video to delete:', video);
-
     const updatedRoom = await prisma.room.update({
       where: { id: room.id },
       data: {
@@ -24,7 +21,7 @@ export default async function handler(req, res) {
       include: { videos: true }
     });
 
-    console.log('Updated room:', video.id);
+    // console.log('Updated room:', video.id);--epr-
 
     return res.status(200).json({ message: 'Video deleted successfully', room: updatedRoom });
   } catch (error) {

@@ -209,7 +209,7 @@ function Player({ roomId }) {
       <div className="flex flex-col gap-3 ml-1">
         {videos.map((video) => (
           <div
-            key={video.videoId}
+            key={video.id}
             className="flex flex-col w-full justify-center bg-background-cyanDark cursor-pointer rounded-lg p-4 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
           >
             <div className="flex gap-3">

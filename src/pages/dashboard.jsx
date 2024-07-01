@@ -46,7 +46,7 @@ const DashBoardPage = () => {
       const newRoom = await createRoom(roomName, user.id);
       if (newRoom) {
         setUserRooms((prev) => [...prev, newRoom]);
-        dispatch({ type: "ADD_USER_ROOM", payload: newRoom });
+        // dispatch({ type: "ADD_USER_ROOM", payload: newRoom });
       }
       toast.success('Room created successfully!');
     } catch (error) {

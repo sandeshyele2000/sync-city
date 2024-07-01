@@ -3,17 +3,20 @@ import { useRoom, useOthers, useUpdateMyPresence } from "@liveblocks/react";
 import axios from "axios";
 import { IoSend } from "react-icons/io5";
 import { useContextAPI } from "@/context/Context";
+import EmojiPicker from "emoji-picker-react";
+import { BsEmojiSmileFill } from "react-icons/bs";
 
 function LiveblocksChat({ roomId, userId }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const { state, dispatch } = useContextAPI();
+  const { state } = useContextAPI();
   const user = state.user;
   const updateMyPresence = useUpdateMyPresence();
   const others = useOthers();
   const room = useRoom();
   const messageRef = useRef();
+  const [emojiOpen, setEmojiOpen] = useState(false);
 
   async function fetchMessages() {
     setIsLoading(true);
@@ -31,6 +34,7 @@ function LiveblocksChat({ roomId, userId }) {
   }
 
   async function sendMessage() {
+    setEmojiOpen(false);
     if (!message.trim()) return;
 
     const newMessage = {
@@ -79,14 +83,14 @@ function LiveblocksChat({ roomId, userId }) {
 
     updateMyPresence(user);
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, [room, roomId, user]);
 
   useEffect(() => {
     messageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  console.log("others", others);
+  // console.log("others", others);
 
   return (
     <div className="liveblocks-chat relative h-full">
@@ -99,6 +103,7 @@ function LiveblocksChat({ roomId, userId }) {
           ></img>
           {others.map((otherUser) => (
             <img
+             key={otherUser.id}
               className="user-avatar w-11 h-11 rounded-full"
               src={otherUser.presence.profileImage}
             ></img>
@@ -130,12 +135,34 @@ function LiveblocksChat({ roomId, userId }) {
         <div ref={messageRef} />
       </div>
       <form
-        className="flex w-full justify-between items-center rounded-lg gap-2 p-4"
+        className="flex w-full justify-between mt-4 items-center rounded-lg gap-2 relative"
         onSubmit={async (e) => {
           e.preventDefault();
           await sendMessage();
         }}
       >
+        <div className={`absolute bottom-[4.1rem]`}>
+          <EmojiPicker
+            open={emojiOpen}
+            theme="dark"
+            width={"17rem"}
+            style={{background:'black', color:"black"}}
+            height={"25rem"}
+            lazyLoadEmojis={true}
+            onEmojiClick={(e) => {
+              console.log(e);
+              setMessage((prevMessage) => prevMessage + e.emoji);
+            }}
+          />
+        </div>
+
+        <div
+          className="hover:color-[#0ff] cursor-pointer"
+          onClick={() => setEmojiOpen(!emojiOpen)}
+        >
+          <BsEmojiSmileFill size={"2rem"} fontWeight={"100"} />
+        </div>
+
         <input
           className="flex w-full p-3 h-full rounded-lg bg-transparent outline-none border-[1px]  border-background-cyanMedium "
           type="text"
