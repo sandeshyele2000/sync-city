@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
 
 function Loader() {
   return (
-    <div>Loader</div>
-  )
+    <div class="spinner">
+      <div class="inner"></div>
+    </div>
+  );
 }
 
-export default Loader
+export default Loader;

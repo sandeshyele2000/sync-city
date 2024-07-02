@@ -157,10 +157,9 @@ function Player({ roomId }) {
         case "SYNC_PLAYBACK":
           const { time, state } = event.data;
           if (Math.abs(player.getCurrentTime() - time) > 2) {
-            // CHECK IF THERE IS ANY DELAY GREATER THAN 2 SECONDS
-            isSeeking.current = true; // SET SEEKING AS TRUE
-            player.seekTo(time, true); // SEEK THE PLAYER TO THE EXACT TIME
-            setTimeout(() => (isSeeking.current = false), 1000); // SET IT BACK TO FALSE AFTER A DELAY
+            isSeeking.current = true; 
+            player.seekTo(time, true); 
+            setTimeout(() => (isSeeking.current = false), 1000); 
           }
           if (state !== playerStateRef.current) {
             if (state === Youtube.PlayerState.PLAYING) {

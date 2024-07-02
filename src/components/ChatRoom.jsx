@@ -164,7 +164,6 @@ function LiveblocksChat({ roomId, userId }) {
             height={"25rem"}
             lazyLoadEmojis={true}
             onEmojiClick={(e) => {
-              console.log(e);
               setMessage((prevMessage) => prevMessage + e.emoji);
             }}
           />

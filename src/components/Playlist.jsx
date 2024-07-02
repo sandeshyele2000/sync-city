@@ -47,7 +47,6 @@ function Playlist() {
         data: video.id,
       });
     } catch (error) {
-      console.log(error);
       toast.error(error);
     }
   };

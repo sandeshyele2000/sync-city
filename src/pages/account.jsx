@@ -26,7 +26,6 @@ function AccountPage() {
       setUserRooms((prev) => prev.filter((item) => item.id !== roomId));
       toast.success("Room deleted successfully!");
     } catch (error) {
-      console.log(error);
       toast.error("Error deleting room");
     }
   };
@@ -49,20 +48,19 @@ function AccountPage() {
     } else {
       router.push("/login");
     }
-  }, [user]);
+  }, []);
 
   return (
     <>
       {user ? (
         <>
-          <div className="bg-background-dark w-full min-h-[100vh] flex flex-col items-center">
+          <div className="bg-background-dark w-full min-h-[100vh] h-full flex flex-col items-center overflow-auto">
             <Navbar />
             <div className="text-white w-[90vw] items-center flex h-[85vh] justify-center gap-3 mt-24 flex-col  md:flex-col lg:flex-row">
-              <div className="left bg-background-cyanDark  h-full p-4 flex flex-col gap-4 items-center w-full sm:w-full md:w-full lg:w-[20%]">
+              <div className="left bg-background-cyanDark  h-full p-6 flex flex-col gap-4 items-center w-full sm:w-full md:w-full lg:w-[25%] rounded-lg">
                 <img
                   src={user.profileImage}
-                  alt=""
-                  className="rounded-lg border-4 border-[#0ff] h-52 w-52"
+                  className="rounded-lg border-4 border-[#0ff]  w-52 mt-8"
                 />
                 <div className="flex flex-col w-full items-center gap-4">
                   <p className="text">{user.username}</p>
@@ -71,20 +69,55 @@ function AccountPage() {
                 </div>
                 <button
                   onClick={() => setModal(true)}
-                  className="bg-background-cyanDark w-[80%] justify-center text-text-light p-3 text-[15px] rounded-lg flex items-center gap-3 hover:text-white mx-auto hover:bg-background-dark"
+                  className="bg-background-dark w-[75%] justify-center text-text-light p-3 text-[15px] rounded-lg flex items-center gap-3 hover:text-white mx-auto hover:bg-background-cyanLight"
                 >
                   Edit profile
                 </button>
-                <p>Active Rooms: {userRooms.length}</p>
-              </div>
-              <div className="right bg-background-cyanDark h-full p-4 sm:w-full md:w-full overflow-hidden">
-                <p className="text-text-dark">Your Rooms</p>
+                <div className="relative w-[200px] h-[200px] flex items-center justify-center">
+                  <svg className="absolute w-full h-full transform -rotate-[90deg]">
+                  <circle
+                      className="text-accent"
+                      strokeWidth="10"
+                      strokeDasharray="565.48"
+                      strokeDashoffset="0"
+                      strokeLinecap="round"
+                      stroke="currentColor"
+                      fill="transparent"
+                      r="90"
+                      cx="100"
+                      cy="100"
+                      style={{
+                        strokeDashoffset: `calc(565.48 - (565.48 * ${
+                          userRooms?.length || 0
+                        }) / 10)`,
+                      }}
+                    />
+                    <circle
+                      className="text-background-cyanLight"
+                      strokeWidth="10"
+                      stroke="currentColor"
+                      fill="transparent"
+                      r="90"
+                      cx="100"
+                      cy="100"
+                    />
+                    
+                  </svg>
+                  <p className="text-[25px] z-10 text-accent">{`${
+                    userRooms?.length || 0
+                  }/10`}</p>
+                </div>
 
-                <div className="flex w-full h-full flex-wrap overflow-auto">
+                <p className="text-text-dark">Rooms used</p>
+              </div>
+              <div className="right bg-background-cyanDark h-full p-4 sm:w-full md:w-full ">
+                <p className="text-text-dark">My Rooms</p>
+
+                <div className="flex w-full h-full flex-wrap overflow-auto min-h-[300px]">
                   {userRooms.map((room) => (
                     <div
                       key={room.id}
-                      className="flex flex-col w-[250px] h-[300px] items-center justify-center p-3 bg-background-cyanDark border-[1px] border-background-cyanMedium rounded-lg m-2 hover:bg-[#08262654]"
+                      className="flex flex-col w-[250px] h-[300px] items-center justify-center p-3 bg-background-cyanDark border-[1px] border-background-cyanMedium rounded-lg m-2 hover:bg-[#08262654] hover:scale-[1.02] transition-all ease duration-200"
                     >
                       <p>{room.name}</p>
                       <div className="flex gap-2">

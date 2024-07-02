@@ -31,7 +31,6 @@ export default async function handler(req, res) {
       },
     });
 
-    console.log(newVideo);
     return res.status(200).json(newVideo);
   } catch (error) {
     console.error(error);

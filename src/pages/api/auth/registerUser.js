@@ -35,8 +35,6 @@ export default async function handler(req, res) {
       }
     });
 
-    console.log(user)
-
     return res.status(201).json({ msg: "User created", status: true, user });
   } catch (error) {
     return res

@@ -21,8 +21,6 @@ export default async function handler(req, res) {
       include: { videos: true }
     });
 
-    // console.log('Updated room:', video.id);--epr-
-
     return res.status(200).json({ message: 'Video deleted successfully', room: updatedRoom });
   } catch (error) {
     console.error('Error deleting video from playlist:', error);

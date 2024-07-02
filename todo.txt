@@ -1,44 +1,34 @@
-currentVideo which is playing should be available as a state in the room
+1. middleware for route protection
+
+2. currentVideo which is playing should be available as a state in the room
 so that on reload or initial load user can directly view the video played in the room
 
-delete room cascade
 
-
-when room is created it is public for others 
+3. when room is created it is public for others 
  make a private room creation feature 
  where it can be joined via link only
 
 
-search filter for public rooms
+4. search filter for public rooms
 
-join private/public room via link 
+5. join private/public room via link 
 generate link
 send it to others
 paste link in the box which on enter will redirect to the desired room 
 
-toast dark theme
 
-can send markdown in the input 
+6. (Almost done) sync playback time of videos on seek or change
 
-
-sync playback time of videos on seek or change
-
-delete personal rooms
-   - delete created rooms
-
-account page
-   - show user details
-   - change nickname
+7. account page
    - delete account
-   - 
 
 
-room settings 
+8. room settings 
   - leave room : redirect to dashboard
   - change room name
 
 
-mulitple playlists feature
+9. mulitple playlists feature
 
-anime mode 
+10. binge anime 
   - https://api.allanime.day

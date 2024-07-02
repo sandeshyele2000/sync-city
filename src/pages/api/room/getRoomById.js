@@ -15,8 +15,6 @@ export default async function handler(req, res) {
       return res.status(404).json({ msg: "Room not found", status: false });
     }
 
-    console.log(room)
-
     return res.status(200).json({ msg: "Room fetched", status: true, room });
   } catch (error) {
     console.error("Room fetch error:", error);

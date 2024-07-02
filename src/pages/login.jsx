@@ -24,7 +24,7 @@ function LoginPage() {
         username,
         profileImage,
       });
-      return response.data;
+      return response.data.user;
     } catch (error) {
       toast.error(error);
     }
@@ -36,18 +36,21 @@ function LoginPage() {
       dispatch({ type: "SET_LOADING", payload: true });
       const { user } = await signInWithPopup(auth, provider);
 
-      const response = await registerUser({
-        email: user.email,
-        firebaseId: user.uid,
-        username: user.displayName,
-        profileImage: user.photoURL,
-      });
+      let userData = await axios.get(`/api/user/getUser?email=${user.email}`);
 
-      dispatch({
-        type: "SET_USER",
-        payload: response.user,
-      });
+      if (!userData) {
+        userData = await registerUser({
+          email: user.email,
+          firebaseId: user.uid,
+          username: user.displayName,
+          profileImage: user.photoURL,
+        });
 
+        toast.success("Registered successfully!")
+      }
+
+      console.log(userData)
+      dispatch({type: "SET_USER",payload: userData.data.user});
     } catch (error) {
       toast.error(`Error signing in with Google: ${error.message}`);
     } finally {
@@ -55,8 +58,8 @@ function LoginPage() {
     }
   };
 
-  if(userData){
-     router.push('/dashboard')
+  if (userData) {
+    router.push("/dashboard");
   }
 
   return (

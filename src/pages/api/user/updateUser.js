@@ -17,8 +17,6 @@ export default async function handler(req, res) {
       }
     });
 
-    console.log(user)
-
     return res.status(201).json(user);
   } catch (error) {
     console.error("User update error:", error);

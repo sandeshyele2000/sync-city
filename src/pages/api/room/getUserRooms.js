@@ -13,8 +13,6 @@ export default async function handler(req, res) {
       }
     });
 
-    console.log(userRooms)
-
     return res.status(201).json(userRooms.rooms);
   } catch (error) {
     console.error("User Fetch error:", error);

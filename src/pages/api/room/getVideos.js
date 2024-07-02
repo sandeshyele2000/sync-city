@@ -17,7 +17,6 @@ export default async function handler(req, res) {
       },
     });
 
-    console.log(room.videos);
     return res.status(200).json(room.videos);
   } catch (error) {
     console.error(error);
