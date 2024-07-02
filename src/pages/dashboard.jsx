@@ -18,6 +18,8 @@ const DashBoardPage = () => {
   const router = useRouter();
   const [userRooms, setUserRooms] = useState([]);
   const loading = state.loading;
+  const roomLimit = process.env.NEXT_PUBLIC_ROOM_LIMIT;
+  console.log(roomLimit)
 
   const createRoom = async (roomName, hostId) => {
     try {
@@ -96,20 +98,25 @@ const DashBoardPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      dispatch({ type: "SET_LOADING", payload: true });
-      const userRoomsData = await getUserRooms(user.id);
-      const data = await getAllRooms();
-      setUserRooms(userRoomsData);
-      dispatch({ type: "SET_ALL_ROOMS", payload: data });
-      dispatch({ type: "SET_LOADING", payload: false });
+      try {
+        dispatch({ type: "SET_LOADING", payload: true });
+        const userRoomsData = await getUserRooms(user.id);
+        const data = await getAllRooms();
+        setUserRooms(userRoomsData);
+        dispatch({ type: "SET_ALL_ROOMS", payload: data });
+      } catch (error) {
+        toast.error(error);
+      } finally {
+        dispatch({ type: "SET_LOADING", payload: false });
+      }
     };
-    fetchData();
+
+    if (!user) {
+      router.push("/login");
+    } else {
+      fetchData();
+    }
   }, []);
-
-
-  if(!user){
-     router.push('/login')
-  }
 
   return (
     <>
@@ -141,13 +148,17 @@ const DashBoardPage = () => {
                             query: { id: room.id },
                           }}
                         >
-                          <IoEnterOutline size={"1.5rem"} color="gray" />
+                          <IoEnterOutline
+                            size={"1.5rem"}
+                            color="gray"
+                            title="Join room"
+                          />
                         </Link>
                         <button
                           className="text-gray-700 hover:text-red-700"
                           onClick={() => handleDeleteRoom(room.id)}
                         >
-                          <IoMdTrash size={"1.5rem"} />
+                          <IoMdTrash size={"1.5rem"} title="Delete room" />
                         </button>
                       </div>
                     </div>
@@ -167,9 +178,9 @@ const DashBoardPage = () => {
                   />
                   <button
                     className={`bg-accent text-black h-full pr-2 pl-2 text-[15px] rounded-lg flex items-center gap-3 hover:shadow-[0px_0px_2px_#0ff] ${
-                      user.rooms.length > 9 ? "bg-gray-700" : ""
+                      userRooms.length >= roomLimit ? "bg-gray-700" : ""
                     }`}
-                    disabled={user.rooms.length > 9}
+                    disabled={userRooms.length >= roomLimit}
                   >
                     Create
                   </button>
@@ -195,7 +206,11 @@ const DashBoardPage = () => {
                                 query: { id: room.id },
                               }}
                             >
-                              <IoEnterOutline size={"1.5rem"} color="gray" />
+                              <IoEnterOutline
+                                size={"1.5rem"}
+                                color="gray"
+                                title="Join room"
+                              />
                             </Link>
                           </div>
                         </div>

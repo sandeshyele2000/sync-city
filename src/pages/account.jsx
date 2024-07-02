@@ -36,6 +36,7 @@ function AccountPage() {
         `/api/room/getUserRooms?userId=${userId}`
       );
       setUserRooms(response.data);
+      console.log(response.data);
       dispatch({ type: "SET_USER_ROOMS", payload: response.data });
     } catch (error) {
       toast.error("Error fetching rooms");
@@ -49,6 +50,20 @@ function AccountPage() {
       router.push("/login");
     }
   }, []);
+
+  /*
+  
+  {
+    "id": "66844e699abdb7ebb066ac76",
+    "name": "test-2",
+    "createdAt": "2024-07-02T19:00:57.994Z",
+    "hostId": "6682700cf9cb7e3c1a3a2418",
+    "userIds": [
+        "6682700cf9cb7e3c1a3a2418"
+    ],
+    "videoIds": []
+}
+  */
 
   return (
     <>
@@ -75,7 +90,7 @@ function AccountPage() {
                 </button>
                 <div className="relative w-[200px] h-[200px] flex items-center justify-center">
                   <svg className="absolute w-full h-full transform -rotate-[90deg]">
-                  <circle
+                    <circle
                       className="text-accent"
                       strokeWidth="10"
                       strokeDasharray="565.48"
@@ -101,7 +116,6 @@ function AccountPage() {
                       cx="100"
                       cy="100"
                     />
-                    
                   </svg>
                   <p className="text-[25px] z-10 text-accent">{`${
                     userRooms?.length || 0
@@ -109,17 +123,30 @@ function AccountPage() {
                 </div>
 
                 <p className="text-text-dark">Rooms used</p>
+
+
+                <button
+                  onClick={() =>{toast.error("Delete feature is under progress!")}}
+                  className="bg-[#ff000020] w-[75%] justify-center text-text-light p-3 text-[15px] rounded-lg flex items-center gap-3 hover:text-white mx-auto "
+                >
+                  Delete account
+                </button>
               </div>
               <div className="right bg-background-cyanDark h-full p-4 sm:w-full md:w-full ">
-                <p className="text-text-dark">My Rooms</p>
+                <p className="text-text-dark p-3">My Rooms</p>
 
-                <div className="flex w-full h-full flex-wrap overflow-auto min-h-[300px]">
+                <div className="flex w-full h-full flex-wrap overflow-auto min-h-[300px]  sm:justify-start justify-center">
                   {userRooms.map((room) => (
                     <div
                       key={room.id}
                       className="flex flex-col w-[250px] h-[300px] items-center justify-center p-3 bg-background-cyanDark border-[1px] border-background-cyanMedium rounded-lg m-2 hover:bg-[#08262654] hover:scale-[1.02] transition-all ease duration-200"
                     >
-                      <p>{room.name}</p>
+                      <div className="flex flex-col w-full h-full items-center justify-center">
+                        <p className="text-lg">{room.name}</p>
+                        <p className="text-gray-600">{room.createdAt.split('T')[0]}</p>
+
+                      </div>
+
                       <div className="flex gap-2">
                         <Link
                           href={{
@@ -127,13 +154,13 @@ function AccountPage() {
                             query: { id: room.id },
                           }}
                         >
-                          <IoEnterOutline size={"1.5rem"} color="gray" />
+                          <IoEnterOutline size={"1.5rem"} color="gray" title="Join room"/>
                         </Link>
                         <button
                           className="text-gray-700 hover:text-red-700"
                           onClick={() => deleteRoom(room.id)}
                         >
-                          <IoMdTrash size={"1.5rem"} />
+                          <IoMdTrash size={"1.5rem"} title="Delete room"/>
                         </button>
                       </div>
                     </div>

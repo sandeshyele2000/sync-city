@@ -24,6 +24,13 @@ function Notification() {
             secondary: "black",
           },
         },
+        info: {
+          duration: 5000,
+          theme: {
+            primary: "orange",
+            secondary: "black",
+          },
+        },
       }}
     />
   );
