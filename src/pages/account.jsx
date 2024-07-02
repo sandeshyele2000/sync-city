@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useRouter } from "next/router";
 import ModalForm from "@/components/common/ModalForm";
+import CircularProgressBar from "@/components/common/CircularProgressBar";
 
 function AccountPage() {
   const { state, dispatch } = useContextAPI();
@@ -51,19 +52,6 @@ function AccountPage() {
     }
   }, []);
 
-  /*
-  
-  {
-    "id": "66844e699abdb7ebb066ac76",
-    "name": "test-2",
-    "createdAt": "2024-07-02T19:00:57.994Z",
-    "hostId": "6682700cf9cb7e3c1a3a2418",
-    "userIds": [
-        "6682700cf9cb7e3c1a3a2418"
-    ],
-    "videoIds": []
-}
-  */
 
   return (
     <>
@@ -88,39 +76,8 @@ function AccountPage() {
                 >
                   Edit profile
                 </button>
-                <div className="relative w-[200px] h-[200px] flex items-center justify-center">
-                  <svg className="absolute w-full h-full transform -rotate-[90deg]">
-                    <circle
-                      className="text-accent"
-                      strokeWidth="10"
-                      strokeDasharray="565.48"
-                      strokeDashoffset="0"
-                      strokeLinecap="round"
-                      stroke="currentColor"
-                      fill="transparent"
-                      r="90"
-                      cx="100"
-                      cy="100"
-                      style={{
-                        strokeDashoffset: `calc(565.48 - (565.48 * ${
-                          userRooms?.length || 0
-                        }) / 10)`,
-                      }}
-                    />
-                    <circle
-                      className="text-background-cyanLight"
-                      strokeWidth="10"
-                      stroke="currentColor"
-                      fill="transparent"
-                      r="90"
-                      cx="100"
-                      cy="100"
-                    />
-                  </svg>
-                  <p className="text-[25px] z-10 text-accent">{`${
-                    userRooms?.length || 0
-                  }/10`}</p>
-                </div>
+                
+                <CircularProgressBar value={userRooms.length} maxValue={process.env.NEXT_PUBLIC_ROOM_LIMIT}/>
 
                 <p className="text-text-dark">Rooms used</p>
 
