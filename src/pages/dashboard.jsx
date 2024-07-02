@@ -18,7 +18,7 @@ const DashBoardPage = () => {
   const router = useRouter();
   const [userRooms, setUserRooms] = useState([]);
   const loading = state.loading;
-  const roomLimit = process.env.NEXT_PUBLIC_ROOM_LIMIT;
+  const roomLimit = 10;
   console.log(roomLimit)
 
   const createRoom = async (roomName, hostId) => {

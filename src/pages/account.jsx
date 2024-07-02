@@ -77,7 +77,7 @@ function AccountPage() {
                   Edit profile
                 </button>
                 
-                <CircularProgressBar value={userRooms.length} maxValue={process.env.NEXT_PUBLIC_ROOM_LIMIT}/>
+                <CircularProgressBar value={userRooms.length} maxValue={10}/>
 
                 <p className="text-text-dark">Rooms used</p>
 
