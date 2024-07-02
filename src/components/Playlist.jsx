@@ -5,6 +5,7 @@ import { useRoom } from "@liveblocks/react";
 import { IoMdTrash } from "react-icons/io";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { MdPlaylistPlay } from "react-icons/md";
 
 function Playlist() {
   const { state, dispatch } = useContextAPI();
@@ -52,9 +53,8 @@ function Playlist() {
   };
 
   useEffect(() => {
-    
-    setFilteredVideos(videos)
-    searchBar.current.value = ""
+    setFilteredVideos(videos);
+    searchBar.current.value = "";
     const unsubscribe = room.subscribe("event", ({ event }) => {
       if (event.type === "ADD_VIDEO_TO_PLAYLIST") {
         dispatch({ type: "SET_VIDEO_TO_PLAYLIST", payload: event.data });
@@ -91,15 +91,15 @@ function Playlist() {
         id="searchInPlaylist"
         onChange={(e) => handleSearchInPlaylist(e)}
         placeholder="Search in playlist..."
-        className="flex  p-2 m-2 h-[50px] rounded-lg bg-transparent outline-none border-[1px] border-background-cyanMedium"
+        className="flex text-sm p-2 m-2 h-[50px] rounded-lg bg-transparent outline-none border-[1px] border-background-cyanMedium"
       />
-      <div className="flex flex-col  ml-1 overflow-auto h-full p-1">
-        {filteredVideos.map((video) => (
-          <div
-            key={video.id}
-            className="flex flex-col w-full border-background-cyanMedium border-b-[1px] justify-center bg-background-cyanDark cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
-          >
-            <div className="flex gap-3">
+      <div className="flex flex-col  ml-1 overflow-auto h-full p-1 w-full">
+        {filteredVideos.length > 0 ? (
+          filteredVideos.map((video) => (
+            <div
+              key={video.id}
+              className="flex flex-wrap lg:flex-nowrap border-background-cyanMedium border-b-[1px] justify-center bg-background-cyanDark cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
+            >
               <img
                 src={video.thumbnailImage}
                 alt={video.videoId}
@@ -114,7 +114,7 @@ function Playlist() {
                 <p className="text-text-dark text-[0.9rem] text-xs">
                   {video.channelName}
                 </p>
-                <div className="flex w-full items-center justify-between flex-wrap relative h-[40px]">
+                <div className="flex w-full items-center justify-between flex-wrap relative h-[40px] gap-2">
                   <p className="text-text-dark text-[0.8rem] text-xs">
                     {dateTimeConverter(video.publishedAt)}
                   </p>
@@ -127,8 +127,17 @@ function Playlist() {
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))
+        ) : (
+          <>
+            <div className="flex w-full h-full items-center justify-center">
+              <MdPlaylistPlay
+                className="text-background-cyanMedium"
+                size={"4rem"}
+              />
+            </div>
+          </>
+        )}
       </div>
     </>
   );

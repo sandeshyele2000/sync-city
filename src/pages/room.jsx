@@ -10,6 +10,9 @@ import { useContextAPI } from "@/context/Context";
 import Notification from "@/components/common/Notification";
 import Playlist from "@/components/Playlist";
 import { LiveblocksProvider, RoomProvider } from "@liveblocks/react";
+import { IoChatbox } from "react-icons/io5";
+import { TbMessages } from "react-icons/tb";
+import { MdPlaylistPlay } from "react-icons/md";
 
 export default function Room() {
   const router = useRouter();
@@ -18,6 +21,7 @@ export default function Room() {
   const { state, dispatch } = useContextAPI();
   const user = state.user;
   const room = state.currentRoom;
+  const [hideChats, setHideChats] = useState(false);
 
   const fetchRoomDetails = async (id) => {
     try {
@@ -35,6 +39,10 @@ export default function Room() {
     }
   }, [id, tab]);
 
+  if (!user || !room) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <>
       {room && user && (
@@ -44,36 +52,35 @@ export default function Room() {
           <RoomProvider id={id}>
             <div className="bg-background-dark w-full min-h-[100vh] flex flex-col items-center">
               <Navbar />
-              <div className="text-white w-[75vw] items-center flex h-[85vh] justify-center gap-3 mt-24">
-                <div className="flex w-[70%] flex-col gap-2 overflow-y-auto pr-2 pt-1 h-full">
-                  <div className="flex w-full justify-between items-center rounded-lg">
+              <div className="text-white w-[80vw] items-center flex h-[85vh] justify-center gap-3 mt-24">
+                <div className="flex w-[70%] flex-col gap-2 overflow-y-auto pr-2 pt-1 h-full border-background-cyanMedium border p-2 rounded-lg">
+                  <div className="flex w-full justify-between items-center p-2">
                     <p className="text-[1.5rem]">{room.name}</p>
-                    <IoMdMenu
-                      className="cursor-pointer"
-                      size={"20px"}
-                    />
+                    <IoMdMenu className="cursor-pointer" size={"20px"}  onClick={()=>setHideChats(!hideChats)}/>
                   </div>
                   <Player roomId={id} />
                 </div>
-
-                <div className="flex flex-col w-[30%] h-full border-[1px]  rounded-lg border-background-cyanMedium bg-background-cyanDark">
-                  <div className="flex w-full border-gray-400 p-3">
-                    <p
-                      className={`p-2 border-b-[1px] h-[40px] cursor-pointer ${
-                        tab ? "border-accent" : "border-none"
+                {
+                hideChats && <div className="flex flex-col w-[30%] h-full border-[1px] overflow-hidden rounded-lg border-background-cyanMedium bg-background-cyanDark">
+                  <div className="flex w-full border-gray-400 p-3 gap-3">
+                    <div
+                      className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
+                        tab ? "border-accent text-accent" : "border-none"
                       }`}
                       onClick={() => setTab(true)}
                     >
-                      Chats
-                    </p>
-                    <p
-                      className={`p-2 border-b-[1px] h-[40px] cursor-pointer ${
-                        !tab ? "border-accent" : "border-none"
+                      <TbMessages />
+                      <span>Chats</span>
+                    </div>
+                    <div
+                      className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
+                        !tab ? "border-accent text-accent" : "border-none"
                       }`}
                       onClick={() => setTab(false)}
                     >
-                      Playlist
-                    </p>
+                      <MdPlaylistPlay />
+                      <span>Playlist</span>
+                    </div>
                   </div>
                   {tab ? (
                     <ChatRoom roomId={id} userId={user.id} />
@@ -81,9 +88,9 @@ export default function Room() {
                     <Playlist />
                   )}
                 </div>
+                }
               </div>
             </div>
-            <Notification />
           </RoomProvider>
         </LiveblocksProvider>
       )}

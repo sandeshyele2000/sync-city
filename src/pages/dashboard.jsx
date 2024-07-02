@@ -18,6 +18,7 @@ const DashBoardPage = () => {
   const router = useRouter();
   const [userRooms, setUserRooms] = useState([]);
 
+
   const createRoom = async (roomName, hostId) => {
     try {
       const response = await axios.post("/api/room/createRoom", {
@@ -30,6 +31,7 @@ const DashBoardPage = () => {
       toast.error("Error creating room");
     }
   };
+
   const deleteRoom = async (roomId) => {
     try {
       const response = await axios.delete("/api/room/deleteRoom", {
@@ -37,7 +39,6 @@ const DashBoardPage = () => {
       });
       return response.data;
     } catch (error) {
-      console.log(error);
       toast.error(error);
     }
   };
@@ -51,6 +52,17 @@ const DashBoardPage = () => {
     }
   };
 
+  const getUserRooms = async (userId) => {
+    try {
+      const response = await axios.get(
+        `/api/room/getUserRooms?userId=${userId}`
+      );
+      return response.data;
+    } catch (error) {
+      toast.error("Error fetching rooms");
+    }
+  };
+
   const handleCreateRoom = async (e) => {
     e.preventDefault();
     const roomName = e.target.roomName.value;
@@ -58,9 +70,8 @@ const DashBoardPage = () => {
       const newRoom = await createRoom(roomName, user.id);
       if (newRoom) {
         setUserRooms((prev) => [...prev, newRoom]);
-        // dispatch({ type: "ADD_USER_ROOM", payload: newRoom });
+        toast.success("Room created successfully!");
       }
-      toast.success("Room created successfully!");
     } catch (error) {
       toast.error("Error creating room");
     }
@@ -72,7 +83,6 @@ const DashBoardPage = () => {
       setUserRooms((prev) => prev.filter((item) => item.id != roomId));
       toast.success("Room deleted successfully!");
     } catch (error) {
-      console.log(error);
       toast.error(error);
     }
   };
@@ -80,16 +90,19 @@ const DashBoardPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       const data = await getAllRooms();
-      if (data) {
-        dispatch({ type: "SET_ALL_ROOMS", payload: data });
-      }
+      dispatch({ type: "SET_ALL_ROOMS", payload: data });
     };
     fetchData();
   }, []);
 
   useEffect(() => {
     if (user) {
-      setUserRooms(user.rooms);
+      const fetchData = async () => {
+        const userRoomsData = await getUserRooms(user.id);
+        setUserRooms(userRoomsData);
+      };
+
+      fetchData();
     } else {
       router.push("/login");
     }
@@ -100,7 +113,7 @@ const DashBoardPage = () => {
       {user && (
         <div className="bg-background-dark w-full min-h-[100vh] flex flex-col items-center">
           <Navbar />
-          <div className="text-white w-[75vw] items-center flex h-full flex-col justify-center gap-10">
+          <div className="text-white w-[80vw] items-center flex h-full flex-col justify-center gap-10">
             <div className="flex gap-2 text-[35px] mt-32">
               <span>Welcome, </span>
               <span className="text-accent">
@@ -112,7 +125,7 @@ const DashBoardPage = () => {
               <div className="flex flex-col w-full hover:border-accent border-[1px] border-background-cyanMedium bg-background-cyanDark rounded-lg p-4 h-[500px]">
                 <p className="text-text-dark">Your Rooms</p>
                 <div className="flex h-[80%] w-full flex-col gap-3 overflow-auto">
-                  {userRooms.map((room) => (
+                  {userRooms?.map((room) => (
                     <div
                       key={room.id}
                       className="flex items-center justify-between p-3 bg-background-cyanDark border-[1px] border-background-cyanMedium  rounded-lg m-2 hover:bg-[#08262654]"
@@ -147,7 +160,7 @@ const DashBoardPage = () => {
                     name="roomName"
                     id="roomName"
                     placeholder="Enter Room Name"
-                    className="flex w-[85%] p-3 h-full rounded-lg bg-[transparent] outline-none border-[1px] border-gray-600"
+                    className="flex w-[85%] p-3 h-full rounded-lg bg-[transparent] outline-none border-[1px] border-background-cyanMedium"
                   />
                   <button className="bg-accent text-black h-full pr-2 pl-2 text-[15px] rounded-lg flex items-center gap-3 hover:shadow-[0px_0px_2px_#0ff]">
                     Create
@@ -156,7 +169,7 @@ const DashBoardPage = () => {
               </div>
 
               <div className="flex flex-col w-full hover:border-accent border-[1px] border-background-cyanMedium rounded-lg p-4 h-[500px] bg-background-cyanDark">
-                <p className="text-text-dark">Join Room</p>
+                <p className="text-text-dark">Public Rooms</p>
                 <div className="flex flex-col gap-3 overflow-auto">
                   {rooms.length > 0 &&
                     rooms

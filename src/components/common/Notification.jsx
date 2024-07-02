@@ -13,8 +13,8 @@ function Notification() {
         className: "",
         duration: 5000,
         style: {
-          background: "rgb(7, 7, 7)",
-          color: "#7f0000f0f",
+          background: "#000",
+          color: "#878787",
         },
 
         success: {

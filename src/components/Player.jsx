@@ -16,9 +16,12 @@ function Player({ roomId }) {
   const playerStateRef = useRef(-1);
   const isSeeking = useRef(false);
   const lastSyncTime = useRef(0);
-  const syncInterval = 5000; // 5 seconds
+  const syncInterval = 5000;
   const seekBuffer = useRef([]);
   const seekBufferTimeout = useRef(null);
+
+  const queryVideos = useRef(null);
+  const playerdivRef = useRef(null);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -78,6 +81,7 @@ function Player({ roomId }) {
   const setCurrentVideo = (video) => {
     dispatch({ type: "SET_CURRENT_VIDEO", payload: video });
     room.broadcastEvent({ type: "SET_CURRENT_VIDEO", data: video });
+    playerdivRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const syncPlayback = useCallback(() => {
@@ -149,12 +153,14 @@ function Player({ roomId }) {
         case "SET_CURRENT_VIDEO":
           dispatch({ type: "SET_CURRENT_VIDEO", payload: event.data });
           break;
+
         case "SYNC_PLAYBACK":
           const { time, state } = event.data;
           if (Math.abs(player.getCurrentTime() - time) > 2) {
-            isSeeking.current = true;
-            player.seekTo(time, true);
-            setTimeout(() => (isSeeking.current = false), 1000);
+            // CHECK IF THERE IS ANY DELAY GREATER THAN 2 SECONDS
+            isSeeking.current = true; // SET SEEKING AS TRUE
+            player.seekTo(time, true); // SEEK THE PLAYER TO THE EXACT TIME
+            setTimeout(() => (isSeeking.current = false), 1000); // SET IT BACK TO FALSE AFTER A DELAY
           }
           if (state !== playerStateRef.current) {
             if (state === Youtube.PlayerState.PLAYING) {
@@ -165,6 +171,7 @@ function Player({ roomId }) {
             playerStateRef.current = state;
           }
           break;
+
         case "PLAYER_SEEK":
           const seekToTime = event.data;
           if (Math.abs(player.getCurrentTime() - seekToTime) > 2) {
@@ -173,6 +180,7 @@ function Player({ roomId }) {
             setTimeout(() => (isSeeking.current = false), 1000);
           }
           break;
+
         case "PLAYER_STATE_CHANGE":
           const newState = event.data;
           if (newState !== playerStateRef.current) {
@@ -184,6 +192,7 @@ function Player({ roomId }) {
             }
           }
           break;
+
         default:
           break;
       }
@@ -192,6 +201,10 @@ function Player({ roomId }) {
     return () => unsubscribe();
   }, [room, dispatch]);
 
+  useEffect(() => {
+    queryVideos.current?.scrollIntoView({ behavior: "smooth" });
+  }, [videos]);
+
   const savePlayer = (youtubePlayer) => {
     playerRef.current = youtubePlayer;
   };
@@ -199,7 +212,7 @@ function Player({ roomId }) {
   return (
     <>
       <form
-        className="flex w-full justify-between items-center rounded-lg gap-2"
+        className="flex w-full justify-between items-center border-[1px] border-gray-700 rounded-lg"
         method="post"
         onSubmit={handleSearch}
       >
@@ -208,14 +221,17 @@ function Player({ roomId }) {
           name="search"
           id="search"
           placeholder="Search..."
-          className="flex w-full p-3 h-[50px] rounded-lg bg-transparent outline-none border-[1px] border-background-cyanMedium"
+          className="flex w-full p-3 h-[50px] rounded-lg bg-transparent outline-none "
         />
-        <button className="text-white h-[50px] w-[50px] bg-background-cyanDark border-[1px] border-background-cyanMedium hover:bg-background-dark pr-2 pl-2 rounded-lg flex items-center justify-center">
-          <IoSearch color={"white"} size={"20px"} />
+        <button className="text-white h-[50px] w-[50px] pr-2 pl-2 rounded-lg flex items-center justify-center">
+          <IoSearch color={"gray"} size={"20px"} />
         </button>
       </form>
 
-      <div className="flex w-full flex-col p-3 h-full justify-between items-center border-[1px] border-background-cyanMedium rounded-lg">
+      <div
+        className="flex w-full flex-col p-3 h-full justify-between items-center border-[1px] border-background-cyanMedium rounded-lg"
+        ref={playerdivRef}
+      >
         <div
           className="w-full h-full relative rounded-lg overflow-hidden"
           style={{ paddingTop: "56%" }}
@@ -241,6 +257,7 @@ function Player({ roomId }) {
       </div>
 
       <div
+        ref={queryVideos}
         className={`flex flex-col gap-3 ml-1 ${
           videos.length == 0 ? "hidden" : ""
         }`}

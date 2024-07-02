@@ -1,12 +1,12 @@
 import "./../styles/globals.css";
-import { Toaster } from "react-hot-toast";
 import { StateProvider } from "../context/Context";
+import Notification from "@/components/common/Notification";
 
 function MyApp({ Component, pageProps }) {
   return (
       <StateProvider>
         <Component {...pageProps} />
-        <Toaster />
+        <Notification />
       </StateProvider>
   );
 }

@@ -1,10 +1,8 @@
-import React, { useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { useRouter } from "next/router";
 import { useContextAPI } from "../context/Context";
 import toast from "react-hot-toast";
-import Notification from "../components/common/Notification";
 import { auth } from "../firebase/initFirebase";
 import axios from "axios";
 
@@ -28,8 +26,7 @@ function LoginPage() {
       });
       return response.data;
     } catch (error) {
-      console.error("Error registering user:", error);
-      throw error;
+      toast.error(error);
     }
   };
 
@@ -51,9 +48,7 @@ function LoginPage() {
         payload: response.user,
       });
 
-      console.log(response.user)
     } catch (error) {
-      console.error("Login error:", error);
       toast.error(`Error signing in with Google: ${error.message}`);
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
@@ -90,8 +85,6 @@ function LoginPage() {
           </button>
         </div>
       </div>
-
-      <Notification />
     </>
   );
 }

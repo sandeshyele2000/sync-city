@@ -2,6 +2,7 @@ import React, { createContext, useReducer, useContext, useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/initFirebase";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const StateContext = createContext();
 
@@ -51,18 +52,17 @@ const reducer = (state, action) => {
         videos: [...state.videos, action.payload],
       };
 
-      case "REMOVE_VIDEO_FROM_PLAYLIST":{
+    case "REMOVE_VIDEO_FROM_PLAYLIST": {
+      let id = action.payload;
+      let updatedVideos = [...state.videos];
 
-        let id = action.payload;
-        let updatedVideos = [...state.videos];
+      updatedVideos = updatedVideos.filter((video) => video.id != id);
 
-        updatedVideos = updatedVideos.filter((video)=> video.id!=id);
-        
-        return {
-          ...state,
-          videos: updatedVideos,
-        };
-      }
+      return {
+        ...state,
+        videos: updatedVideos,
+      };
+    }
 
     case "SET_CURRENT_VIDEO":
       return {
@@ -80,15 +80,19 @@ export const StateProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        const response = await axios.get(
-          `/api/user/getUser?email=${user.email}`
-        );
+      try {
+        if (user) {
+          const response = await axios.get(
+            `/api/user/getUser?email=${user.email}`
+          );
 
-        dispatch({
-          type: "SET_USER",
-          payload: response.data.user,
-        });
+          dispatch({
+            type: "SET_USER",
+            payload: response.data.user,
+          });
+        }
+      } catch (error) {
+        toast.error(error);
       }
     });
 
