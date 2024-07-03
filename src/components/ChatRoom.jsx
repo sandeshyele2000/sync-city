@@ -1,26 +1,24 @@
 import { useState, useEffect, useRef } from "react";
-import { useRoom, useOthers, useUpdateMyPresence } from "@liveblocks/react";
+import { useRoom } from "@liveblocks/react";
 import axios from "axios";
 import { IoSend } from "react-icons/io5";
 import { useContextAPI } from "@/context/Context";
 import EmojiPicker from "emoji-picker-react";
 import { BsEmojiSmileFill } from "react-icons/bs";
 import { TbMessages } from "react-icons/tb";
-import toast from 'react-hot-toast'
+import Loader from "./common/Loader";
 
-function LiveblocksChat({ roomId, userId }) {
+export default function ChatRoom({ roomId, userId }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const { state } = useContextAPI();
   const user = state.user;
-  const currentRoom = state.currentRoom;
-  const updateMyPresence = useUpdateMyPresence();
-  const others = useOthers();
-  const count = others.length;
   const room = useRoom();
   const messageRef = useRef();
   const [emojiOpen, setEmojiOpen] = useState(false);
+  const defaultProfile =
+    "https://media.istockphoto.com/id/1337144146/vector/default-avatar-profile-icon-vector.jpg?s=612x612&w=0&k=20&c=BIbFwuv7FxTWvh5S3vB6bkT0Qv8Vn8N5Ffseq84ClGI=";
 
   async function fetchMessages() {
     setIsLoading(true);
@@ -85,8 +83,6 @@ function LiveblocksChat({ roomId, userId }) {
       }
     });
 
-    updateMyPresence(user);
-
     return () => unsubscribe();
   }, [room, roomId, user]);
 
@@ -94,29 +90,13 @@ function LiveblocksChat({ roomId, userId }) {
     messageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-
-
   return (
     <>
-      <div className="flex gap-2 flex-col bg-[rgba(0,0,0,0.4)] m-2  p-2 rounded-lg ">
-        <div className="flex gap-2">
-          <img
-            title="You"
-            className="user-avatar w-12 h-12 rounded-full  border-[#0ff] border-2 overflow-x-auto"
-            src={user.profileImage}
-          ></img>
-          {others.map((otherUser) => (
-            <img
-              key={otherUser.id}
-              className="user-avatar w-12 h-12 rounded-full"
-              src={otherUser.presence.profileImage}
-            ></img>
-          ))}
-        </div>
-      </div>
-      <div className="messages flex flex-1 flex-col space-y-4 p-4  overflow-auto  m-2 rounded-lg bg-[#0000004f]">
+      <div className="messages flex flex-1 flex-col space-y-4 p-4  overflow-auto  m-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
         {isLoading ? (
-          <p>Loading messages...</p>
+          <div className="flex w-full h-full relative justify-center items-center">
+            <Loader size={"50px"} />
+          </div>
         ) : messages.length > 0 ? (
           messages.map(({ id, user, content }) => (
             <div
@@ -126,13 +106,14 @@ function LiveblocksChat({ roomId, userId }) {
               }`}
             >
               <img
-                src={user.profileImage}
+                src={user.profileImage || defaultProfile}
                 alt={user.username}
                 className="user-avatar w-11 h-11 rounded-full"
+                gray-800
               />
               <div
                 style={{ whiteSpace: "pre-wrap" }}
-                className={` p-3 rounded-lg max-w-[60%] break-words text-text-light ${
+                className={` p-3 rounded-lg max-w-[60%] break-words text-text-light  ${
                   user.id == userId ? "bg-[#023131]" : "bg-background-cyanLight"
                 }`}
               >
@@ -148,19 +129,13 @@ function LiveblocksChat({ roomId, userId }) {
         <div ref={messageRef} />
       </div>
 
-      <form
-        className="flex  justify-between m-2  rounded-lg gap-2 relative bg-[rgba(0,0,0,0.4)] p-3"
-        onSubmit={async (e) => {
-          e.preventDefault();
-          await sendMessage();
-        }}
-      >
-        <div className={`absolute bottom-[4.8rem]`}>
+      <form className="flex  justify-between m-2  rounded-lg gap-2 relative bg-black p-3">
+        <div className={`absolute bottom-[4.7rem]`}>
           <EmojiPicker
             open={emojiOpen}
             theme="dark"
             width={"17rem"}
-            style={{ background: "black", color: "black",  }}
+            style={{ background: "black", color: "black" }}
             height={"25rem"}
             lazyLoadEmojis={true}
             onEmojiClick={(e) => {
@@ -181,10 +156,16 @@ function LiveblocksChat({ roomId, userId }) {
         </div>
 
         <textarea
-          className="flex w-full p-2  rounded-lg bg-transparent outline-none border-[1px]  border-gray-800 h-[45px] min-h-[45px]"
+          className="flex w-full p-2  rounded-lg bg-black outline-none border-[1px]  border-[#1e1e1e] h-[45px] min-h-[45px]"
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyDown={async (e) => {
+            if (e.key == "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              await sendMessage();
+            }
+          }}
           placeholder="Type your message..."
         />
         <button
@@ -197,8 +178,4 @@ function LiveblocksChat({ roomId, userId }) {
       </form>
     </>
   );
-}
-
-export default function ChatRoom({ roomId, userId }) {
-  return <LiveblocksChat roomId={roomId} userId={userId} />;
 }

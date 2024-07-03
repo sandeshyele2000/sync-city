@@ -28,6 +28,8 @@ function Player({ roomId }) {
     const query = e.target.search.value;
 
     try {
+      dispatch({ type: "SET_LOADING", payload: true });
+
       const response = await axios.get(
         "https://www.googleapis.com/youtube/v3/search",
         {
@@ -51,8 +53,11 @@ function Player({ roomId }) {
 
       setVideos(temp);
     } catch (error) {
-      console.error("Error fetching videos:", error);
-      toast.error("Failed to fetch videos.");
+      toast.error("Failed to query videos from youtube");
+    }
+    finally{
+      dispatch({ type: "SET_LOADING", payload: false });
+
     }
   };
 
@@ -70,11 +75,21 @@ function Player({ roomId }) {
   };
 
   const handleAddtoPlaylist = async (video) => {
-    const newVideo = await addToPlaylist(video, roomId);
-    if (newVideo) {
-      room.broadcastEvent({ type: "ADD_VIDEO_TO_PLAYLIST", data: newVideo });
-      dispatch({ type: "SET_VIDEO_TO_PLAYLIST", payload: newVideo });
-      toast.success("Added video to playlist!");
+    try {
+      dispatch({ type: "SET_LOADING", payload: true });
+
+      const newVideo = await addToPlaylist(video, roomId);
+      if (newVideo) {
+        room.broadcastEvent({ type: "ADD_VIDEO_TO_PLAYLIST", data: newVideo });
+        dispatch({ type: "SET_VIDEO_TO_PLAYLIST", payload: newVideo });
+        toast.success("Added video to playlist!");
+      }
+    } catch (error) {
+      toast.error(error)
+    }
+    finally{
+      dispatch({ type: "SET_LOADING", payload: false });
+
     }
   };
 
@@ -198,7 +213,7 @@ function Player({ roomId }) {
     });
 
     return () => unsubscribe();
-  }, [room, dispatch]);
+  }, [room]);
 
   useEffect(() => {
     queryVideos.current?.scrollIntoView({ behavior: "smooth" });
@@ -211,7 +226,7 @@ function Player({ roomId }) {
   return (
     <>
       <form
-        className="flex w-full justify-between items-center border-[1px] border-gray-700 rounded-lg"
+        className="flex w-full justify-between items-center border bg-black opacity-70 border-[#1e1e1e] rounded-[30px] pl-2 pr-2"
         method="post"
         onSubmit={handleSearch}
       >
@@ -228,7 +243,7 @@ function Player({ roomId }) {
       </form>
 
       <div
-        className="flex w-full flex-col p-3 h-full justify-between items-center border-[1px] border-background-cyanMedium rounded-lg"
+        className="flex w-full flex-col p-3 h-full justify-between items-center border-[1px] border-[#1e1e1e] rounded-lg"
         ref={playerdivRef}
       >
         <div
@@ -264,7 +279,7 @@ function Player({ roomId }) {
         {videos.map((video) => (
           <div
             key={video.videoId}
-            className="flex flex-col w-full justify-center bg-background-cyanDark cursor-pointer rounded-lg p-4 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
+            className="flex flex-col w-full justify-center bg-[#0b0b0b] border border-[#1e1e1e] cursor-pointer rounded-lg p-4 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
           >
             <div className="flex gap-3">
               <img
@@ -286,7 +301,7 @@ function Player({ roomId }) {
                     {dateTimeConverter(video.publishedAt)}
                   </p>
                   <button
-                    className="w-fit p-2 border-[1px] rounded-lg border-background-cyanMedium hover:bg-background text-text-dark text-[0.9rem]"
+                    className="w-fit p-2 border-[1px] rounded-lg border-[#1e1e1e] text-text-dark text-[0.9rem] hover:bg-black"
                     onClick={() => handleAddtoPlaylist(video)}
                   >
                     + Add to Playlist

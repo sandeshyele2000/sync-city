@@ -40,6 +40,8 @@ function Playlist() {
 
   const handleDeleteVideo = async (video) => {
     try {
+      dispatch({ type: "SET_LOADING", payload: true });
+
       await deleteFromPlaylist(video, currentRoom);
       dispatch({ type: "REMOVE_VIDEO_FROM_PLAYLIST", payload: video.id });
       room.broadcastEvent({
@@ -48,6 +50,10 @@ function Playlist() {
       });
     } catch (error) {
       toast.error(error);
+    }
+    finally{
+      dispatch({ type: "SET_LOADING", payload: false });
+
     }
   };
 
@@ -63,7 +69,7 @@ function Playlist() {
     });
 
     return () => unsubscribe();
-  }, [room, dispatch, videos]);
+  }, [room, videos]);
 
   const handleSearchInPlaylist = (e) => {
     let query = e.target.value;
@@ -90,14 +96,14 @@ function Playlist() {
         id="searchInPlaylist"
         onChange={(e) => handleSearchInPlaylist(e)}
         placeholder="Search in playlist..."
-        className="flex text-sm p-2 m-2 h-[50px] rounded-lg bg-transparent outline-none border-[1px] border-background-cyanMedium"
+        className="flex text-sm pt-2 pb-2 m-2 h-[50px]  outline-none border-[1px] border-[#1e1e1e] bg-black rounded-[30px] pl-4"
       />
       <div className="flex flex-col  ml-1 overflow-auto h-full p-1 w-full">
         {filteredVideos.length > 0 ? (
           filteredVideos.map((video) => (
             <div
               key={video.id}
-              className="flex flex-wrap lg:flex-nowrap border-background-cyanMedium border-b-[1px] justify-center bg-background-cyanDark cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
+              className="flex flex-wrap lg:flex-nowrap border-background-cyanMedium border-b-[1px] justify-center bg-[#0b0b0b] cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
             >
               <img
                 src={video.thumbnailImage}

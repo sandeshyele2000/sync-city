@@ -10,6 +10,7 @@ import Notification from "@/components/common/Notification";
 import { useContextAPI } from "../context/Context";
 import { useRouter } from "next/router";
 import { IoEnterOutline } from "react-icons/io5";
+import Loader from "@/components/common/Loader";
 
 const DashBoardPage = () => {
   const { state, dispatch } = useContextAPI();
@@ -19,7 +20,7 @@ const DashBoardPage = () => {
   const [userRooms, setUserRooms] = useState([]);
   const loading = state.loading;
   const roomLimit = 10;
-  console.log(roomLimit)
+  console.log(roomLimit);
 
   const createRoom = async (roomName, hostId) => {
     try {
@@ -67,17 +68,21 @@ const DashBoardPage = () => {
 
   const handleCreateRoom = async (e) => {
     e.preventDefault();
+    if(userRooms.length>=10){
+      return toast.error('Reached your build limit!')
+    }
     const roomName = e.target.roomName.value;
     e.target.roomName.value = "";
+  
     try {
       dispatch({ type: "SET_LOADING", payload: true });
       const newRoom = await createRoom(roomName, user.id);
       if (newRoom) {
         setUserRooms((prev) => [...prev, newRoom]);
-        toast.success("Room created successfully!");
+        toast.success("City built successfully!");
       }
     } catch (error) {
-      toast.error("Error creating room");
+      toast.error("Error building city");
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }
@@ -88,11 +93,11 @@ const DashBoardPage = () => {
       dispatch({ type: "SET_LOADING", payload: true });
       await deleteRoom(roomId);
       setUserRooms((prev) => prev.filter((item) => item.id != roomId));
-      toast.success("Room deleted successfully!");
+      toast.success("City demolished successfully!");
     } catch (error) {
       toast.error(error);
     } finally {
-      dispatch({ type: "SET_LOADING", payload: true });
+      dispatch({ type: "SET_LOADING", payload: false });
     }
   };
 
@@ -120,10 +125,17 @@ const DashBoardPage = () => {
 
   return (
     <>
-      {user && (
-        <div className="bg-background-dark w-full min-h-[100vh] flex flex-col items-center">
-          <Navbar />
-          <div className="text-white w-[80vw] items-center flex h-full flex-col justify-center gap-10">
+      <div className="bg-background-dark w-full min-h-[100vh] flex flex-col items-center relative overflow-hidden">
+        <Navbar />
+        <img
+          src="./logo.png"
+          alt=""
+          className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"
+        />
+        {user && (
+          <div
+            className={`text-white w-[80vw] items-center flex h-full flex-col justify-center gap-5 relative`}
+          >
             <div className="flex gap-2 text-[35px] mt-32">
               <span>Welcome, </span>
               <span className="text-accent">
@@ -131,14 +143,19 @@ const DashBoardPage = () => {
               </span>
             </div>
 
+            <p className="text-text-dark text-[22px] opacity-70 text-center">
+              Enter into your favorite city and start{" "}
+              <span className="text-accent">Syncing!</span>{" "}
+            </p>
+
             <div className="flex w-[90%] gap-4 flex-col lg:flex-row md:flex-col sm:flex-col">
-              <div className="flex flex-col w-full hover:border-accent border-[1px] border-background-cyanMedium bg-background-cyanDark rounded-lg p-4 h-[500px]">
-                <p className="text-text-dark p-3">My Rooms</p>
+              <div className="flex flex-col w-full hover:border-accent border-[1px] border-[#1e1e1e] bg-[#000000] rounded-lg p-4 h-[500px] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
+                <p className="text-text-dark p-3">My Cities</p>
                 <div className="flex h-[80%] w-full flex-col gap-3 overflow-auto">
                   {userRooms?.map((room) => (
                     <div
                       key={room.id}
-                      className="flex items-center justify-between p-3 bg-background-cyanDark border-[1px] border-background-cyanMedium  rounded-lg m-2 hover:bg-[#08262654]"
+                      className="flex items-center justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e]  rounded-lg m-2 hover:bg-[#08262654]"
                     >
                       <p>{room.name}</p>
                       <div className="flex gap-2">
@@ -166,29 +183,30 @@ const DashBoardPage = () => {
                 </div>
                 <form
                   method="post"
-                  className="flex gap-2 h-[50px] justify-center w-full items-center mt-3"
+                  className="flex h-[50px] justify-between w-full items-center mt-3 border-[1px] border-[#1e1e1e] p-2 rounded-[30px]"
                   onSubmit={handleCreateRoom}
                 >
                   <input
                     type="text"
                     name="roomName"
                     id="roomName"
-                    placeholder="Enter Room Name"
-                    className="flex w-[85%] p-3 h-full rounded-lg bg-[transparent] outline-none border-[1px] border-background-cyanMedium"
+                    placeholder="Enter City Name"
+                    className="flex w-[85%] p-3 h-full rounded-lg bg-[transparent] outline-none "
                   />
                   <button
-                    className={`bg-accent text-black h-full pr-2 pl-2 text-[15px] rounded-lg flex items-center gap-3 hover:shadow-[0px_0px_2px_#0ff] ${
-                      userRooms.length >= roomLimit ? "bg-gray-700" : ""
+                    className={` text-white h-full pr-2 pl-2 text-[15px] flex items-center gap-3   border-l-[1px] border-[#1e1e1e] ${
+                      userRooms.length >= roomLimit
+                        ? "text-gray-500"
+                        : "hover:text-accent"
                     }`}
-                    disabled={userRooms.length >= roomLimit}
                   >
-                    Create
+                    Build
                   </button>
                 </form>
               </div>
 
-              <div className="flex flex-col w-full hover:border-accent border-[1px] border-background-cyanMedium rounded-lg p-4 h-[500px] bg-background-cyanDark">
-                <p className="text-text-dark p-3">Public Rooms</p>
+              <div className="flex flex-col w-full hover:border-accent border-[1px] border-[#1e1e1e] rounded-lg p-4 h-[500px] bg-[#0b0b0b] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
+                <p className="text-text-dark p-3">Explore other Cities</p>
                 <div className="flex flex-col gap-3 overflow-auto">
                   {rooms.length > 0 &&
                     rooms
@@ -196,7 +214,7 @@ const DashBoardPage = () => {
                       .map((room) => (
                         <div
                           key={room.id}
-                          className="flex items-center justify-between p-3 bg-background-cyanDark border-[1px] border-background-cyanMedium  rounded-lg m-2 hover:bg-[#08262654]"
+                          className="flex items-center justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e]  rounded-lg m-2 hover:bg-[#08262654]"
                         >
                           <p>{room.name}</p>
                           <div className="flex gap-2">
@@ -219,8 +237,14 @@ const DashBoardPage = () => {
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+        {loading && (
+          <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px]">
+            <Loader size={"100px"} />
+          </div> 
+        )}
+      </div>
+
       <Notification />
     </>
   );

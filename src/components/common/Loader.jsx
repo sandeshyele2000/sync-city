@@ -1,9 +1,9 @@
 import React from "react";
 
-function Loader() {
+function Loader({ size }) {
   return (
-    <div class="spinner">
-      <div class="inner"></div>
+    <div class={`animate-spin absolute`} style={{ width: size, height: size }}>
+      <img src="./logo.png" className="opacity-60" />
     </div>
   );
 }

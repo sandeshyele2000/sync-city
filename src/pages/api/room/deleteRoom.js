@@ -1,9 +1,8 @@
 import prisma from "@/lib/prisma";
+import axios from 'axios';
 
 export default async function handler(req, res) {
-  if (req.method !== 'DELETE') {
-    return res.status(405).json({ message: "Method not allowed" });
-  }
+  
 
   const  roomId  = req.body;
 
@@ -49,6 +48,13 @@ export default async function handler(req, res) {
       await prisma.room.delete({
         where: {
           id: roomId,
+        },
+      });
+
+
+      await axios.delete(`https://api.liveblocks.io/v2/rooms/${roomId}`, {
+        headers: {
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_LIVEBLOCKS_API_KEY}`,
         },
       });
     

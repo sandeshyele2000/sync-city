@@ -27,13 +27,17 @@ function Navbar() {
   if (!user) return null;
 
   return (
-    <div className="flex h-[70px] w-full justify-center fixed bg-[#000] bg-opacity-80 backdrop-blur-md z-50">
+    <div className="flex h-[70px] w-full justify-center fixed bg-[#111111] bg-opacity-80 backdrop-blur-md z-50">
       <div className="flex w-[80vw] items-center justify-between">
-        <p className="text-accent text-[25px] font-bold cursor-pointer">
-          Sync City
-        </p>
+        <div className="flex items-center gap-2">
+          <img src="./logo.png" alt="" className="w-8 h-8 items-center" />
+          <p className="text-accent text-[20px] font-bold cursor-pointer">
+            Sync <span className="text-white">City</span>
+          </p>
+        </div>
+
         <div
-          className="flex gap-2 items-center cursor-pointer border-background-cyanMedium border-[1px] p-2 rounded-[30px] "
+          className="flex gap-2 items-center cursor-pointer border-[#1e1e1e] border-[1px] p-2 rounded-[30px] "
           onClick={() => setDropDown(!dropDown)}
         >
           <img

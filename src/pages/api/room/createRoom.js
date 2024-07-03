@@ -2,9 +2,7 @@ import prisma from "../../../lib/prisma";
 import axios from "axios";
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ message: "Method not allowed" });
-  }
+  
 
   const { roomName, hostId } = req.body;
 
@@ -25,6 +23,7 @@ export default async function handler(req, res) {
     });
 
     const liveblocksApiKey = process.env.NEXT_PUBLIC_LIVEBLOCKS_API_KEY;
+    
     if (!liveblocksApiKey) {
       throw new Error("Liveblocks API key is missing");
     }
