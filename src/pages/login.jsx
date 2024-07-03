@@ -74,8 +74,8 @@ function LoginPage() {
 
         <div className="z-10 gap-4  flex w-[650px] h-[650px] items-center justify-center flex-col  relative rounded-full border-[1px] border-accent shadow-[0px_0px_55px_#006f6f] m-5 outline-double outline-[5px] outline-[#0ff] bg-opacity-40 backdrop-blur-md bg-[#00000081]">
           <img src="./logo.png" alt="" className="w-[230px] h-[230px] opacity-65" />
-          <h1 className="text-accent text-center font-bold text-[35px] sm:text-[45px] md:text-[50px] lg:text-[60px] rounded-lg hover:text-background-dark text-outline cursor-pointer ">
-            Sync City
+          <h1 className="text-[#c6c6c6aa] text-center font-bold text-[35px] sm:text-[45px] md:text-[50px] lg:text-[60px] rounded-lg hover:text-background-dark text-outline cursor-pointer ">
+            SYNCITY
           </h1>
           <p className="text-accent pl-5 pr-5 text-center opacity-50 text-[12px]  sm:text-[12px] md:text-[15px] lg:text-[18px]">
             Watch videos and chat with your friends in realtime!

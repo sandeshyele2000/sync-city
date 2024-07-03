@@ -32,7 +32,7 @@ function Navbar() {
         <div className="flex items-center gap-2">
           <img src="./logo.png" alt="" className="w-8 h-8 items-center" />
           <p className="text-accent text-[20px] font-bold cursor-pointer">
-            Sync <span className="text-white">City</span>
+             <span className="text-gray-300 font-bold">SYNCITY</span>
           </p>
         </div>
 
