@@ -16,9 +16,11 @@ function Playlist() {
   const [filteredVideos, setFilteredVideos] = useState(videos);
 
   const setCurrentVideo = (video) => {
-    dispatch({ type: "SET_CURRENT_VIDEO", payload: video });
-    room.broadcastEvent({ type: "SET_CURRENT_VIDEO", data: video });
+    updateCurrentVideoId(video);
+    dispatch({ type: "SET_CURRENT_VIDEO", payload: video.videoId });
+    room.broadcastEvent({ type: "SET_CURRENT_VIDEO", data: video.videoId });
   };
+
   const deleteFromPlaylist = async (video, room) => {
     try {
       const response = await axios.post("/api/room/deleteFromPlaylist", {
@@ -35,6 +37,19 @@ function Playlist() {
     } catch (error) {
       console.error("Error deleting video from playlist:", error);
       toast.error("Failed to delete video from playlist.");
+    }
+  };
+
+  const updateCurrentVideoId = async (video) => {
+    try {
+      const response = await axios.post("/api/room/updateCurrentVideo", {
+        id: currentRoom.id,
+        videoId: video.videoId,
+      });
+
+      console.log(response.data)
+    } catch (error) {
+      toast.error(error);
     }
   };
 

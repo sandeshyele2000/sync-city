@@ -5,6 +5,8 @@ export default async function handler(req, res) {
   
 
   const { roomName, hostId } = req.body;
+ 
+  const defaultCurrentVideoId = "RzVvThhjAKw";
 
   if (!roomName || !hostId) {
     return res
@@ -19,6 +21,7 @@ export default async function handler(req, res) {
         hostId,
         userIds: [hostId],
         videoIds: [],
+        currentVideoId: defaultCurrentVideoId
       },
     });
 

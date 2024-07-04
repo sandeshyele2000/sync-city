@@ -19,6 +19,9 @@ export default async function handler(req, res) {
       }
     });
 
+    if(!user) 
+      return res.status(201).json({ msg: "User not found", status: false, user });
+
     return res.status(201).json({ msg: "User found", status: true, user });
   } catch (error) {
     return res.status(500);

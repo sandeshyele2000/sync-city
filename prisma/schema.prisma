@@ -29,6 +29,7 @@ model Room {
   messages       Message[]  
   videoIds       String[]  @db.ObjectId
   videos         Video[]   @relation(fields: [videoIds], references: [id])
+  currentVideoId String
 }
 
 model Message {

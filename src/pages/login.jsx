@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { auth } from "../firebase/initFirebase";
 import axios from "axios";
 import Loader from "@/components/common/Loader";
+import { useEffect } from "react";
 
 function LoginPage() {
   const { state, dispatch } = useContextAPI();
@@ -40,7 +41,7 @@ function LoginPage() {
 
       let userData = await axios.get(`/api/user/getUser?email=${user.email}`);
 
-      if (!userData) {
+      if (!userData.data.status) {
         userData = await registerUser({
           email: user.email,
           firebaseId: user.uid,
@@ -50,19 +51,25 @@ function LoginPage() {
 
         toast.success("Registered successfully!")
       }
+      else{
+        userData = userData.data.user;
+      }
 
       console.log(userData)
-      dispatch({type: "SET_USER",payload: userData.data.user});
+      dispatch({type: "SET_USER",payload: userData});
     } catch (error) {
       toast.error(`Error signing in with Google: ${error.message}`);
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }
   };
-
-  if (userData) {
-    router.push("/dashboard");
-  }
+  
+  useEffect(()=>{
+    if(userData){
+      router.push("/dashboard");
+      console.log("going to dashboard")
+    }
+  },[userData])
 
   return (
     <>

@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import ModalForm from "@/components/common/ModalForm";
 import CircularProgressBar from "@/components/common/CircularProgressBar";
 import Loader from "@/components/common/Loader";
+import { ROOM_LIMIT } from "@/lib/constants";
 
 function AccountPage() {
   const { state, dispatch } = useContextAPI();
@@ -95,7 +96,7 @@ function AccountPage() {
                   <div className="flex flex-col items-center justify-center gap-3">
                     <CircularProgressBar
                       value={userRooms.length}
-                      maxValue={10}
+                      maxValue={ROOM_LIMIT}
                     />
                     <p className="text-text-dark">Cities Built</p>
                   </div>

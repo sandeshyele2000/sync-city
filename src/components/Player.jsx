@@ -10,7 +10,8 @@ import { useRoom } from "@liveblocks/react";
 function Player({ roomId }) {
   const { state, dispatch } = useContextAPI();
   const room = useRoom();
-  const currentVideo = state.currentVideo;
+  const currentVideoId = state.currentVideo;
+
   const [videos, setVideos] = useState([]);
   const playerRef = useRef(null);
   const playerStateRef = useRef(-1);
@@ -54,10 +55,8 @@ function Player({ roomId }) {
       setVideos(temp);
     } catch (error) {
       toast.error("Failed to query videos from youtube");
-    }
-    finally{
+    } finally {
       dispatch({ type: "SET_LOADING", payload: false });
-
     }
   };
 
@@ -74,6 +73,18 @@ function Player({ roomId }) {
     }
   };
 
+  const getCurrentVideoid = async (roomId) => {
+    try {
+      const response = await axios.get(
+        `/api/room/getCurrentVideo?id=${roomId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      toast.error("Failed to get the current video");
+    }
+  };
+
   const handleAddtoPlaylist = async (video) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
@@ -85,17 +96,29 @@ function Player({ roomId }) {
         toast.success("Added video to playlist!");
       }
     } catch (error) {
-      toast.error(error)
-    }
-    finally{
+      toast.error(error);
+    } finally {
       dispatch({ type: "SET_LOADING", payload: false });
+    }
+  };
 
+  const updateCurrentVideoId = async (video) => {
+    try {
+      const response = await axios.post("/api/room/updateCurrentVideo", {
+        id: roomId,
+        videoId: video.videoId,
+      });
+
+      console.log(response.data)
+    } catch (error) {
+      toast.error(error);
     }
   };
 
   const setCurrentVideo = (video) => {
-    dispatch({ type: "SET_CURRENT_VIDEO", payload: video });
-    room.broadcastEvent({ type: "SET_CURRENT_VIDEO", data: video });
+    updateCurrentVideoId(video)
+    dispatch({ type: "SET_CURRENT_VIDEO", payload: video.videoId });
+    room.broadcastEvent({ type: "SET_CURRENT_VIDEO", data: video.videoId });
     playerdivRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -158,6 +181,11 @@ function Player({ roomId }) {
     },
     [room]
   );
+  const fetchCurrentVideoId = async () => {
+    const videoId = await getCurrentVideoid(roomId);
+    console.log(videoId);
+    dispatch({ type: "SET_CURRENT_VIDEO", payload: videoId });
+  };
 
   useEffect(() => {
     const unsubscribe = room.subscribe("event", ({ event }) => {
@@ -172,9 +200,9 @@ function Player({ roomId }) {
         case "SYNC_PLAYBACK":
           const { time, state } = event.data;
           if (Math.abs(player.getCurrentTime() - time) > 2) {
-            isSeeking.current = true; 
-            player.seekTo(time, true); 
-            setTimeout(() => (isSeeking.current = false), 1000); 
+            isSeeking.current = true;
+            player.seekTo(time, true);
+            setTimeout(() => (isSeeking.current = false), 1000);
           }
           if (state !== playerStateRef.current) {
             if (state === Youtube.PlayerState.PLAYING) {
@@ -216,6 +244,10 @@ function Player({ roomId }) {
   }, [room]);
 
   useEffect(() => {
+    fetchCurrentVideoId();
+  }, []);
+
+  useEffect(() => {
     queryVideos.current?.scrollIntoView({ behavior: "smooth" });
   }, [videos]);
 
@@ -251,7 +283,7 @@ function Player({ roomId }) {
           style={{ paddingTop: "56%" }}
         >
           <Youtube
-            videoId={currentVideo ? currentVideo.videoId : "RzVvThhjAKw"}
+            videoId={currentVideoId}
             className="absolute top-0 left-0 w-full h-full"
             iframeClassName="w-full h-full"
             opts={{
