@@ -131,7 +131,7 @@ function AccountPage() {
                         <div className="flex gap-2 w-full justify-between flex-col">
                           <Link
                             href={{
-                              pathname: "/room",
+                              pathname: "/city",
                               query: { id: room.id },
                             }}
                             className="flex gap-2 border border-[#1e1e1e] p-2 rounded-lg"

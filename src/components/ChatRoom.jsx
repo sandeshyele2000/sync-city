@@ -116,6 +116,7 @@ export default function ChatRoom({ roomId, userId }) {
                   user.id == userId ? "bg-[#023131]" : "bg-background-cyanLight"
                 }`}
               >
+                <p className="pb-2 text-[#076a6a] text-bold">{user.username}</p>
                 {content}
               </div>
             </div>

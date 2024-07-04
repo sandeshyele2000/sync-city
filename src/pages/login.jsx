@@ -45,7 +45,7 @@ function LoginPage() {
         userData = await registerUser({
           email: user.email,
           firebaseId: user.uid,
-          username: user.displayName,
+          username: user.displayName.substring(0,15),
           profileImage: user.photoURL,
         });
 

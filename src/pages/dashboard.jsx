@@ -178,7 +178,7 @@ const DashBoardPage = () => {
                 type="text"
                 name="roomLink"
                 id="roomLink"
-                placeholder="Paste City Code"
+                placeholder="Paste City Link"
                 className="flex w-full p-3 h-[50px] rounded-lg bg-transparent outline-none "
               />
               <button className="text-white min-w-[120px] border-l-gray-500 border-l-[1px] pr-2 pl-2  items-center justify-center flex">
