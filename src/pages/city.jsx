@@ -45,7 +45,6 @@ function RoomContent({ id }) {
       updateMyPresence(user);
     }
   }, [id, tab]);
-  
 
   return (
     <>
@@ -130,7 +129,7 @@ export default function Room() {
   const { id } = router.query;
   const { state } = useContextAPI();
   const user = state.user;
-
+  const room = state.currentRoom;
   return (
     <>
       {user && (

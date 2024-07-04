@@ -20,6 +20,7 @@ function Player({ roomId }) {
   const syncInterval = 5000;
   const seekBuffer = useRef([]);
   const seekBufferTimeout = useRef(null);
+  const isNewUser = useRef(true);
 
   const queryVideos = useRef(null);
   const playerdivRef = useRef(null);
@@ -108,15 +109,14 @@ function Player({ roomId }) {
         id: roomId,
         videoId: video.videoId,
       });
-
-      console.log(response.data)
+      console.log(response.data);
     } catch (error) {
       toast.error(error);
     }
   };
 
   const setCurrentVideo = (video) => {
-    updateCurrentVideoId(video)
+    updateCurrentVideoId(video);
     dispatch({ type: "SET_CURRENT_VIDEO", payload: video.videoId });
     room.broadcastEvent({ type: "SET_CURRENT_VIDEO", data: video.videoId });
     playerdivRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -158,6 +158,7 @@ function Player({ roomId }) {
           syncPlayback();
         }
       }
+      isNewUser.current = false;
     },
     [room, syncPlayback]
   );
@@ -181,10 +182,13 @@ function Player({ roomId }) {
     },
     [room]
   );
+
   const fetchCurrentVideoId = async () => {
     const videoId = await getCurrentVideoid(roomId);
-    console.log(videoId);
     dispatch({ type: "SET_CURRENT_VIDEO", payload: videoId });
+    if (isNewUser.current) {
+      room.broadcastEvent({ type: "VIDEO_INIT_REQUEST" });
+    }
   };
 
   useEffect(() => {
@@ -232,6 +236,32 @@ function Player({ roomId }) {
             } else if (newState === Youtube.PlayerState.PAUSED) {
               player.pauseVideo();
             }
+          }
+          break;
+
+        case "VIDEO_INIT_REQUEST":
+          if (!isNewUser.current) {
+            room.broadcastEvent({
+              type: "VIDEO_INIT_RESPONSE",
+              data: {
+                time: player.getCurrentTime(),
+                state: playerStateRef.current,
+              },
+            });
+          }
+          break;
+
+        case "VIDEO_INIT_RESPONSE":
+          if (isNewUser.current) {
+            const { time, state } = event.data;
+            player.seekTo(time, true);
+            if (state === Youtube.PlayerState.PLAYING) {
+              player.playVideo();
+            } else {
+              player.pauseVideo();
+            }
+            playerStateRef.current = state;
+            isNewUser.current = false;
           }
           break;
 
@@ -288,7 +318,7 @@ function Player({ roomId }) {
             iframeClassName="w-full h-full"
             opts={{
               playerVars: {
-                autoplay: 1,
+                autoplay: 0,
                 enablejsapi: 1,
                 origin: window.location.origin,
               },
