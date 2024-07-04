@@ -128,7 +128,14 @@ export default function ChatRoom({ roomId, userId }) {
         <div ref={messageRef} />
       </div>
 
-      <form className="flex  justify-between m-2  rounded-lg gap-2 relative bg-black p-3">
+      <form
+        className="flex  justify-between m-2  rounded-lg gap-2 relative bg-black p-3"
+        onSubmit={async(e) => {
+          e.preventDefault();
+          await sendMessage();
+
+        }}
+      >
         <div className={`absolute bottom-[4.7rem]`}>
           <EmojiPicker
             open={emojiOpen}

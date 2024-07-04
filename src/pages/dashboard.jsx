@@ -190,7 +190,7 @@ const DashBoardPage = () => {
               <div className="flex flex-col w-full hover:border-accent border-[1px] border-[#1e1e1e] bg-[#000000] rounded-lg p-4 h-[500px] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
                 <p className="text-text-dark p-3">My Cities</p>
                 <div className="flex h-[80%] w-full flex-col gap-3 overflow-auto">
-                  {userRooms?.map((room) => (
+                  {userRooms && userRooms?.map((room) => (
                     <div
                       key={room.id}
                       className="flex items-center justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e]  rounded-lg m-2 hover:bg-[#08262654]"
@@ -252,7 +252,7 @@ const DashBoardPage = () => {
               <div className="flex flex-col w-full hover:border-accent border-[1px] border-[#1e1e1e] rounded-lg p-4 h-[500px] bg-[#0b0b0b] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
                 <p className="text-text-dark p-3">Explore other cities</p>
                 <div className="flex flex-col gap-3 overflow-auto">
-                  {rooms.length > 0 &&
+                  {rooms &&
                     rooms
                       .filter((room) => room.hostId != user.id)
                       .map((room) => (
