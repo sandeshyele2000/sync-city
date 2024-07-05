@@ -1,17 +1,18 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
+
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
-  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
+  apiKey: "AIzaSyA6HR73qqyEK1QIPuKiEOXhxaL6eo2bhZU",
+  authDomain: "sync-city-93e1d.firebaseapp.com",
+  projectId: "sync-city-93e1d",
+  storageBucket: "sync-city-93e1d.appspot.com",
+  messagingSenderId: "51610402944",
+  appId: "1:51610402944:web:c17df5c4612d4fd9a5a665",
+  measurementId: "G-C9EP21GFCZ"
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export { auth };
+export { auth} ;
