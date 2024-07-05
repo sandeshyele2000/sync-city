@@ -17,6 +17,7 @@ model User {
   roomIds      String[]  @db.ObjectId
   rooms        Room[]    @relation(fields: [roomIds], references: [id])
   messages     Message[]
+  isAdmin        Boolean
 }
 
 model Room {
@@ -30,6 +31,8 @@ model Room {
   videoIds       String[]  @db.ObjectId
   videos         Video[]   @relation(fields: [videoIds], references: [id])
   currentVideoId String
+  isPrivate      Boolean
+
 }
 
 model Message {

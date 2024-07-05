@@ -54,7 +54,6 @@ function LoginPage() {
       else{
         userData = userData.data.user;
       }
-
       console.log(userData)
       dispatch({type: "SET_USER",payload: userData});
     } catch (error) {

@@ -16,10 +16,12 @@ import {
 import { TbMessages } from "react-icons/tb";
 import { MdPlaylistPlay } from "react-icons/md";
 import Loader from "@/components/common/Loader";
+import { IoArrowBack } from "react-icons/io5";
 
 function RoomContent({ id }) {
   const [tab, setTab] = useState(true);
   const { state, dispatch } = useContextAPI();
+  const router = useRouter();
   const user = state.user;
   const room = state.currentRoom;
   const loading = state.loading;
@@ -59,7 +61,10 @@ function RoomContent({ id }) {
           <div className="text-white w-[80vw] items-center flex h-[85vh] justify-center gap-3 mt-24">
             <div className="flex w-[70%] flex-col gap-2 overflow-y-auto  pt-1 h-full border-[#1e1e1e] border p-2 rounded-lg bg-[#0b0b0b] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
               <div className="flex w-full justify-between items-center pl-2">
-                <p className="text-[1.5rem]">{room.name}</p>
+                <div className="flex gap-3 items-center">
+                  <IoArrowBack className="cursor-pointer" color="white" onClick={()=>{router.push('/dashboard')}}/>
+                  <p className="text-[1.5rem]">{room.name}</p>
+                </div>
 
                 <div className="flex gap-2 flex-col m-2  p-1 rounded-lg ">
                   <div className="flex gap-2">

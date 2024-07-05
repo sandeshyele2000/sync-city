@@ -15,7 +15,8 @@ export default async function handler(req, res) {
         profileImage:true,
         rooms:true,
         roomIds:true,
-        messages: true
+        messages: true,
+        isAdmin:true
       }
     });
 

@@ -13,6 +13,8 @@ import ModalForm from "@/components/common/ModalForm";
 import CircularProgressBar from "@/components/common/CircularProgressBar";
 import Loader from "@/components/common/Loader";
 import { ROOM_LIMIT } from "@/lib/constants";
+import { FaLock } from "react-icons/fa";
+import { MdOutlinePublic } from "react-icons/md";
 
 function AccountPage() {
   const { state, dispatch } = useContextAPI();
@@ -73,8 +75,8 @@ function AccountPage() {
               className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"
             />
             <div className="text-white w-[80vw] items-center flex h-[85vh] justify-center gap-3 mt-24 flex-col  md:flex-row lg:flex-row relative">
-              <div className="left bg-[#0b0b0b] border border-[#1e1e1e]  h-full p-6 flex flex-col gap-4 items-center w-full sm:w-full md:w-full md:flex-col lg:w-[28%] lg:flex-col rounded-lg bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg overflow-y-auto">
-                <div className="flex flex-col items-center justify-center gap-3">
+              <div className="left bg-[#0b0b0b] border border-[#1e1e1e]  h-full p-6 flex flex-col gap-8 items-center w-full sm:w-full md:w-full md:flex-col lg:w-[28%] lg:flex-col rounded-lg bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg overflow-y-auto">
+                <div className="flex flex-col items-center justify-center gap-6">
                   <img
                     src={user.profileImage}
                     className="rounded-lg border border-[#0ff]  w-56 mt-8 md:w-40"
@@ -119,12 +121,16 @@ function AccountPage() {
                     userRooms.map((room) => (
                       <div
                         key={room.id}
-                        className="flex flex-col w-[250px] h-[300px]  justify-center p-3 bg-background-cyanDark border-[1px] border-background-cyanMedium rounded-lg m-2 hover:bg-[#08262654]"
+                        className="flex flex-col w-[250px] h-[300px]  justify-center p-3 bg-[#0941413a] border-[1px] border-background-cyanMedium rounded-lg m-2 hover:bg-[#08262654]"
                       >
-                        <div className="flex flex-col w-full h-full items-center justify-center gap-10">
+                        <div className="flex flex-col w-full h-full items-center justify-center gap-5">
                           <p className="text-lg">{room.name}</p>
                           <p className="text-gray-600">
                             Built on {room.createdAt.split("T")[0]}
+                          </p>
+                          {room.isPrivate ? <FaLock size={"20px"} /> : <MdOutlinePublic size="25px" />}
+                          <p className="text-gray-600">
+                            {room.isPrivate ? "Private" : "Public"}
                           </p>
                         </div>
 
@@ -134,7 +140,7 @@ function AccountPage() {
                               pathname: "/city",
                               query: { id: room.id },
                             }}
-                            className="flex gap-2 border border-[#1e1e1e] p-2 rounded-lg"
+                            className="flex gap-2 border border-[#1f444b] p-2 rounded-lg"
                           >
                             <IoEnterOutline
                               size={"1.5rem"}
@@ -145,7 +151,7 @@ function AccountPage() {
                             <p> Enter City</p>
                           </Link>
                           <button
-                            className="text-gray-700 hover:text-red-700 flex gap-2 border border-[#1e1e1e] p-2 rounded-lg"
+                            className="text-gray-700 hover:text-red-700 flex gap-2 border border-[#1f444b] p-2 rounded-lg"
                             onClick={() => deleteRoom(room.id)}
                           >
                             <IoMdTrash size={"1.5rem"} title="Delete room" />

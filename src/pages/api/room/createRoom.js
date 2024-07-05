@@ -2,10 +2,8 @@ import prisma from "../../../lib/prisma";
 import axios from "axios";
 
 export default async function handler(req, res) {
-  
+  const { roomName, hostId, isPrivate } = req.body;
 
-  const { roomName, hostId } = req.body;
- 
   const defaultCurrentVideoId = "RzVvThhjAKw";
 
   if (!roomName || !hostId) {
@@ -21,12 +19,15 @@ export default async function handler(req, res) {
         hostId,
         userIds: [hostId],
         videoIds: [],
-        currentVideoId: defaultCurrentVideoId
-      },
+        currentVideoId: defaultCurrentVideoId,
+        isPrivate,
+      }
     });
 
+    console.log(room)
+
     const liveblocksApiKey = process.env.NEXT_PUBLIC_LIVEBLOCKS_API_KEY;
-    
+
     if (!liveblocksApiKey) {
       throw new Error("Liveblocks API key is missing");
     }

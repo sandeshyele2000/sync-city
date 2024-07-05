@@ -13,6 +13,8 @@ const initialState = {
   currentRoom: null,
   videos: [],
   currentVideo: null,
+  // admin
+  allUsers: [],
 };
 
 const reducer = (state, action) => {
@@ -21,6 +23,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         user: action.payload,
+      };
+    case "SET_ALL_USERS":
+      return {
+        ...state,
+        allUsers: action.payload,
       };
 
     case "SET_LOADING":

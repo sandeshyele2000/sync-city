@@ -32,7 +32,7 @@ function Navbar() {
         <div className="flex items-center gap-2">
           <img src="./logo.png" alt="" className="w-8 h-8 items-center" />
           <p className="text-accent text-[20px] font-bold cursor-pointer">
-             <span className="text-gray-300 font-bold">SYNCITY</span>
+            <span className="text-gray-300 font-bold">SYNCITY</span>
           </p>
         </div>
 
@@ -72,12 +72,22 @@ function Navbar() {
           className="flex absolute gap-4 bg-background rounded-lg flex-col p-5 right-[10vw] top-[80px] items-center justify-center"
           id="dropdown"
         >
+          {console.log(user)}
+          {user.isAdmin && (
+            <Link
+              href={`/admin`}
+              className="text-text-dark cursor-pointer hover:text-text-light"
+            >
+              Admin
+            </Link>
+          )}
           <Link
             href={`/account`}
             className="text-text-dark cursor-pointer hover:text-text-light"
           >
             My Account
           </Link>
+
           <p
             className="text-text-dark cursor-pointer hover:text-text-light"
             onClick={handleLogout}

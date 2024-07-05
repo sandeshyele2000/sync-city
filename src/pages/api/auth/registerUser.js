@@ -20,8 +20,9 @@ export default async function handler(req, res) {
         email,
         firebaseId,
         username,
-        nickname: "nickname", // user can change this form accounts page,
-        profileImage
+        nickname: "nickname",
+        profileImage,
+        isAdmin:false
       },
       select:{
         id:true,
@@ -31,7 +32,8 @@ export default async function handler(req, res) {
         profileImage:true,
         rooms:true,
         roomIds:true,
-        messages: true
+        messages: true,
+        isAdmin:true
       }
     });
 

@@ -13,7 +13,8 @@ import { IoEnterOutline } from "react-icons/io5";
 import Loader from "@/components/common/Loader";
 import { BsShareFill } from "react-icons/bs";
 import { HOST_URL, ROOM_LIMIT } from "@/lib/constants";
-import { decrypt, encrypt } from "@/lib/encrypter";
+import { FaLock } from "react-icons/fa";
+import { MdOutlinePublic } from "react-icons/md";
 
 const DashBoardPage = () => {
   const { state, dispatch } = useContextAPI();
@@ -22,12 +23,14 @@ const DashBoardPage = () => {
   const router = useRouter();
   const [userRooms, setUserRooms] = useState([]);
   const loading = state.loading;
+  const [isPrivate, setIsPrivate] = useState(true);
 
-  const createRoom = async (roomName, hostId) => {
+  const createRoom = async (roomName, hostId, isPrivate) => {
     try {
       const response = await axios.post("/api/room/createRoom", {
         roomName,
         hostId,
+        isPrivate,
       });
       return response.data.room;
     } catch (error) {
@@ -63,6 +66,7 @@ const DashBoardPage = () => {
       );
       return response.data;
     } catch (error) {
+      console.log(error)
       toast.error("Error fetching rooms");
     }
   };
@@ -77,7 +81,7 @@ const DashBoardPage = () => {
 
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      const newRoom = await createRoom(roomName, user.id);
+      const newRoom = await createRoom(roomName, user.id, isPrivate);
       if (newRoom) {
         setUserRooms((prev) => [...prev, newRoom]);
         toast.success("City built successfully!");
@@ -89,18 +93,6 @@ const DashBoardPage = () => {
     }
   };
 
-  const handleDeleteRoom = async (roomId) => {
-    try {
-      dispatch({ type: "SET_LOADING", payload: true });
-      await deleteRoom(roomId);
-      setUserRooms((prev) => prev.filter((item) => item.id != roomId));
-      toast.success("City demolished successfully!");
-    } catch (error) {
-      toast.error(error);
-    } finally {
-      dispatch({ type: "SET_LOADING", payload: false });
-    }
-  };
 
   const handleInvite = async (room) => {
     try {
@@ -168,10 +160,10 @@ const DashBoardPage = () => {
             <form
               className="flex w-[90%] justify-between items-center border bg-black opacity-70 border-[#1e1e1e] rounded-[30px] pl-2 pr-2"
               method="post"
-              onSubmit={(e)=>{
+              onSubmit={(e) => {
                 e.preventDefault();
-                let roomLink = (e.target.roomLink.value.trim());
-                router.push(roomLink)
+                let roomLink = e.target.roomLink.value.trim();
+                router.push(roomLink);
               }}
             >
               <input
@@ -182,7 +174,7 @@ const DashBoardPage = () => {
                 className="flex w-full p-3 h-[50px] rounded-lg bg-transparent outline-none "
               />
               <button className="text-white min-w-[120px] border-l-gray-500 border-l-[1px] pr-2 pl-2  items-center justify-center flex">
-                    Join via link
+                Join via link
               </button>
             </form>
 
@@ -190,40 +182,37 @@ const DashBoardPage = () => {
               <div className="flex flex-col w-full hover:border-accent border-[1px] border-[#1e1e1e] bg-[#000000] rounded-lg p-4 h-[500px] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
                 <p className="text-text-dark p-3">My Cities</p>
                 <div className="flex h-[80%] w-full flex-col gap-3 overflow-auto">
-                  {userRooms && userRooms?.map((room) => (
-                    <div
-                      key={room.id}
-                      className="flex items-center justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e]  rounded-lg m-2 hover:bg-[#08262654]"
-                    >
-                      <p>{room.name}</p>
-                      <div className="flex gap-5">
-                        <Link
-                          href={{
-                            pathname: "/city",
-                            query: { id: room.id },
-                          }}
-                        >
-                          <IoEnterOutline
-                            size={"1.5rem"}
-                            color="gray"
-                            title="Join room"
-                          />
-                        </Link>
-                        <button
-                          className="text-gray-700 hover:text-accent"
-                          onClick={() => handleInvite(room)}
-                        >
-                          <BsShareFill size={"1rem"} title="Share city" />
-                        </button>
-                        <button
-                          className="text-gray-700 hover:text-red-700"
-                          onClick={() => handleDeleteRoom(room.id)}
-                        >
-                          <IoMdTrash size={"1.5rem"} title="Demolish city" />
-                        </button>
+                  {userRooms &&
+                    userRooms?.map((room) => (
+                      <div
+                        key={room.id}
+                        className="flex items-center justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e]  rounded-lg m-2 hover:bg-[#08262654]"
+                      >
+                        <div className="flex gap-2">
+                          <p>{room.name}</p>
+                        </div>
+                        <div className="flex gap-5">
+                          <Link
+                            href={{
+                              pathname: "/city",
+                              query: { id: room.id },
+                            }}
+                          >
+                            <IoEnterOutline
+                              size={"1.5rem"}
+                              color="gray"
+                              title="Enter City"
+                            />
+                          </Link>
+                          <button
+                            className="text-gray-700 hover:text-accent"
+                            onClick={() => handleInvite(room)}
+                          >
+                            <BsShareFill size={"1rem"} title="Share city" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
                 </div>
                 <form
                   method="post"
@@ -237,9 +226,28 @@ const DashBoardPage = () => {
                     placeholder="Enter City Name"
                     className="flex w-[85%] p-3 h-full rounded-lg bg-[transparent] outline-none "
                   />
+                  {isPrivate ? (
+                    <FaLock
+                      size={"15px"}
+                      title="Make City Private"
+                      className="cursor-pointer m-3"
+                      onClick={() => {
+                        setIsPrivate(false);
+                      }}
+                    />
+                  ) : (
+                    <MdOutlinePublic
+                      size={"20px"}
+                      title="Make City Public"
+                      className="cursor-pointer m-3"
+                      onClick={() => {
+                        setIsPrivate(true);
+                      }}
+                    />
+                  )}
                   <button
                     className={` text-white h-full pr-3 pl-3 text-[15px] flex items-center gap-3   border-l-gray-500 border-l-[1px] ${
-                      userRooms.length >= ROOM_LIMIT
+                      userRooms?.length >= ROOM_LIMIT
                         ? "text-gray-500"
                         : "hover:text-accent"
                     }`}
@@ -254,14 +262,16 @@ const DashBoardPage = () => {
                 <div className="flex flex-col gap-3 overflow-auto">
                   {rooms &&
                     rooms
-                      .filter((room) => room.hostId != user.id)
+                      .filter(
+                        (room) => room.hostId != user.id && !room.isPrivate
+                      )
                       .map((room) => (
                         <div
                           key={room.id}
                           className="flex items-center justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e]  rounded-lg m-2 hover:bg-[#08262654]"
                         >
                           <p>{room.name}</p>
-                          <div className="flex gap-2">
+                          <div className="flex gap-4">
                             <Link
                               href={{
                                 pathname: "/city",
@@ -271,9 +281,16 @@ const DashBoardPage = () => {
                               <IoEnterOutline
                                 size={"1.5rem"}
                                 color="gray"
-                                title="Demolish city"
+                                title="Enter city"
                               />
                             </Link>
+
+                            <button
+                              className="text-gray-700 hover:text-accent"
+                              onClick={() => handleInvite(room)}
+                            >
+                              <BsShareFill size={"1rem"} title="Share city" />
+                            </button>
                           </div>
                         </div>
                       ))}
