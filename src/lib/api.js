@@ -85,6 +85,23 @@ export const getAllRooms = async () => {
   }
 };
 
+export const getAllUsers = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+  
+      const response = await axios.get(`/api/user/getAllUsers`, config);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  };
+
 export const getUserRooms = async (userId) => {
   try {
     const token = localStorage.getItem("token");

@@ -7,22 +7,17 @@ import Link from "next/link";
 import { IoEnterOutline } from "react-icons/io5";
 import { IoMdTrash } from "react-icons/io";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { useRouter } from "next/router";
-import ModalForm from "@/components/common/ModalForm";
-import CircularProgressBar from "@/components/common/CircularProgressBar";
 import Loader from "@/components/common/Loader";
-import { ROOM_LIMIT } from "@/lib/constants";
 import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
-import { deleteRoomById } from "@/lib/api";
+import { deleteRoomById, getAllUsers } from "@/lib/api";
 
-function AccountPage() {
+function AdminPage() {
   const { state, dispatch } = useContextAPI();
   const user = state.user;
   const [allUsers, setAllUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
-  const [userSearch, setUserSearch] = useState("");
 
   const router = useRouter();
   const loading = state.loading;
@@ -32,7 +27,6 @@ function AccountPage() {
   const deleteRoom = async (roomId) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-
       await deleteRoomById(roomId)
       setAll((prev) => prev.filter((item) => item.id !== roomId));
       toast.success("City demolished successfully!");
@@ -45,11 +39,10 @@ function AccountPage() {
 
   const fetchAllUsers = async () => {
     try {
-      console.log("first");
-      const response = await axios.get(`/api/user/getAllUsers`);
-      setAllUsers(response.data);
-      setFilteredUsers(response.data);
-      console.log(response.data);
+      const allUsersData = await getAllUsers();
+      setAllUsers(allUsersData);
+      setFilteredUsers(allUsersData);
+      console.log(allUsersData);
     } catch (error) {
       console.log(error);
       toast.error("Error fetching your all users");
@@ -237,4 +230,4 @@ function AccountPage() {
   );
 }
 
-export default AccountPage;
+export default AdminPage;
