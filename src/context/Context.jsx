@@ -96,12 +96,12 @@ export const StateProvider = ({ children }) => {
             username: user.displayName.substring(0, 15),
             profileImage: user.photoURL,
           });
+          localStorage.setItem("token", userData.token);
 
           dispatch({ type: "SET_USER", payload: userData.user });
         }
       } catch (error) {
         console.log(error)
-        toast.error(error);
       }
     });
 
