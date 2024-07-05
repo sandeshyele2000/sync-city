@@ -46,6 +46,28 @@ export const createRoom = async (roomName, hostId, isPrivate) => {
   }
 };
 
+export const deleteRoomById = async (roomId) => {
+  try {
+    const token = localStorage.getItem("token");
+    console.log("deleteRoom----------------------->: ", token);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    return await axios.post(
+      "/api/room/deleteRoom",
+      {
+        roomId,
+      },
+      config
+    );
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const getAllRooms = async () => {
   try {
     const token = localStorage.getItem("token");
@@ -79,7 +101,7 @@ export const getUserRooms = async (userId) => {
       config
     );
 
-    console.log(response)
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -244,18 +266,23 @@ export const deleteFromPlaylist = async (video, room) => {
   }
 };
 
-export const deleteRoomById = async (roomId) => {
+export const updateUserDetails = async (formData,email) => {
   try {
     const token = localStorage.getItem("token");
-    console.log("deleteRoom----------------------->: ",token)
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     };
-    return await axios.post("/api/room/deleteRoom", {
-      roomId,
+
+
+    console.log("Token from updateUserDetails: ",token)
+    const response = await axios.post("/api/user/updateUser", {
+      ...formData,
+      email,
     },config);
+
+    return response.data;
   } catch (error) {
     console.log(error);
     throw error;

@@ -10,10 +10,6 @@ export default async function handler(req, res) {
     verifyToken(req, res, async () => {
       const { username, nickname, email } = req.body;
 
-      if (req.user.email !== email) {
-        return res.status(403).json({ message: 'Forbidden', error: 'You are not authorized to perform this action' });
-      }
-
       const user = await prisma.user.update({
         where: { email },
         data: { username, nickname },

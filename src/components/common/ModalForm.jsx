@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import toast from 'react-hot-toast'
 import axios from 'axios'
 import { useContextAPI } from "@/context/Context";
+import { updateUserDetails } from "@/lib/api";
 
 function ModalForm({ isOpen, onClose, user }) {
   const {state,dispatch} = useContextAPI();
@@ -18,8 +19,8 @@ function ModalForm({ isOpen, onClose, user }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/user/updateUser", {...formData, email:user.email});      
-      dispatch({type:'SET_USER',payload: response.data});
+      const response = await updateUserDetails(formData,user.email);      
+      dispatch({type:'SET_USER',payload: response});
 
       onClose();
     } catch (error) {
