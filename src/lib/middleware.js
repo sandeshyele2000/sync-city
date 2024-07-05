@@ -5,12 +5,6 @@ const middlewareCheck = (handler) => async (req, res) => {
   if (!session) {
     return res.status(401).json({ msg: "Unauthorized", status: false });
   }
-
-  // You can add more middleware logic here
-  // For example, logging the request
-  console.log(`API Request: ${req.method} ${req.url}`);
-
-  // Call the original handler
   return handler(req, res);
 };
 
