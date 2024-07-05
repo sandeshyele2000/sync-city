@@ -6,6 +6,7 @@ import { dateTimeConverter } from "@/lib/dateTimeConverter";
 import toast from "react-hot-toast";
 import { useContextAPI } from "@/context/Context";
 import { useRoom } from "@liveblocks/react";
+import { addToPlaylist, getCurrentVideoid, updateCurrentVideoId } from "@/lib/api";
 
 function Player({ roomId }) {
   const { state, dispatch } = useContextAPI();
@@ -61,30 +62,7 @@ function Player({ roomId }) {
     }
   };
 
-  const addToPlaylist = async (video, roomId) => {
-    try {
-      const response = await axios.post("/api/room/addToPlaylist", {
-        roomId,
-        video,
-      });
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to add video to playlist.");
-    }
-  };
 
-  const getCurrentVideoid = async (roomId) => {
-    try {
-      const response = await axios.get(
-        `/api/room/getCurrentVideo?id=${roomId}`
-      );
-      return response.data;
-    } catch (error) {
-      console.log(error);
-      toast.error("Failed to get the current video");
-    }
-  };
 
   const handleAddtoPlaylist = async (video) => {
     try {
@@ -97,26 +75,15 @@ function Player({ roomId }) {
         toast.success("Added video to playlist!");
       }
     } catch (error) {
-      toast.error(error);
+      toast.error(error.message);
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }
   };
 
-  const updateCurrentVideoId = async (video) => {
-    try {
-      const response = await axios.post("/api/room/updateCurrentVideo", {
-        id: roomId,
-        videoId: video.videoId,
-      });
-      console.log(response.data);
-    } catch (error) {
-      toast.error(error);
-    }
-  };
 
-  const setCurrentVideo = (video) => {
-    updateCurrentVideoId(video);
+  const setCurrentVideo = async (video) => {
+    await updateCurrentVideoId(video,roomId);
     dispatch({ type: "SET_CURRENT_VIDEO", payload: video.videoId });
     room.broadcastEvent({ type: "SET_CURRENT_VIDEO", data: video.videoId });
     playerdivRef.current?.scrollIntoView({ behavior: "smooth" });

@@ -1,25 +1,29 @@
+
+import { verifyToken } from "@/lib/auth";
 import prisma from "../../../lib/prisma";
 
 export default async function handler(req, res) {
-  try {
-    const { userId } = req.query;
+  verifyToken(req, res, async () => {
+    try {
+      const { userId } = req.query;
 
-    const userRooms = await prisma.user.findUnique({
-      where: {
-        id:userId,
-      },
-      include:{
-        rooms: true
-      }
-    });
+      const userRooms = await prisma.user.findUnique({
+        where: {
+          id: userId,
+        },
+        include: {
+          rooms: true,
+        },
+      });
 
-    return res.status(201).json(userRooms.rooms);
-  } catch (error) {
-    console.error("User Fetch error:", error);
-    return res.status(500).json({
-      msg: "Internal server error",
-      status: false,
-      error: error.message,
-    });
-  }
+      return res.status(200).json(userRooms.rooms);
+    } catch (error) {
+      console.error("User fetch error:", error);
+      return res.status(500).json({
+        msg: "Internal server error",
+        status: false,
+        error: error.message,
+      });
+    }
+  });
 }

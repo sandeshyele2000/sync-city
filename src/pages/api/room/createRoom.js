@@ -1,65 +1,72 @@
+import { verifyToken } from "@/lib/auth";
 import prisma from "../../../lib/prisma";
 import axios from "axios";
 
 export default async function handler(req, res) {
-  const { roomName, hostId, isPrivate } = req.body;
-
-  const defaultCurrentVideoId = "RzVvThhjAKw";
-
-  if (!roomName || !hostId) {
-    return res
-      .status(400)
-      .json({ message: "Room name and host ID are required" });
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method Not Allowed' });
   }
 
-  try {
-    const room = await prisma.room.create({
-      data: {
-        name: roomName,
-        hostId,
-        userIds: [hostId],
-        videoIds: [],
-        currentVideoId: defaultCurrentVideoId,
-        isPrivate,
-      }
-    });
+  verifyToken(req, res, async () => {
+    const { roomName, hostId, isPrivate } = req.body;
 
-    console.log(room)
+    const defaultCurrentVideoId = "RzVvThhjAKw";
 
-    const liveblocksApiKey = process.env.NEXT_PUBLIC_LIVEBLOCKS_API_KEY;
-
-    if (!liveblocksApiKey) {
-      throw new Error("Liveblocks API key is missing");
+    if (!roomName || !hostId) {
+      return res
+        .status(400)
+        .json({ message: "Room name and host ID are required" });
     }
 
-    const liveblocksUrl = "https://api.liveblocks.io/v2/rooms";
+    try {
+      const room = await prisma.room.create({
+        data: {
+          name: roomName,
+          hostId,
+          userIds: [hostId],
+          videoIds: [],
+          currentVideoId: defaultCurrentVideoId,
+          isPrivate,
+        }
+      });
 
-    await axios.post(
-      liveblocksUrl,
-      { id: room.id, defaultAccesses: ["room:write"] },
-      {
-        headers: {
-          Authorization: `Bearer ${liveblocksApiKey}`,
-        },
+      console.log(room)
+
+      const liveblocksApiKey = process.env.NEXT_PUBLIC_LIVEBLOCKS_API_KEY;
+
+      if (!liveblocksApiKey) {
+        throw new Error("Liveblocks API key is missing");
       }
-    );
 
-    await prisma.user.update({
-      where: { id: hostId },
-      data: {
-        roomIds: {
-          push: room.id,
+      const liveblocksUrl = "https://api.liveblocks.io/v2/rooms";
+
+      await axios.post(
+        liveblocksUrl,
+        { id: room.id, defaultAccesses: ["room:write"] },
+        {
+          headers: {
+            Authorization: `Bearer ${liveblocksApiKey}`,
+          },
+        }
+      );
+
+      await prisma.user.update({
+        where: { id: hostId },
+        data: {
+          roomIds: {
+            push: room.id,
+          },
         },
-      },
-    });
+      });
 
-    return res.status(201).json({ msg: "Room created", status: true, room });
-  } catch (error) {
-    console.error("Room creation error:", error);
-    return res.status(500).json({
-      msg: "Internal server error",
-      status: false,
-      error: error.message,
-    });
-  }
+      return res.status(201).json({ msg: "Room created", status: true, room });
+    } catch (error) {
+      console.error("Room creation error:", error);
+      return res.status(500).json({
+        msg: "Internal server error",
+        status: false,
+        error: error.message,
+      });
+    }
+  });
 }

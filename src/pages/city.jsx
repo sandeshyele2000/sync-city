@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import Navbar from "@/components/common/Navbar";
 import Player from "@/components/Player";
 import ChatRoom from "@/components/ChatRoom";
@@ -17,6 +16,7 @@ import { TbMessages } from "react-icons/tb";
 import { MdPlaylistPlay } from "react-icons/md";
 import Loader from "@/components/common/Loader";
 import { IoArrowBack } from "react-icons/io5";
+import { fetchRoomDetails } from "@/lib/api";
 
 function RoomContent({ id }) {
   const [tab, setTab] = useState(true);
@@ -28,23 +28,23 @@ function RoomContent({ id }) {
   const others = useOthers();
   const updateMyPresence = useUpdateMyPresence();
 
-  const fetchRoomDetails = async (id) => {
-    try {
-      dispatch({ type: "SET_LOADING", payload: true });
-      const response = await axios.get(`/api/room/getRoomById?id=${id}`);
-      dispatch({ type: "SET_CURRENT_ROOM", payload: response.data.room });
-      dispatch({ type: "SET_VIDEOS", payload: response.data.room.videos });
-    } catch (error) {
-      toast.error("Failed to fetch room details.");
-    } finally {
-      dispatch({ type: "SET_LOADING", payload: false });
-    }
-  };
-
   useEffect(() => {
     if (id) {
-      fetchRoomDetails(id);
-      updateMyPresence(user);
+      const getRoomDetails = async () => {
+        try {
+          dispatch({ type: "SET_LOADING", payload: true });
+          const response = await fetchRoomDetails(id);
+          dispatch({ type: "SET_CURRENT_ROOM", payload: response.data.room });
+          dispatch({ type: "SET_VIDEOS", payload: response.data.room.videos });
+          updateMyPresence(user);
+        } catch (error) {
+          toast.error(error.message);
+        } finally {
+          dispatch({ type: "SET_LOADING", payload: false });
+        }
+      };
+
+      getRoomDetails();
     }
   }, [id, tab]);
 
@@ -62,7 +62,13 @@ function RoomContent({ id }) {
             <div className="flex w-[70%] flex-col gap-2 overflow-y-auto  pt-1 h-full border-[#1e1e1e] border p-2 rounded-lg bg-[#0b0b0b] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
               <div className="flex w-full justify-between items-center pl-2">
                 <div className="flex gap-3 items-center">
-                  <IoArrowBack className="cursor-pointer" color="white" onClick={()=>{router.push('/dashboard')}}/>
+                  <IoArrowBack
+                    className="cursor-pointer"
+                    color="white"
+                    onClick={() => {
+                      router.push("/dashboard");
+                    }}
+                  />
                   <p className="text-[1.5rem]">{room.name}</p>
                 </div>
 

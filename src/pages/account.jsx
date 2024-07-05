@@ -15,6 +15,7 @@ import Loader from "@/components/common/Loader";
 import { ROOM_LIMIT } from "@/lib/constants";
 import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
+import { deleteRoomById, getUserRooms } from "@/lib/api";
 
 function AccountPage() {
   const { state, dispatch } = useContextAPI();
@@ -27,10 +28,7 @@ function AccountPage() {
   const deleteRoom = async (roomId) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-
-      await axios.delete("/api/room/deleteRoom", {
-        data: roomId,
-      });
+      await deleteRoomById(roomId);
       setUserRooms((prev) => prev.filter((item) => item.id !== roomId));
       toast.success("City demolished successfully!");
     } catch (error) {
@@ -42,12 +40,9 @@ function AccountPage() {
 
   const fetchUserRooms = async (userId) => {
     try {
-      const response = await axios.get(
-        `/api/room/getUserRooms?userId=${userId}`
-      );
-      setUserRooms(response.data);
-      console.log(response.data);
-      dispatch({ type: "SET_USER_ROOMS", payload: response.data });
+      const userRoomsData = await getUserRooms(userId);
+      setUserRooms(userRoomsData);
+      dispatch({ type: "SET_USER_ROOMS", payload: userRoomsData });
     } catch (error) {
       toast.error("Error fetching your cities");
     }
@@ -97,7 +92,7 @@ function AccountPage() {
                 <div className="flex flex-col items-center justify-center gap-3">
                   <div className="flex flex-col items-center justify-center gap-3">
                     <CircularProgressBar
-                      value={userRooms.length}
+                      value={userRooms?.length}
                       maxValue={ROOM_LIMIT}
                     />
                     <p className="text-text-dark">Cities Built</p>
@@ -117,7 +112,7 @@ function AccountPage() {
                 <p className="text-text-dark p-3">My Cities</p>
 
                 <div className="flex w-full h-full flex-wrap overflow-auto min-h-[300px]  sm:justify-start justify-center">
-                  {userRooms.length > 0 ? (
+                  {userRooms?.length > 0 ? (
                     userRooms.map((room) => (
                       <div
                         key={room.id}

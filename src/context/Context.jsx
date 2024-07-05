@@ -3,6 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/initFirebase";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { registerUser } from "@/lib/api";
 
 const StateContext = createContext();
 
@@ -89,16 +90,17 @@ export const StateProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
         if (user) {
-          const response = await axios.get(
-            `/api/user/getUser?email=${user.email}`
-          );
-
-          dispatch({
-            type: "SET_USER",
-            payload: response.data.user,
+          const userData = await registerUser({
+            email: user.email,
+            firebaseId: user.uid,
+            username: user.displayName.substring(0, 15),
+            profileImage: user.photoURL,
           });
+
+          dispatch({ type: "SET_USER", payload: userData.user });
         }
       } catch (error) {
+        console.log(error)
         toast.error(error);
       }
     });

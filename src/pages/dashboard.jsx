@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import axios from "axios";
 import toast from "react-hot-toast";
-import { IoMdTrash } from "react-icons/io";
 import Link from "next/link";
 import Navbar from "../components/common/Navbar";
 import Notification from "@/components/common/Notification";
@@ -15,6 +13,7 @@ import { BsShareFill } from "react-icons/bs";
 import { HOST_URL, ROOM_LIMIT } from "@/lib/constants";
 import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
+import { createRoom, getAllRooms, getUserRooms } from "@/lib/api";
 
 const DashBoardPage = () => {
   const { state, dispatch } = useContextAPI();
@@ -24,52 +23,6 @@ const DashBoardPage = () => {
   const [userRooms, setUserRooms] = useState([]);
   const loading = state.loading;
   const [isPrivate, setIsPrivate] = useState(true);
-
-  const createRoom = async (roomName, hostId, isPrivate) => {
-    try {
-      const response = await axios.post("/api/room/createRoom", {
-        roomName,
-        hostId,
-        isPrivate,
-      });
-      return response.data.room;
-    } catch (error) {
-      console.error(error);
-      toast.error("Error creating room");
-    }
-  };
-
-  const deleteRoom = async (roomId) => {
-    try {
-      const response = await axios.delete("/api/room/deleteRoom", {
-        data: roomId,
-      });
-      return response.data;
-    } catch (error) {
-      toast.error(error);
-    }
-  };
-
-  const getAllRooms = async () => {
-    try {
-      const response = await axios.get("/api/room/getAllRooms");
-      return response.data.rooms;
-    } catch (error) {
-      toast.error("Error fetching rooms");
-    }
-  };
-
-  const getUserRooms = async (userId) => {
-    try {
-      const response = await axios.get(
-        `/api/room/getUserRooms?userId=${userId}`
-      );
-      return response.data;
-    } catch (error) {
-      console.log(error)
-      toast.error("Error fetching rooms");
-    }
-  };
 
   const handleCreateRoom = async (e) => {
     e.preventDefault();
@@ -93,7 +46,6 @@ const DashBoardPage = () => {
     }
   };
 
-
   const handleInvite = async (room) => {
     try {
       const roomUrl = `${HOST_URL}/city?id=${room.id}`;
@@ -105,7 +57,6 @@ const DashBoardPage = () => {
       }
       console.log(roomUrl);
     } catch (e) {
-      console.log(e);
       toast.error("Failed to copy room URL!");
     }
   };

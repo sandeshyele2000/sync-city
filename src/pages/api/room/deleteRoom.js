@@ -1,12 +1,15 @@
+
+import { verifyToken } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import axios from 'axios';
 
 export default async function handler(req, res) {
-  
+  verifyToken(req, res, async () => {
+    
 
-  const  roomId  = req.body;
+    const { roomId } = req.body;
 
-  try {
+    try {
       const users = await prisma.user.findMany({
         where: {
           roomIds: {
@@ -51,17 +54,16 @@ export default async function handler(req, res) {
         },
       });
 
-
       await axios.delete(`https://api.liveblocks.io/v2/rooms/${roomId}`, {
         headers: {
           Authorization: `Bearer ${process.env.NEXT_PUBLIC_LIVEBLOCKS_API_KEY}`,
         },
       });
-    
 
-    res.status(200).json({ message: "Room deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
-  }
+      res.status(200).json({ message: "Room deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: error.message });
+    }
+  });
 }

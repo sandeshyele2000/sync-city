@@ -4,8 +4,8 @@ import { dateTimeConverter } from "@/lib/dateTimeConverter";
 import { useRoom } from "@liveblocks/react";
 import { IoMdTrash } from "react-icons/io";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { MdPlaylistPlay } from "react-icons/md";
+import { deleteFromPlaylist, updateCurrentVideoId } from "@/lib/api";
 
 function Playlist() {
   const { state, dispatch } = useContextAPI();
@@ -15,49 +15,22 @@ function Playlist() {
   const videos = state.videos;
   const [filteredVideos, setFilteredVideos] = useState(videos);
 
-  const setCurrentVideo = (video) => {
-    updateCurrentVideoId(video);
+  const setCurrentVideo = async (video) => {
+    await updateCurrentVideoId(video,currentRoom.id);
     dispatch({ type: "SET_CURRENT_VIDEO", payload: video.videoId });
     room.broadcastEvent({ type: "SET_CURRENT_VIDEO", data: video.videoId });
-  };
-
-  const deleteFromPlaylist = async (video, room) => {
-    try {
-      const response = await axios.post("/api/room/deleteFromPlaylist", {
-        room,
-        video,
-      });
-
-      if (response.data.room) {
-        dispatch({ type: "SET_CURRENT_ROOM", payload: response.data.room });
-        toast.success("Video deleted from playlist successfully.");
-      }
-
-      return response.data;
-    } catch (error) {
-      console.error("Error deleting video from playlist:", error);
-      toast.error("Failed to delete video from playlist.");
-    }
-  };
-
-  const updateCurrentVideoId = async (video) => {
-    try {
-      const response = await axios.post("/api/room/updateCurrentVideo", {
-        id: currentRoom.id,
-        videoId: video.videoId,
-      });
-
-      console.log(response.data)
-    } catch (error) {
-      toast.error(error);
-    }
   };
 
   const handleDeleteVideo = async (video) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-
-      await deleteFromPlaylist(video, currentRoom);
+      const response = await deleteFromPlaylist(video, currentRoom);
+      if (response.data.room) {
+        dispatch({ type: "SET_CURRENT_ROOM", payload: response.data.room });
+        toast.success("Video deleted from playlist successfully.");
+      }
+  
+      
       dispatch({ type: "REMOVE_VIDEO_FROM_PLAYLIST", payload: video.id });
       room.broadcastEvent({
         type: "REMOVE_VIDEO_FROM_PLAYLIST",
@@ -65,10 +38,8 @@ function Playlist() {
       });
     } catch (error) {
       toast.error(error);
-    }
-    finally{
+    } finally {
       dispatch({ type: "SET_LOADING", payload: false });
-
     }
   };
 

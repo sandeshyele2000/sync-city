@@ -17,6 +17,7 @@ function Navbar() {
     try {
       await signOut(auth);
       dispatch({ type: "SET_USER", payload: null });
+      localStorage.removeItem("token");
       toast.success("Logged out successfully!");
       router.push("/login");
     } catch (error) {

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
 import { useRoom } from "@liveblocks/react";
-import axios from "axios";
 import { IoSend } from "react-icons/io5";
 import { useContextAPI } from "@/context/Context";
 import EmojiPicker from "emoji-picker-react";
@@ -8,6 +7,7 @@ import { BsEmojiSmileFill } from "react-icons/bs";
 import { TbMessages } from "react-icons/tb";
 import Loader from "./common/Loader";
 import { DEFAULT_PROFILE } from "@/lib/constants";
+import { fetchMessages, sendMessage } from "@/lib/api";
 
 export default function ChatRoom({ roomId, userId }) {
   const [message, setMessage] = useState("");
@@ -19,22 +19,10 @@ export default function ChatRoom({ roomId, userId }) {
   const messageRef = useRef();
   const [emojiOpen, setEmojiOpen] = useState(false);
 
-  async function fetchMessages() {
-    setIsLoading(true);
-    try {
-      const response = await axios.get(`/api/room/messages`, {
-        params: { id: roomId },
-      });
+  
+  
 
-      setMessages(response.data);
-    } catch (error) {
-      console.error("Error fetching messages:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function sendMessage() {
+  async function handleSendMessage() {
     setEmojiOpen(false);
     if (!message.trim()) return;
 
@@ -47,11 +35,7 @@ export default function ChatRoom({ roomId, userId }) {
     setMessage("");
 
     try {
-      const { data: savedMessage } = await axios.post("/api/room/sendMessage", {
-        message,
-        roomId,
-        userId,
-      });
+      const savedMessage = await sendMessage(message,roomId,userId);
 
       room.broadcastEvent({ type: "NEW_MESSAGE", data: savedMessage });
 
@@ -68,8 +52,20 @@ export default function ChatRoom({ roomId, userId }) {
     }
   }
 
+  const getRoomMessages = async (roomId) => {
+    try {
+      setIsLoading(true);
+      const response = await fetchMessages(roomId);
+      setMessages(response.data);
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    fetchMessages();
+    getRoomMessages(roomId);
 
     const unsubscribe = room.subscribe("event", ({ event }) => {
       if (event.type === "NEW_MESSAGE") {
@@ -131,10 +127,9 @@ export default function ChatRoom({ roomId, userId }) {
 
       <form
         className="flex  justify-between m-2  rounded-lg gap-2 relative bg-black p-3"
-        onSubmit={async(e) => {
+        onSubmit={async (e) => {
           e.preventDefault();
-          await sendMessage();
-
+          await handleSendMessage();
         }}
       >
         <div className={`absolute bottom-[4.7rem]`}>
@@ -170,7 +165,7 @@ export default function ChatRoom({ roomId, userId }) {
           onKeyDown={async (e) => {
             if (e.key == "Enter" && !e.shiftKey) {
               e.preventDefault();
-              await sendMessage();
+              await handleSendMessage();
             }
           }}
           placeholder="Type your message..."

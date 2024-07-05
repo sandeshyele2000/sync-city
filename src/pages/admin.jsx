@@ -15,6 +15,7 @@ import Loader from "@/components/common/Loader";
 import { ROOM_LIMIT } from "@/lib/constants";
 import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
+import { deleteRoomById } from "@/lib/api";
 
 function AccountPage() {
   const { state, dispatch } = useContextAPI();
@@ -32,9 +33,7 @@ function AccountPage() {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
 
-      await axios.delete("/api/room/deleteRoom", {
-        data: roomId,
-      });
+      await deleteRoomById(roomId)
       setAll((prev) => prev.filter((item) => item.id !== roomId));
       toast.success("City demolished successfully!");
     } catch (error) {

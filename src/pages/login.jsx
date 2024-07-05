@@ -7,6 +7,7 @@ import { auth } from "../firebase/initFirebase";
 import axios from "axios";
 import Loader from "@/components/common/Loader";
 import { useEffect } from "react";
+import { registerUser } from "@/lib/api";
 
 function LoginPage() {
   const { state, dispatch } = useContextAPI();
@@ -14,24 +15,6 @@ function LoginPage() {
   const router = useRouter();
   const loading = state.loading;
 
-  const registerUser = async ({
-    email,
-    firebaseId,
-    username,
-    profileImage,
-  }) => {
-    try {
-      const response = await axios.post("/api/auth/registerUser", {
-        email,
-        firebaseId,
-        username,
-        profileImage,
-      });
-      return response.data.user;
-    } catch (error) {
-      toast.error(error);
-    }
-  };
 
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
@@ -39,36 +22,37 @@ function LoginPage() {
       dispatch({ type: "SET_LOADING", payload: true });
       const { user } = await signInWithPopup(auth, provider);
 
-      let userData = await axios.get(`/api/user/getUser?email=${user.email}`);
+      let userData = await registerUser({
+        email: user.email,
+        firebaseId: user.uid,
+        username: user.displayName.substring(0, 15),
+        profileImage: user.photoURL,
+      });
 
-      if (!userData.data.status) {
-        userData = await registerUser({
-          email: user.email,
-          firebaseId: user.uid,
-          username: user.displayName.substring(0,15),
-          profileImage: user.photoURL,
-        });
-
-        toast.success("Registered successfully!")
-      }
-      else{
-        userData = userData.data.user;
-      }
-      console.log(userData)
-      dispatch({type: "SET_USER",payload: userData});
+      
+      console.log(userData);
+      console.log(userData.token);
+      localStorage.setItem("token", userData.token);
+      
+      console.log(localStorage.getItem('token'))
+      
+      dispatch({ type: "SET_USER", payload: userData.user });
+      toast.success("Logged in successfully!");
     } catch (error) {
       toast.error(`Error signing in with Google: ${error.message}`);
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }
   };
-  
-  useEffect(()=>{
-    if(userData){
+
+  useEffect(() => {
+    if (userData) {
       router.push("/dashboard");
-      console.log("going to dashboard")
+      console.log("going to dashboard");
     }
-  },[userData])
+
+  }, [userData]);
+
 
   return (
     <>
@@ -79,7 +63,11 @@ function LoginPage() {
         <div className="absolute rounded-full w-[1700px] h-[1700px] border-[1px] border-[#0ff] opacity-10 bg-opacity-10 backdrop-blur-md bg-[#0ff] animate-pulse"></div>
 
         <div className="z-10 gap-4  flex w-[650px] h-[650px] items-center justify-center flex-col  relative rounded-full border-[1px] border-accent shadow-[0px_0px_55px_#006f6f] m-5 outline-double outline-[5px] outline-[#0ff] bg-opacity-40 backdrop-blur-md bg-[#00000081]">
-          <img src="./logo.png" alt="" className="w-[230px] h-[230px] opacity-65" />
+          <img
+            src="./logo.png"
+            alt=""
+            className="w-[230px] h-[230px] opacity-65"
+          />
           <h1 className="text-[#c6c6c6aa] text-center font-bold text-[35px] sm:text-[45px] md:text-[50px] lg:text-[60px] rounded-lg hover:text-background-dark text-outline cursor-pointer ">
             SYNCITY
           </h1>
@@ -98,7 +86,7 @@ function LoginPage() {
         {loading && (
           <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px]">
             <Loader size={"100px"} />
-          </div> 
+          </div>
         )}
       </div>
     </>

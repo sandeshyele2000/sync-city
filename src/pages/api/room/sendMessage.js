@@ -1,10 +1,22 @@
+import { verifyToken } from "@/lib/auth";
 import prisma from "../../../lib/prisma";
 
 export default async function handler(req, res) {
-  const { message, roomId, userId } = req.body;
+  if (req.method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
+  }
 
-  if (req.method === 'POST') {
-    try {
+  try {
+    // Verify token here before proceeding
+    verifyToken(req, res, async () => {
+      const { message, roomId, userId } = req.body;
+
+      // Validate inputs
+      if (!message || !roomId || !userId) {
+        return res.status(400).json({ error: "Message, roomId, and userId are required" });
+      }
+
       const newMessage = await prisma.message.create({
         data: {
           content: message,
@@ -36,12 +48,9 @@ export default async function handler(req, res) {
       };
 
       res.status(201).json(formattedMessage);
-    } catch (error) {
-      console.error("Error sending message:", error);
-      res.status(500).json({ error: "Error sending message" });
-    }
-  } else {
-    res.setHeader("Allow", ["POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+    });
+  } catch (error) {
+    console.error("Error sending message:", error);
+    res.status(500).json({ error: "Error sending message" });
   }
 }

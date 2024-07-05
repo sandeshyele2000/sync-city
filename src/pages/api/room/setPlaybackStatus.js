@@ -1,23 +1,31 @@
+import { verifyToken } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
-
 export default async function handler(req, res) {
-  const { videoId, roomId } = req.body;
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
 
   try {
-    await prisma.video.updateMany({
-      where: { roomIds: roomId },
-      data: { isPlaying: false },
-    });
+    verifyToken(req, res, async () => {
+      const { videoId, roomId } = req.body;
 
-    const updatedVideo = await prisma.video.update({
-      where: { videoId },
-      data: { isPlaying: true },
-    });
+      await prisma.video.updateMany({
+        where: { roomIds: roomId },
+        data: { isPlaying: false },
+      });
 
-    res.status(200).json(updatedVideo);
+      const updatedVideo = await prisma.video.update({
+        where: { videoId },
+        data: { isPlaying: true },
+      });
+
+      return res.status(200).json(updatedVideo);
+    });
   } catch (error) {
-    console.error('Error setting playback status:', error);
-    res.status(500).json({ message: 'Failed to set playback status' });
+    console.error("Error setting playback status:", error);
+    return res
+      .status(500)
+      .json({ message: "Failed to set playback status", error: error.message });
   }
 }
