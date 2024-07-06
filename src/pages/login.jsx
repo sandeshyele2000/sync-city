@@ -8,6 +8,7 @@ import axios from "axios";
 import Loader from "@/components/common/Loader";
 import { useEffect } from "react";
 import { registerUser } from "@/lib/api";
+import { checkValidUser } from "@/lib/checkValidUser";
 
 function LoginPage() {
   const { state, dispatch } = useContextAPI();
@@ -48,7 +49,6 @@ function LoginPage() {
   useEffect(() => {
     if (userData) {
       router.push("/dashboard");
-      console.log("going to dashboard");
     }
 
   }, [userData]);

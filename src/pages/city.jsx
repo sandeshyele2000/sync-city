@@ -19,6 +19,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { fetchRoomDetails } from "@/lib/api";
 import Members from "@/components/Members";
 import { FaUser } from "react-icons/fa";
+import { checkValidUser } from "@/lib/checkValidUser";
 
 function RoomContent({ id }) {
   const [tab, setTab] = useState("chats");
@@ -155,11 +156,10 @@ export default function Room() {
   const { id } = router.query;
   const { state } = useContextAPI();
   const user = state.user;
-  const room = state.currentRoom;
 
   useEffect(() => {
     if (!user) {
-      router.push("/login");
+      if(!checkValidUser()) router.push('/login')
     }
   }, [user]);
 

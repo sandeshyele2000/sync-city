@@ -14,6 +14,7 @@ import { HOST_URL, ROOM_LIMIT } from "@/lib/constants";
 import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
 import { createRoom, getAllRooms, getUserRooms } from "@/lib/api";
+import { checkValidUser } from "@/lib/checkValidUser";
 
 const DashBoardPage = () => {
   const { state, dispatch } = useContextAPI();
@@ -60,26 +61,27 @@ const DashBoardPage = () => {
       toast.error("Failed to copy room URL!");
     }
   };
+  const fetchData = async () => {
+    try {
+      dispatch({ type: "SET_LOADING", payload: true });
+      const userRoomsData = await getUserRooms(user.id);
+      const data = await getAllRooms();
+      setUserRooms(userRoomsData);
+      dispatch({ type: "SET_ALL_ROOMS", payload: data });
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
+    }
+  };
+
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        dispatch({ type: "SET_LOADING", payload: true });
-        const userRoomsData = await getUserRooms(user.id);
-        const data = await getAllRooms();
-        setUserRooms(userRoomsData);
-        dispatch({ type: "SET_ALL_ROOMS", payload: data });
-      } catch (error) {
-        toast.error(error);
-      } finally {
-        dispatch({ type: "SET_LOADING", payload: false });
-      }
-    };
-
-    if (!user) {
-      router.push("/login");
-    } else {
+    if (user) {
       fetchData();
+    } else {
+      if(!checkValidUser())
+        router.push("/login");
     }
   }, [user]);
 

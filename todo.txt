@@ -1,30 +1,32 @@
-4. search filter for public rooms
-
-7. account page
+search filter for public rooms
+----------------------------------
+account page
    - delete account
+----------------------------------
 
-
-8. room settings 
+room settings 
   - change room name 
+----------------------------------
 
+multiple playlists feature
 
-9. multiple playlists feature
+----------------------------------
 
-10. binge anime 
+binge anime 
   - https://api.allanime.day
 
-
+----------------------------------
+give admin access 
+----------------------------------
 
 user {
-
-
   isbanned:false,
   isPremiumUser: false,
-
-
-
 }
-
-
+----------------------------------
 
 refactor rooms to cities in entire code base
+
+-----------------------------------
+
+add meta deta so that on share the website details are visible

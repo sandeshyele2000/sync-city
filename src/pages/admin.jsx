@@ -11,6 +11,8 @@ import Loader from "@/components/common/Loader";
 import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
 import { deleteRoomById, getAllRooms, getAllUsers, getUser } from "@/lib/api";
+import { checkValidUser } from "@/lib/checkValidUser";
+import { useRouter } from "next/router";
 
 function AdminPage() {
   const { state, dispatch } = useContextAPI();
@@ -22,6 +24,7 @@ function AdminPage() {
   const loading = state.loading;
   const [displayUser, setDisplayUser] = useState(null);
   const [displayRoom, setDisplayRoom] = useState(null);
+  const router = useRouter();
 
   const deleteRoom = async (roomId) => {
     try {
@@ -135,6 +138,10 @@ function AdminPage() {
       fetchAllRooms();
       console.log(user);
       dispatch({ type: "SET_LOADING", payload: false });
+    } else {
+      if (!user) {
+        if (!checkValidUser()) router.push("/login");
+      }
     }
   }, [user]);
 

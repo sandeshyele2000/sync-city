@@ -15,6 +15,7 @@ import { ROOM_LIMIT } from "@/lib/constants";
 import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
 import { deleteRoomById, getUserRooms } from "@/lib/api";
+import { checkValidUser } from "@/lib/checkValidUser";
 
 function AccountPage() {
   const { state, dispatch } = useContextAPI();
@@ -53,8 +54,7 @@ function AccountPage() {
       fetchUserRooms(user.id);
       dispatch({ type: "SET_LOADING", payload: false });
     } else {
-
-      // router.push("/login");
+      if (!checkValidUser()) router.push("/login");
     }
   }, [user]);
 
@@ -123,7 +123,11 @@ function AccountPage() {
                           <p className="text-gray-600">
                             Built on {room.createdAt.split("T")[0]}
                           </p>
-                          {room.isPrivate ? <FaLock size={"20px"} /> : <MdOutlinePublic size="25px" />}
+                          {room.isPrivate ? (
+                            <FaLock size={"20px"} />
+                          ) : (
+                            <MdOutlinePublic size="25px" />
+                          )}
                           <p className="text-gray-600">
                             {room.isPrivate ? "Private" : "Public"}
                           </p>

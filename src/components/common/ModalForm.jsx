@@ -5,6 +5,7 @@ import { useContextAPI } from "@/context/Context";
 import { updateUserDetails } from "@/lib/api";
 
 function ModalForm({ isOpen, onClose, user }) {
+
   const {state,dispatch} = useContextAPI();
   const [formData, setFormData] = useState({
     username: user.username,
@@ -32,6 +33,8 @@ function ModalForm({ isOpen, onClose, user }) {
   if (!isOpen) return null;
 
   return (
+
+    
     <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 text-text-light">
       <div className="bg-background-cyanDark p-6 rounded-lg shadow-lg w-[90%] md:w-[500px]">
         <h2 className="text-xl mb-4">Edit Profile</h2>
