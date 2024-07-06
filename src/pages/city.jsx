@@ -126,7 +126,7 @@ function RoomContent({ id }) {
           </div>
         )}
         {loading && (
-          <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px]">
+          <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px] ">
             <Loader size={"100px"} />
           </div>
         )}
@@ -141,6 +141,13 @@ export default function Room() {
   const { state } = useContextAPI();
   const user = state.user;
   const room = state.currentRoom;
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+    }
+  }, [user]);
+
   return (
     <>
       {user && (

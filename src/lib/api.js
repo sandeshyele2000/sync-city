@@ -86,21 +86,21 @@ export const getAllRooms = async () => {
 };
 
 export const getAllUsers = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const config = {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      };
-  
-      const response = await axios.get(`/api/user/getAllUsers`, config);
-      return response.data;
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  };
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response = await axios.get(`/api/user/getAllUsers`, config);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
 
 export const getUserRooms = async (userId) => {
   try {
@@ -283,7 +283,7 @@ export const deleteFromPlaylist = async (video, room) => {
   }
 };
 
-export const updateUserDetails = async (formData,email) => {
+export const updateUserDetails = async (formData, email) => {
   try {
     const token = localStorage.getItem("token");
     const config = {
@@ -292,14 +292,33 @@ export const updateUserDetails = async (formData,email) => {
       },
     };
 
-
-    console.log("Token from updateUserDetails: ",token)
-    const response = await axios.post("/api/user/updateUser", {
-      ...formData,
-      email,
-    },config);
+    console.log("Token from updateUserDetails: ", token);
+    const response = await axios.post(
+      "/api/user/updateUser",
+      {
+        ...formData,
+        email,
+      },
+      config
+    );
 
     return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
+export const getUser = async (email) => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(`/api/user/getUser?email=${email}`, config);
+    return response;
   } catch (error) {
     console.log(error);
     throw error;

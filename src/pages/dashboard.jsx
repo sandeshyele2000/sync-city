@@ -81,7 +81,7 @@ const DashBoardPage = () => {
     } else {
       fetchData();
     }
-  }, []);
+  }, [user]);
 
   return (
     <>
@@ -130,7 +130,7 @@ const DashBoardPage = () => {
             </form>
 
             <div className="flex w-[90%] gap-4 flex-col lg:flex-row md:flex-col sm:flex-col">
-              <div className="flex flex-col w-full hover:border-accent border-[1px] border-[#1e1e1e] bg-[#000000] rounded-lg p-4 h-[500px] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
+              <div className="flex flex-col w-full hover:border-accent border-[1px] border-[#1e1e1e] bg-[#000000] rounded-lg p-4 h-[500px] bg-opacity-10 backdrop-filter backdrop-blur-[45px] shadow-lg">
                 <p className="text-text-dark p-3">My Cities</p>
                 <div className="flex h-[80%] w-full flex-col gap-3 overflow-auto">
                   {userRooms &&
@@ -139,7 +139,26 @@ const DashBoardPage = () => {
                         key={room.id}
                         className="flex items-center justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e]  rounded-lg m-2 hover:bg-[#08262654]"
                       >
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 items-center">
+                          {room.isPrivate ? (
+                            <FaLock
+                              size={"15px"}
+                              title="Make City Private"
+                              className="cursor-pointer"
+                              onClick={() => {
+                                setIsPrivate(false);
+                              }}
+                            />
+                          ) : (
+                            <MdOutlinePublic
+                              size={"15px"}
+                              title="Make City Public"
+                              className="cursor-pointer"
+                              onClick={() => {
+                                setIsPrivate(true);
+                              }}
+                            />
+                          )}
                           <p>{room.name}</p>
                         </div>
                         <div className="flex gap-5">
@@ -208,7 +227,7 @@ const DashBoardPage = () => {
                 </form>
               </div>
 
-              <div className="flex flex-col w-full hover:border-accent border-[1px] border-[#1e1e1e] rounded-lg p-4 h-[500px] bg-[#0b0b0b] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
+              <div className="flex flex-col w-full hover:border-accent border-[1px] border-[#1e1e1e] rounded-lg p-4 h-[500px] bg-[#0b0b0b] bg-opacity-10 backdrop-filter backdrop-blur-[45px] shadow-lg">
                 <p className="text-text-dark p-3">Explore other cities</p>
                 <div className="flex flex-col gap-3 overflow-auto">
                   {rooms &&
@@ -251,7 +270,7 @@ const DashBoardPage = () => {
           </div>
         )}
         {loading && (
-          <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px]">
+          <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px] translate-y-[5%]">
             <Loader size={"100px"} />
           </div>
         )}

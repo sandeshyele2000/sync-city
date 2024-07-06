@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import Loader from "@/components/common/Loader";
 import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
-import { deleteRoomById, getAllUsers } from "@/lib/api";
+import { deleteRoomById, getAllUsers, getUser } from "@/lib/api";
 
 function AdminPage() {
   const { state, dispatch } = useContextAPI();
@@ -27,8 +27,14 @@ function AdminPage() {
   const deleteRoom = async (roomId) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      await deleteRoomById(roomId)
-      setAll((prev) => prev.filter((item) => item.id !== roomId));
+      await deleteRoomById(roomId);
+
+      displayUser.rooms = displayUser.rooms.filter(
+        (item) => item.id !== roomId
+      );
+
+      setDisplayUser(displayUser);
+      setDisplayRoom(null);
       toast.success("City demolished successfully!");
     } catch (error) {
       toast.error("Error in demolishing city");
@@ -46,6 +52,19 @@ function AdminPage() {
     } catch (error) {
       console.log(error);
       toast.error("Error fetching your all users");
+    }
+  };
+
+  const handleLoadUser = async (user) => {
+    try {
+      dispatch({ type: "SET_LOADING", payload: true });
+      const response = await getUser(user.email);
+      setDisplayUser(response.data.user);
+      setDisplayRoom(null);
+    } catch (error) {
+      toast.error(error);
+    } finally {
+      dispatch({ type: "SET_LOADING", payload: false });
     }
   };
 
@@ -77,9 +96,9 @@ function AdminPage() {
       console.log(user);
       dispatch({ type: "SET_LOADING", payload: false });
     } else {
-      router.push("/dashboard");
+      // router.push("/dashboard");
     }
-  }, []);
+  }, [user]);
 
   return (
     <>
@@ -108,33 +127,30 @@ function AdminPage() {
                     <div
                       key={userItem.id}
                       className="flex items-center cursor-pointer w-[90%] justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e]  rounded-lg m-2 hover:bg-[#08262654]"
-                      onClick={() => {
-                        setDisplayUser(userItem);
-                        setDisplayRoom(null);
-                      }}
+                      onClick={() => handleLoadUser(userItem)}
                     >
                       {userItem.username}
                     </div>
                   ))}
               </div>
               <div className="right  flex  bg-[#0b0b0b] border gap-3 border-[#1e1e1e] rounded-lg h-full p-4 w-full sm:w-full md:w-full lg:w-[92%] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg overflow-hidden">
-                <div className="flex flex-col w-[40%]">
-                  {displayUser && (
+                <div className="flex flex-col w-[50%] border-[#1e1e1e] border rounded-lg p-4">
+                  {displayUser ? (
                     <>
-                      <div className="flex flex-col">
-                        <div className="flex items-center">
+                      <div className="flex flex-col gap-3">
+                        <div className="flex sm:flex-col md:flex-col lg:flex-row">
                           <img
                             src={displayUser.profileImage}
                             alt=""
-                            className="rounded-lg border border-[#0ff]  w-[100px] h-[100px]"
+                            className="rounded-lg border border-[#0ff]  w-[13rem] h-[13rem]"
                           />
                           <div className="flex flex-col p-4">
                             <p className="font-extrabold">
                               {displayUser.username}
                             </p>
-                            <p>{displayUser.nickname}</p>
-                            <p>{displayUser.email}</p>
-                            <div className="flex gap-2">
+                            <p className="text-text-dark">{displayUser.nickname}</p>
+                            <p className="text-text-dark" >{displayUser.email}</p>
+                            <div className="flex gap-2 text-text-dark">
                               Cities Built:{" "}
                               <div>{displayUser.rooms.length}</div>
                             </div>
@@ -166,60 +182,70 @@ function AdminPage() {
                         ))}
                       </div>
                     </>
+                  ) : (
+                    <div className="flex w-full h-full border-[#1e1e1e] justify-center items-center">
+                      <p className="text-text-dark">Select user to load</p>
+                    </div>
                   )}
                 </div>
 
-                <div className="flex w-[60%] flex-col">
-                  {displayRoom && (
-                    <>
-                      <div
-                        key={displayRoom.id}
-                        className="flex flex-col w-full h-full  justify-center p-3 bg-[#0941413a] border-[1px] border-background-cyanMedium rounded-lg m-2 hover:bg-[#08262654]"
-                      >
-                        <div className="flex flex-col w-full h-full items-center justify-center gap-5">
-                          <p className="text-lg">{displayRoom.name}</p>
-                          <p className="text-gray-600">
-                            Built on {displayRoom.createdAt.split("T")[0]}
-                          </p>
-                          {displayRoom.isPrivate ? <FaLock size={"20px"} /> : <MdOutlinePublic size="25px" />}
-                          <p className="text-gray-600">
-                            {displayRoom.isPrivate ? "Private" : "Public"}
-                          </p>
-                        </div>
-
-                        <div className="flex gap-2 w-full justify-between flex-col">
-                          <Link
-                            href={{
-                              pathname: "/city",
-                              query: { id: displayRoom.id },
-                            }}
-                            className="flex gap-2 border border-[#1f444b] p-2 rounded-lg"
-                          >
-                            <IoEnterOutline
-                              size={"1.5rem"}
-                              color="gray"
-                              title="Enter city"
-                            />
-
-                            <p> Enter City</p>
-                          </Link>
-                          <button
-                            className="text-gray-700 hover:text-red-700 flex gap-2 border border-[#1f444b] p-2 rounded-lg"
-                            onClick={() => deleteRoom(displayRoom.id)}
-                          >
-                            <IoMdTrash size={"1.5rem"} title="Delete room" />
-                            <p> Demolish City</p>
-                          </button>
-                        </div>
+                <div className="flex w-[60%] flex-col border-[#1e1e1e] border rounded-lg">
+                  {displayRoom ? (
+                    <div
+                      key={displayRoom.id}
+                      className="flex flex-col w-full h-full  justify-center p-3 bg-[#0941413a] border-[1px] border-background-cyanMedium rounded-lg m-2 hover:bg-[#08262654]"
+                    >
+                      <div className="flex flex-col w-full h-full items-center justify-center gap-5">
+                        <p className="text-lg">{displayRoom.name}</p>
+                        <p className="text-gray-600">
+                          Built on {displayRoom.createdAt.split("T")[0]}
+                        </p>
+                        {displayRoom.isPrivate ? (
+                          <FaLock size={"20px"} />
+                        ) : (
+                          <MdOutlinePublic size="25px" />
+                        )}
+                        <p className="text-gray-600">
+                          {displayRoom.isPrivate ? "Private" : "Public"}
+                        </p>
                       </div>
-                    </>
+
+                      <div className="flex gap-2 w-full justify-between flex-col">
+                        <Link
+                          href={{
+                            pathname: "/city",
+                            query: { id: displayRoom.id },
+                          }}
+                          className="flex gap-2 border border-[#1f444b] p-2 rounded-lg"
+                        >
+                          <IoEnterOutline
+                            size={"1.5rem"}
+                            color="gray"
+                            title="Enter city"
+                          />
+
+                          <p> Enter City</p>
+                        </Link>
+                        <button
+                          className="text-gray-700 hover:text-red-700 flex gap-2 border border-[#1f444b] p-2 rounded-lg"
+                          onClick={() => deleteRoom(displayRoom.id)}
+                        >
+                          <IoMdTrash size={"1.5rem"} title="Delete room" />
+                          <p> Demolish City</p>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex w-full h-full border-[#1e1e1e] justify-center items-center">
+                      <p className="text-text-dark">Select city to load</p>
+                    </div>
                   )}
                 </div>
               </div>
             </div>
 
             {loading && (
-              <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px]">
+              <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px] translate-y-[5%]">
                 <Loader size={"100px"} />
               </div>
             )}

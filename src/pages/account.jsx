@@ -7,7 +7,6 @@ import Link from "next/link";
 import { IoEnterOutline } from "react-icons/io5";
 import { IoMdTrash } from "react-icons/io";
 import toast from "react-hot-toast";
-import axios from "axios";
 import { useRouter } from "next/router";
 import ModalForm from "@/components/common/ModalForm";
 import CircularProgressBar from "@/components/common/CircularProgressBar";
@@ -54,9 +53,10 @@ function AccountPage() {
       fetchUserRooms(user.id);
       dispatch({ type: "SET_LOADING", payload: false });
     } else {
-      router.push("/login");
+
+      // router.push("/login");
     }
-  }, []);
+  }, [user]);
 
   return (
     <>

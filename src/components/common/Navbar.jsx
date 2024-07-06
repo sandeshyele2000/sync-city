@@ -70,10 +70,17 @@ function Navbar() {
 
       {dropDown && (
         <div
-          className="flex absolute gap-4 bg-background rounded-lg flex-col p-5 right-[10vw] top-[80px] items-center justify-center"
+          className="flex absolute gap-4 bg-background rounded-lg flex-col p-5 right-[10vw] top-[80px]  justify-center"
           id="dropdown"
         >
           {console.log(user)}
+
+          <Link
+            href={`/account`}
+            className="text-text-dark cursor-pointer hover:text-text-light"
+          >
+            My Account
+          </Link>
           {user.isAdmin && (
             <Link
               href={`/admin`}
@@ -82,12 +89,6 @@ function Navbar() {
               Admin
             </Link>
           )}
-          <Link
-            href={`/account`}
-            className="text-text-dark cursor-pointer hover:text-text-light"
-          >
-            My Account
-          </Link>
 
           <p
             className="text-text-dark cursor-pointer hover:text-text-light"
