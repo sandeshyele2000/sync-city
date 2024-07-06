@@ -157,11 +157,6 @@ export default function Room() {
   const { state } = useContextAPI();
   const user = state.user;
 
-  useEffect(() => {
-    if (!user) {
-      if(!checkValidUser()) router.push('/login')
-    }
-  }, [user]);
 
   return (
     <>

@@ -133,11 +133,7 @@ function AdminPage() {
       fetchAllUsers();
       fetchAllRooms();
       dispatch({ type: "SET_LOADING", payload: false });
-    } else {
-      if (!user) {
-        if (!checkValidUser()) router.push("/login");
-      }
-    }
+    } 
   }, [user]);
 
   return (

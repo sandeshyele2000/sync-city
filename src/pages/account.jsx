@@ -53,8 +53,6 @@ function AccountPage() {
       dispatch({ type: "SET_LOADING", payload: true });
       fetchUserRooms(user.id);
       dispatch({ type: "SET_LOADING", payload: false });
-    } else {
-      if (!checkValidUser()) router.push("/login");
     }
   }, [user]);
 
