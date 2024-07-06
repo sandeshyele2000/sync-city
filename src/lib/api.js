@@ -309,7 +309,7 @@ export const updateUserDetails = async (formData, email) => {
   }
 };
 
-export const getUser = async (email) => {
+export const getUser = async (id) => {
   try {
     const token = localStorage.getItem("token");
     const config = {
@@ -317,7 +317,7 @@ export const getUser = async (email) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const response = await axios.get(`/api/user/getUser?email=${email}`, config);
+    const response = await axios.get(`/api/user/getUser?id=${id}`, config);
     return response;
   } catch (error) {
     console.log(error);

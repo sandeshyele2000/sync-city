@@ -17,9 +17,11 @@ import { MdPlaylistPlay } from "react-icons/md";
 import Loader from "@/components/common/Loader";
 import { IoArrowBack } from "react-icons/io5";
 import { fetchRoomDetails } from "@/lib/api";
+import Members from "@/components/Members";
+import { FaUser } from "react-icons/fa";
 
 function RoomContent({ id }) {
-  const [tab, setTab] = useState(true);
+  const [tab, setTab] = useState("chats");
   const { state, dispatch } = useContextAPI();
   const router = useRouter();
   const user = state.user;
@@ -96,28 +98,41 @@ function RoomContent({ id }) {
               <div className="flex w-full border-gray-400 p-3 gap-3">
                 <div
                   className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
-                    tab
+                    tab == "chats"
                       ? "border-accent text-accent"
                       : "border-none text-[#5f5f5f]"
                   }`}
-                  onClick={() => setTab(true)}
+                  onClick={() => setTab("chats")}
                 >
                   <TbMessages />
                   <span>Chats</span>
                 </div>
                 <div
                   className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
-                    !tab
+                    tab == "playlist"
                       ? "border-accent text-accent"
                       : "border-none text-[#5f5f5f]"
                   }`}
-                  onClick={() => setTab(false)}
+                  onClick={() => setTab("playlist")}
                 >
                   <MdPlaylistPlay />
                   <span>Playlist</span>
                 </div>
+                <div
+                  className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
+                    tab == "members"
+                      ? "border-accent text-accent"
+                      : "border-none text-[#5f5f5f]"
+                  }`}
+                  onClick={() => setTab("members")}
+                >
+                  <FaUser />
+                  <span>Citizens</span>
+                </div>
               </div>
-              {tab ? <ChatRoom roomId={id} userId={user.id} /> : <Playlist />}
+              {tab == "chats" && <ChatRoom roomId={id} userId={user.id} />}
+              {tab == "playlist" && <Playlist />}
+              {tab == "members" && <Members roomId={id}/>}
             </div>
           </div>
         ) : (

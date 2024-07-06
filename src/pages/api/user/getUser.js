@@ -8,11 +8,11 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { email } = req.query;
+    const { id } = req.query;
 
 
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { id },
       select: {
         id: true,
         email: true,
