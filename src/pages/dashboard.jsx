@@ -56,8 +56,7 @@ const DashBoardPage = () => {
       } else {
         toast.error("Clipboard not supported!");
       }
-      console.log(roomUrl);
-    } catch (e) {
+    } catch (error) {
       toast.error("Failed to copy room URL!");
     }
   };
@@ -75,13 +74,11 @@ const DashBoardPage = () => {
     }
   };
 
-
   useEffect(() => {
     if (user) {
       fetchData();
     } else {
-      if(!checkValidUser())
-        router.push("/login");
+      if (!checkValidUser()) router.push("/login");
     }
   }, [user]);
 

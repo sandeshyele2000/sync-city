@@ -4,18 +4,15 @@ import { useRouter } from "next/router";
 import { useContextAPI } from "../context/Context";
 import toast from "react-hot-toast";
 import { auth } from "../firebase/initFirebase";
-import axios from "axios";
 import Loader from "@/components/common/Loader";
 import { useEffect } from "react";
 import { registerUser } from "@/lib/api";
-import { checkValidUser } from "@/lib/checkValidUser";
 
 function LoginPage() {
   const { state, dispatch } = useContextAPI();
   const userData = state.user;
   const router = useRouter();
   const loading = state.loading;
-
 
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
@@ -30,13 +27,8 @@ function LoginPage() {
         profileImage: user.photoURL,
       });
 
-      
-      console.log(userData);
-      console.log(userData.token);
       localStorage.setItem("token", userData.token);
-      
-      console.log(localStorage.getItem('token'))
-      
+
       dispatch({ type: "SET_USER", payload: userData.user });
       toast.success("Logged in successfully!");
     } catch (error) {
@@ -50,9 +42,7 @@ function LoginPage() {
     if (userData) {
       router.push("/dashboard");
     }
-
   }, [userData]);
-
 
   return (
     <>

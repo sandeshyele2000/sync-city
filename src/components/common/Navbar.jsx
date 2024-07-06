@@ -73,8 +73,6 @@ function Navbar() {
           className="flex absolute gap-4 bg-background rounded-lg flex-col p-5 right-[10vw] top-[80px]  justify-center"
           id="dropdown"
         >
-          {console.log(user)}
-
           <Link
             href={`/account`}
             className="text-text-dark cursor-pointer hover:text-text-light"

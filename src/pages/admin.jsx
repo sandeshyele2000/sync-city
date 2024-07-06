@@ -50,9 +50,7 @@ function AdminPage() {
       const allUsersData = await getAllUsers();
       setAllUsers(allUsersData);
       setFilteredUsers(allUsersData);
-      console.log(allUsersData);
     } catch (error) {
-      console.log(error);
       toast.error("Error fetching all users");
     }
   };
@@ -62,9 +60,7 @@ function AdminPage() {
       const allRoomsData = await getAllRooms();
       setAllRooms(allRoomsData);
       setFilteredRooms(allRoomsData);
-      console.log(allRoomsData);
     } catch (error) {
-      console.log(error);
       toast.error("Error fetching all rooms");
     }
   };
@@ -136,7 +132,6 @@ function AdminPage() {
       dispatch({ type: "SET_LOADING", payload: true });
       fetchAllUsers();
       fetchAllRooms();
-      console.log(user);
       dispatch({ type: "SET_LOADING", payload: false });
     } else {
       if (!user) {
@@ -156,7 +151,6 @@ function AdminPage() {
               alt=""
               className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"
             />
-            {console.log(displayUser)}
             <div className="text-white w-[80vw] items-center flex h-[85vh] justify-center gap-3 mt-24 flex-col md:flex-row lg:flex-row relative">
               <div className="left bg-[#0b0b0b] border border-[#1e1e1e] h-full flex flex-col gap-2 items-center w-full sm:w-full md:w-full lg:w-[28%] rounded-lg bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg overflow-hidden">
                 <input

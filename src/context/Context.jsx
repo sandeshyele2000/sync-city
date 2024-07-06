@@ -101,7 +101,7 @@ export const StateProvider = ({ children }) => {
           dispatch({ type: "SET_USER", payload: userData.user });
         }
       } catch (error) {
-        console.log(error)
+        toast.error(error)
       }
     });
 

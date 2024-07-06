@@ -30,8 +30,6 @@ export default async function handler(req, res) {
         }
       });
 
-      console.log(room)
-
       const liveblocksApiKey = process.env.NEXT_PUBLIC_LIVEBLOCKS_API_KEY;
 
       if (!liveblocksApiKey) {

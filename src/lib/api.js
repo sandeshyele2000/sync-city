@@ -12,7 +12,6 @@ export const registerUser = async ({
       username,
       profileImage,
     });
-    console.log(response);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -49,7 +48,6 @@ export const createRoom = async (roomName, hostId, isPrivate) => {
 export const deleteRoomById = async (roomId) => {
   try {
     const token = localStorage.getItem("token");
-    console.log("deleteRoom----------------------->: ", token);
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -106,7 +104,6 @@ export const getUserRooms = async (userId) => {
   try {
     const token = localStorage.getItem("token");
 
-    console.log("Token in getUserRooms", token);
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -118,7 +115,6 @@ export const getUserRooms = async (userId) => {
       config
     );
 
-    console.log(response);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -251,7 +247,6 @@ export const updateCurrentVideoId = async (video, roomId) => {
       },
       config
     );
-    console.log(response.data);
   } catch (error) {
     console.log(error);
     throw error;
@@ -292,7 +287,6 @@ export const updateUserDetails = async (formData, email) => {
       },
     };
 
-    console.log("Token from updateUserDetails: ", token);
     const response = await axios.post(
       "/api/user/updateUser",
       {
