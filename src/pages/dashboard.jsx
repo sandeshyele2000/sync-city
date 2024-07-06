@@ -78,7 +78,10 @@ const DashBoardPage = () => {
     if (user) {
       fetchData();
     } else {
-      if (!checkValidUser()) router.push("/login");
+      if (!checkValidUser()) {
+        console.log("going to login");
+        router.push("/login");
+      }
     }
   }, [user]);
 

@@ -26,19 +26,22 @@ function AdminPage() {
   const [displayRoom, setDisplayRoom] = useState(null);
   const router = useRouter();
 
-  const deleteRoom = async (roomId) => {
+  const deleteRoom = async (room) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
-      await deleteRoomById(roomId);
+      await deleteRoomById(room.id);
 
-      displayUser.rooms = displayUser.rooms.filter(
-        (item) => item.id !== roomId
-      );
+      const response = await getUser(room.hostId);
 
-      setDisplayUser(displayUser);
+      let user = response.data.user;
+
+      user.rooms = user.rooms.filter((item) => item.id !== room.id);
+
+      setDisplayUser(user);
       setDisplayRoom(null);
       toast.success("City demolished successfully!");
     } catch (error) {
+      console.log(error);
       toast.error("Error in demolishing city");
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
@@ -81,6 +84,8 @@ function AdminPage() {
   const handleLoadRoom = async (room) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
+      const response = await getUser(room.hostId);
+      setDisplayUser(response.data.user);
       setDisplayRoom(room);
     } catch (error) {
       toast.error(error.message);
@@ -133,7 +138,7 @@ function AdminPage() {
       fetchAllUsers();
       fetchAllRooms();
       dispatch({ type: "SET_LOADING", payload: false });
-    } 
+    }
   }, [user]);
 
   return (
@@ -290,7 +295,7 @@ function AdminPage() {
                           </Link>
                           <button
                             className="text-gray-700 hover:text-red-700 flex gap-2 border border-[#1f444b] p-2 rounded-lg"
-                            onClick={() => deleteRoom(displayRoom.id)}
+                            onClick={() => deleteRoom(displayRoom)}
                           >
                             <IoMdTrash size={"1.5rem"} title="Delete room" />
                             <p> Demolish City</p>

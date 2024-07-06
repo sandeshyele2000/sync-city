@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { auth } from "../firebase/initFirebase";
 import Loader from "@/components/common/Loader";
 import { useEffect } from "react";
-import { registerUser } from "@/lib/api";
+import { getUserByEmail, registerUser } from "@/lib/api";
 
 function LoginPage() {
   const { state, dispatch } = useContextAPI();
@@ -20,16 +20,22 @@ function LoginPage() {
       dispatch({ type: "SET_LOADING", payload: true });
       const { user } = await signInWithPopup(auth, provider);
 
-      let userData = await registerUser({
-        email: user.email,
-        firebaseId: user.uid,
-        username: user.displayName.substring(0, 15),
-        profileImage: user.photoURL,
-      });
+      const userDataByEmail = await getUserByEmail(user.email);
 
-      localStorage.setItem("token", userData.token);
+      if (!userDataByEmail.data.status) {
+        let registerResponse = await registerUser({
+          email: user.email,
+          firebaseId: user.uid,
+          username: user.displayName.substring(0, 15),
+          profileImage: user.photoURL,
+        });
+        localStorage.setItem("token", registerResponse.token);
+        dispatch({ type: "SET_USER", payload: registerResponse.user });
+      } else {
+        localStorage.setItem("token", userDataByEmail.data.token);
+        dispatch({ type: "SET_USER", payload: userDataByEmail.data.user });
+      }
 
-      dispatch({ type: "SET_USER", payload: userData.user });
       toast.success("Logged in successfully!");
     } catch (error) {
       toast.error(`Error signing in with Google: ${error.message}`);
@@ -40,6 +46,7 @@ function LoginPage() {
 
   useEffect(() => {
     if (userData) {
+      console.log("going to dashboard");
       router.push("/dashboard");
     }
   }, [userData]);

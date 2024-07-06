@@ -1,12 +1,9 @@
-
 import { verifyToken } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import axios from 'axios';
+import axios from "axios";
 
 export default async function handler(req, res) {
   verifyToken(req, res, async () => {
-    
-
     const { roomId } = req.body;
 
     try {
@@ -24,7 +21,7 @@ export default async function handler(req, res) {
             id: user.id,
           },
           data: {
-            roomIds: user.roomIds.filter(id => id !== roomId),
+            roomIds: user.roomIds.filter((id) => id !== roomId),
           },
         });
       }
@@ -43,7 +40,7 @@ export default async function handler(req, res) {
             id: video.id,
           },
           data: {
-            roomIds: video.roomIds.filter(id => id !== roomId),
+            roomIds: video.roomIds.filter((id) => id !== roomId),
           },
         });
       }

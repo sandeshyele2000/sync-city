@@ -318,3 +318,20 @@ export const getUser = async (id) => {
     throw error;
   }
 };
+
+
+export const getUserByEmail = async (email) => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const response = await axios.get(`/api/user/getUserByEmail?email=${email}`, config);
+    return response;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

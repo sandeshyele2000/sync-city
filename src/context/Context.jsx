@@ -3,7 +3,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase/initFirebase";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { registerUser } from "@/lib/api";
+import { getUserByEmail, registerUser } from "@/lib/api";
 
 const StateContext = createContext();
 
@@ -90,18 +90,17 @@ export const StateProvider = ({ children }) => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       try {
         if (user) {
-          const userData = await registerUser({
-            email: user.email,
-            firebaseId: user.uid,
-            username: user.displayName.substring(0, 15),
-            profileImage: user.photoURL,
-          });
-          localStorage.setItem("token", userData.token);
+          const userData = await getUserByEmail(user.email);
 
-          dispatch({ type: "SET_USER", payload: userData.user });
+          console.log("from useEffect on auth state changed", userData);
+          
+          if (userData.data.status) {
+            localStorage.setItem("token", userData.data.token);
+            dispatch({ type: "SET_USER", payload: userData.data.user });
+          }
         }
       } catch (error) {
-        toast.error(error)
+        toast.error(error);
       }
     });
 
