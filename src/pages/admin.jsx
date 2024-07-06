@@ -138,8 +138,16 @@ function AdminPage() {
       fetchAllUsers();
       fetchAllRooms();
       dispatch({ type: "SET_LOADING", payload: false });
+    } else {
+      if (user && !user.isAdmin) {
+        router.push("/dashboard");
+      }
     }
   }, [user]);
+
+  if (user && !user.isAdmin) {
+    return null;
+  }
 
   return (
     <>
