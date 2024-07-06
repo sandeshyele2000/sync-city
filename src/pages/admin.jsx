@@ -111,25 +111,49 @@ function AdminPage() {
             />
             {console.log(displayUser)}
             <div className="text-white w-[80vw] items-center flex h-[85vh] justify-center gap-3 mt-24 flex-col  md:flex-row lg:flex-row relative">
-              <div className="left bg-[#0b0b0b] border border-[#1e1e1e]  h-full  flex flex-col gap-2 items-center w-full sm:w-full md:w-full md:flex-col lg:w-[28%] lg:flex-col rounded-lg bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg overflow-y-auto">
+              <div className="left bg-[#0b0b0b] border border-[#1e1e1e]  h-full  flex flex-col gap-2 items-center w-full sm:w-full md:w-full md:flex-col lg:w-[28%] lg:flex-col rounded-lg bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg overflow-hidden">
+                  <input
+                    type="text"
+                    name="userSearch"
+                    id="userSearch"
+                    placeholder="Search User..."
+                    onChange={(e) => handleUserSearch(e)}
+                    className="flex w-full p-3 h-[50px]  bg-transparent outline-none border-b-[#1e1e1e] border-b-[1px]"
+                  />
+                <div className=" overflow-y-auto flex flex-col gap-2 items-center w-full sm:w-full md:w-full md:flex-col">
+                  {filteredUsers.length > 0 &&
+                    [...filteredUsers, ...filteredUsers].map((userItem) => (
+                      <div
+                        key={userItem.id}
+                        className="flex items-center cursor-pointer w-[90%] justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e]  rounded-lg m-2 hover:bg-[#08262654]"
+                        onClick={() => handleLoadUser(userItem)}
+                      >
+                        {userItem.username}
+                      </div>
+                    ))}
+                </div>
+
                 <input
-                  type="text"
-                  name="userSearch"
-                  id="userSearch"
-                  placeholder="Search User..."
-                  onChange={(e) => handleUserSearch(e)}
-                  className="flex w-full p-3 h-[50px]  bg-transparent outline-none border-b-[#1e1e1e] border-b-[1px]"
-                />
-                {filteredUsers.length > 0 &&
-                  filteredUsers.map((userItem) => (
-                    <div
-                      key={userItem.id}
-                      className="flex items-center cursor-pointer w-[90%] justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e]  rounded-lg m-2 hover:bg-[#08262654]"
-                      onClick={() => handleLoadUser(userItem)}
-                    >
-                      {userItem.username}
-                    </div>
-                  ))}
+                    type="text"
+                    name="userSearch"
+                    id="userSearch"
+                    placeholder="Search User..."
+                    onChange={(e) => handleUserSearch(e)}
+                    className="flex w-full p-3 h-[50px]  bg-transparent outline-none border-b-[#1e1e1e] border-b-[1px]"
+                  />
+                <div className=" overflow-y-auto flex flex-col gap-2 items-center w-full sm:w-full md:w-full md:flex-col">
+                  {filteredUsers.length > 0 &&
+                    [...filteredUsers, ...filteredUsers].map((userItem) => (
+                      <div
+                        key={userItem.id}
+                        className="flex items-center cursor-pointer w-[90%] justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e]  rounded-lg m-2 hover:bg-[#08262654]"
+                        onClick={() => handleLoadUser(userItem)}
+                      >
+                        {userItem.username}
+                      </div>
+                    ))}
+                </div>
+
               </div>
               <div className="right  flex  bg-[#0b0b0b] border gap-3 border-[#1e1e1e] rounded-lg h-full p-4 w-full sm:w-full md:w-full lg:w-[92%] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg overflow-hidden">
                 <div className="flex flex-col w-[50%] border-[#1e1e1e] border rounded-lg p-4">
@@ -146,8 +170,12 @@ function AdminPage() {
                             <p className="font-extrabold">
                               {displayUser.username}
                             </p>
-                            <p className="text-text-dark">{displayUser.nickname}</p>
-                            <p className="text-text-dark" >{displayUser.email}</p>
+                            <p className="text-text-dark">
+                              {displayUser.nickname}
+                            </p>
+                            <p className="text-text-dark">
+                              {displayUser.email}
+                            </p>
                             <div className="flex gap-2 text-text-dark">
                               Cities Built:{" "}
                               <div>{displayUser.rooms.length}</div>

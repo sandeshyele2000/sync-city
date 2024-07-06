@@ -14,14 +14,8 @@ export default async function handler(req, res) {
     let user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
-      user = await prisma.user.upsert({
-        where: { email },
-        update: {
-          firebaseId,
-          username,
-          profileImage,
-        },
-        create: {
+      user = await prisma.user.create({
+        data: {
           email,
           firebaseId,
           username,
@@ -41,16 +35,14 @@ export default async function handler(req, res) {
           isAdmin: true,
         },
       });
-    }
+    } 
 
-    // Generate JWT token
     const token = sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "1d", // Token expires in 1 day
+      expiresIn: "1d",
     });
 
     console.log("Token: ", token);
 
-    // Send token and user data in response
     return res.status(201).json({ user, token });
   } catch (error) {
     console.log(error);
