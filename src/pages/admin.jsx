@@ -90,13 +90,11 @@ function AdminPage() {
   };
 
   useEffect(() => {
-    if (user) {
+    if (user && user.isAdmin) {
       dispatch({ type: "SET_LOADING", payload: true });
       fetchAllUsers();
       console.log(user);
       dispatch({ type: "SET_LOADING", payload: false });
-    } else {
-      // router.push("/dashboard");
     }
   }, [user]);
 
