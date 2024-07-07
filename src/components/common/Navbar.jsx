@@ -20,6 +20,8 @@ function Navbar() {
   const router = useRouter();
 
   const { state, dispatch } = useContextAPI();
+  const user = state.user;
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -36,7 +38,7 @@ function Navbar() {
     <>
       <div className="flex h-[70px] w-full justify-center fixed bg-[#111111] bg-opacity-80 backdrop-blur-md z-50">
         <div className="flex w-[80vw] items-center justify-between">
-          <Link href={'/home'} className="flex items-center gap-2">
+          <Link href={"/home"} className="flex items-center gap-2">
             <img src="./logo.png" alt="" className="w-8 h-8 items-center" />
             <p className="text-accent text-[20px] font-bold cursor-pointer">
               <span className="text-gray-300 font-bold">SYNCITY</span>
@@ -44,7 +46,7 @@ function Navbar() {
           </Link>
 
           <div className="gap-4 hidden lg:flex">
-            <NavLinks />
+            <NavLinks user={user} />
           </div>
 
           <div className="lg:hidden">
@@ -55,10 +57,14 @@ function Navbar() {
         </div>
       </div>
 
-      { (
-        <div className={`lg:hidden transition-all duration-200 h-[95%] p-10 ease fixed top-[70px] left-0 w-full bg-[#111111] bg-opacity-80 backdrop-blur-md z-30 flex flex-col justify-between ${isMenuOpen? "translate-y-[0%]":"translate-y-[-150%]"}`}>
+      {
+        <div
+          className={`lg:hidden transition-all duration-200 h-[95%] p-10 ease fixed top-[70px] left-0 w-full bg-[#111111] bg-opacity-80 backdrop-blur-md z-30 flex flex-col justify-between ${
+            isMenuOpen ? "translate-y-[0%]" : "translate-y-[-150%]"
+          }`}
+        >
           <div className="flex flex-col items-center py-4 gap-10 ">
-            <NavLinks />
+            <NavLinks user={user} />
           </div>
           <button
             onClick={handleLogout}
@@ -67,12 +73,12 @@ function Navbar() {
             Log out
           </button>
         </div>
-      )}
+      }
     </>
   );
 }
 
-function NavLinks() {
+function NavLinks({ user }) {
   return (
     <>
       <Link
@@ -96,13 +102,15 @@ function NavLinks() {
         <HiOutlineUser />
         <p>My Account</p>
       </Link>
-      <Link
-        href={`/admin`}
-        className="flex text-text-dark items-center gap-2 p-2"
-      >
-        <GrUserAdmin />
-        <p>Admin</p>
-      </Link>
+      {user?.isAdmin && (
+        <Link
+          href={`/admin`}
+          className="flex text-text-dark items-center gap-2 p-2"
+        >
+          <GrUserAdmin />
+          <p>Admin</p>
+        </Link>
+      )}
     </>
   );
 }
