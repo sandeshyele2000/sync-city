@@ -114,7 +114,7 @@ const DashBoardPage = () => {
             </p>
 
             <p className="text-[22px] text-text-dark">
-              Let's build a city now!
+              Build a city now!
             </p>
             <div className="flex lg:w-[60%] md:w-[50%] sm:w-full">
               <form
