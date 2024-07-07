@@ -6,13 +6,16 @@ import { dateTimeConverter } from "@/lib/dateTimeConverter";
 import toast from "react-hot-toast";
 import { useContextAPI } from "@/context/Context";
 import { useRoom } from "@liveblocks/react";
-import { addToPlaylist, getCurrentVideoid, updateCurrentVideoId } from "@/lib/api";
+import {
+  addToPlaylist,
+  getCurrentVideoid,
+  updateCurrentVideoId,
+} from "@/lib/api";
 
 function Player({ roomId }) {
   const { state, dispatch } = useContextAPI();
   const room = useRoom();
   const currentVideoId = state.currentVideo;
-
   const [videos, setVideos] = useState([]);
   const playerRef = useRef(null);
   const playerStateRef = useRef(-1);
@@ -22,9 +25,15 @@ function Player({ roomId }) {
   const seekBuffer = useRef([]);
   const seekBufferTimeout = useRef(null);
   const isNewUser = useRef(true);
-
   const queryVideos = useRef(null);
   const playerdivRef = useRef(null);
+
+  const extractVideoId = (url) => {
+    const regExp =
+      /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return match && match[2].length === 11 ? match[2] : null;
+  };
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -33,36 +42,59 @@ function Player({ roomId }) {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
 
-      const response = await axios.get(
-        "https://www.googleapis.com/youtube/v3/search",
-        {
-          params: {
-            key: process.env.NEXT_PUBLIC_YOUTUBE_API_KEY,
-            part: "snippet",
-            type: "video",
-            maxResults: 10,
-            q: query,
-          },
-        }
-      );
+      let videoId = extractVideoId(query);
 
-      const temp = response.data.items.map((item) => ({
-        videoId: item.id.videoId,
-        channelName: item.snippet.channelTitle,
-        title: item.snippet.title,
-        thumbnailImage: item.snippet.thumbnails.medium.url,
-        publishedAt: item.snippet.publishTime,
-      }));
+      let videos = [];
 
-      setVideos(temp);
+      if (videoId) {
+        const response = await axios.get(
+          "https://www.googleapis.com/youtube/v3/videos",
+          {
+            params: {
+              key: process.env.NEXT_PUBLIC_YOUTUBE_API_KEY,
+              part: "snippet",
+              id: videoId,
+            },
+          }
+        );
+
+        videos = response.data.items.map((item) => ({
+          videoId: item.id,
+          channelName: item.snippet.channelTitle,
+          title: item.snippet.title,
+          thumbnailImage: item.snippet.thumbnails.medium.url,
+          publishedAt: item.snippet.publishedAt,
+        }));
+      } else {
+        const response = await axios.get(
+          "https://www.googleapis.com/youtube/v3/search",
+          {
+            params: {
+              key: process.env.NEXT_PUBLIC_YOUTUBE_API_KEY,
+              part: "snippet",
+              type: "video",
+              maxResults: 30,
+              q: query,
+            },
+          }
+        );
+
+        videos = response.data.items.map((item) => ({
+          videoId: item.id.videoId,
+          channelName: item.snippet.channelTitle,
+          title: item.snippet.title,
+          thumbnailImage: item.snippet.thumbnails.medium.url,
+          publishedAt: item.snippet.publishTime,
+        }));
+      }
+
+      setVideos(videos);
     } catch (error) {
-      toast.error("Failed to query videos from youtube");
+      toast.error("Failed to query videos from YouTube");
     } finally {
       dispatch({ type: "SET_LOADING", payload: false });
     }
   };
-
-
 
   const handleAddtoPlaylist = async (video) => {
     try {
@@ -81,9 +113,8 @@ function Player({ roomId }) {
     }
   };
 
-
   const setCurrentVideo = async (video) => {
-    await updateCurrentVideoId(video,roomId);
+    await updateCurrentVideoId(video, roomId);
     dispatch({ type: "SET_CURRENT_VIDEO", payload: video.videoId });
     room.broadcastEvent({ type: "SET_CURRENT_VIDEO", data: video.videoId });
     playerdivRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -263,7 +294,7 @@ function Player({ roomId }) {
           type="text"
           name="search"
           id="search"
-          placeholder="Search..."
+          placeholder="Search for video or paste the video link.."
           className="flex w-full p-3 h-[50px] rounded-lg bg-transparent outline-none "
         />
         <button className="text-white h-[50px] w-[50px] pr-2 pl-2 rounded-lg flex items-center justify-center">

@@ -84,12 +84,12 @@ function Playlist() {
         placeholder="Search in playlist..."
         className="flex text-sm pt-2 pb-2 m-2 h-[50px]  outline-none border-[1px] border-[#1e1e1e] bg-black rounded-[30px] pl-4"
       />
-      <div className="flex flex-col  ml-1 overflow-auto h-full p-1 w-full">
+      <div className="flex flex-col  ml-1 overflow-auto h-full p-1 w-full text-white">
         {filteredVideos.length > 0 ? (
           filteredVideos.map((video) => (
             <div
               key={video.id}
-              className="flex flex-wrap lg:flex-nowrap border-background-cyanMedium border-b-[1px] justify-center bg-[#0b0b0b] cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
+              className="flex flex-wrap lg:flex-nowrap border-background-cyanMedium border-b-[1px]  bg-[#0b0b0b] cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
             >
               <img
                 src={video.thumbnailImage}
@@ -105,12 +105,12 @@ function Playlist() {
                 <p className="text-text-dark text-[0.9rem] text-xs">
                   {video.channelName}
                 </p>
-                <div className="flex w-full items-center justify-between flex-wrap relative h-[40px] gap-2">
+                <div className="flex w-full items-center justify-between flex-wrap relative  gap-2">
                   <p className="text-text-dark text-[0.8rem] text-xs">
                     {dateTimeConverter(video.publishedAt)}
                   </p>
                   <button
-                    className="text-gray-700 hover:text-red-700 rounded-lg border-gray-700 border p-2"
+                    className="text-gray-700 hover:text-red-700 rounded-lg border-gray-700 border p-1"
                     onClick={() => handleDeleteVideo(video)}
                   >
                     <IoMdTrash />

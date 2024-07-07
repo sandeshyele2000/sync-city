@@ -66,6 +66,27 @@ export const deleteRoomById = async (roomId) => {
   }
 };
 
+export const updateRoomName = async (id, name) => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const response = await axios.post(
+      "/api/room/updateRoom",
+      { id, name },
+      config
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const getAllRooms = async () => {
   try {
     const token = localStorage.getItem("token");
@@ -319,7 +340,6 @@ export const getUser = async (id) => {
   }
 };
 
-
 export const getUserByEmail = async (email) => {
   try {
     const token = localStorage.getItem("token");
@@ -328,7 +348,10 @@ export const getUserByEmail = async (email) => {
         Authorization: `Bearer ${token}`,
       },
     };
-    const response = await axios.get(`/api/user/getUserByEmail?email=${email}`, config);
+    const response = await axios.get(
+      `/api/user/getUserByEmail?email=${email}`,
+      config
+    );
     return response;
   } catch (error) {
     console.log(error);

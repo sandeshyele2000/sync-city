@@ -26,7 +26,7 @@ function LoginPage() {
         let registerResponse = await registerUser({
           email: user.email,
           firebaseId: user.uid,
-          username: user.displayName.substring(0, 15),
+          username: user.displayName,
           profileImage: user.photoURL,
         });
         localStorage.setItem("token", registerResponse.token);
@@ -46,8 +46,7 @@ function LoginPage() {
 
   useEffect(() => {
     if (userData) {
-      console.log("going to dashboard");
-      router.push("/dashboard");
+      router.push("/home")
     }
   }, [userData]);
 

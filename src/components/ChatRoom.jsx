@@ -87,7 +87,7 @@ export default function ChatRoom({ roomId, userId }) {
 
   return (
     <>
-      <div className="messages flex flex-1 flex-col space-y-4 p-4  overflow-auto  m-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
+      <div className="messages flex flex-1 flex-col space-y-4 p-4  overflow-auto   m-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
         {isLoading ? (
           <div className="flex w-full h-full relative justify-center items-center">
             <Loader size={"50px"} />

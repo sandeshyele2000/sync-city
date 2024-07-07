@@ -1,18 +1,25 @@
-import React, { useState } from "react";
-import { useContextAPI } from "../../context/Context";
-import { MdOutlineArrowDropDown, MdOutlineArrowDropUp } from "react-icons/md";
-import toast from "react-hot-toast";
-import { auth } from "../../firebase/initFirebase";
-import { signOut } from "firebase/auth";
-import { useRouter } from "next/router";
+import { useState } from "react";
 import Link from "next/link";
+import { PiCity } from "react-icons/pi";
+import { IoClose, IoEarthOutline } from "react-icons/io5";
+import { HiOutlineUser } from "react-icons/hi";
+import { GrUserAdmin } from "react-icons/gr";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase/initFirebase";
+import { useContextAPI } from "@/context/Context";
+import { useRouter } from "next/router";
+import toast from "react-hot-toast";
 
 function Navbar() {
-  const { state, dispatch } = useContextAPI();
-  const user = state.user;
-  const router = useRouter();
-  const [dropDown, setDropDown] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+  const router = useRouter();
+
+  const { state, dispatch } = useContextAPI();
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -25,78 +32,78 @@ function Navbar() {
     }
   };
 
-  if (!user) return null;
-
   return (
-    <div className="flex h-[70px] w-full justify-center fixed bg-[#111111] bg-opacity-80 backdrop-blur-md z-50">
-      <div className="flex w-[80vw] items-center justify-between">
-        <div className="flex items-center gap-2">
-          <img src="./logo.png" alt="" className="w-8 h-8 items-center" />
-          <p className="text-accent text-[20px] font-bold cursor-pointer">
-            <span className="text-gray-300 font-bold">SYNCITY</span>
-          </p>
-        </div>
+    <>
+      <div className="flex h-[70px] w-full justify-center fixed bg-[#111111] bg-opacity-80 backdrop-blur-md z-50">
+        <div className="flex w-[80vw] items-center justify-between">
+          <Link href={'/home'} className="flex items-center gap-2">
+            <img src="./logo.png" alt="" className="w-8 h-8 items-center" />
+            <p className="text-accent text-[20px] font-bold cursor-pointer">
+              <span className="text-gray-300 font-bold">SYNCITY</span>
+            </p>
+          </Link>
 
-        <div
-          className="flex gap-2 items-center cursor-pointer border-[#1e1e1e] border-[1px] p-2 rounded-[30px] "
-          onClick={() => setDropDown(!dropDown)}
-        >
-          <img
-            src={
-              user.profileImage ||
-              `https://beforeigosolutions.com/wp-content/uploads/2021/12/dummy-profile-pic-300x300-1.png`
-            }
-            alt="user profile"
-            className="rounded-full w-8 h-8"
-          />
-          <p className="text-text-dark hover:text-text-light">
-            {user.username.toLowerCase()}
-          </p>
-          {!dropDown ? (
-            <MdOutlineArrowDropDown
-              size={"1.2rem"}
-              color="white"
-              className="cursor-pointer"
-            />
-          ) : (
-            <MdOutlineArrowDropUp
-              size={"1.2rem"}
-              color="white"
-              className="cursor-pointer"
-            />
-          )}
+          <div className="gap-4 hidden lg:flex">
+            <NavLinks />
+          </div>
+
+          <div className="lg:hidden">
+            <button onClick={toggleMenu} className="text-text-dark text-2xl">
+              {isMenuOpen ? <IoClose /> : <GiHamburgerMenu />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {dropDown && (
-        <div
-          className="flex absolute gap-4 bg-background rounded-lg flex-col p-5 right-[10vw] top-[80px]  justify-center"
-          id="dropdown"
-        >
-          <Link
-            href={`/account`}
-            className="text-text-dark cursor-pointer hover:text-text-light"
-          >
-            My Account
-          </Link>
-          {user.isAdmin && (
-            <Link
-              href={`/admin`}
-              className="text-text-dark cursor-pointer hover:text-text-light"
-            >
-              Admin
-            </Link>
-          )}
-
-          <p
-            className="text-text-dark cursor-pointer hover:text-text-light"
+      { (
+        <div className={`lg:hidden transition-all duration-200 h-[95%] p-10 ease fixed top-[70px] left-0 w-full bg-[#111111] bg-opacity-80 backdrop-blur-md z-30 flex flex-col justify-between ${isMenuOpen? "translate-y-[0%]":"translate-y-[-150%]"}`}>
+          <div className="flex flex-col items-center py-4 gap-10 ">
+            <NavLinks />
+          </div>
+          <button
             onClick={handleLogout}
+            className="bg-[#ff000020] w-fit  justify-center text-text-light p-3 pl-8 pr-8 text-[15px] rounded-lg flex items-center gap-3 hover:text-white mx-auto "
           >
             Log out
-          </p>
+          </button>
         </div>
       )}
-    </div>
+    </>
+  );
+}
+
+function NavLinks() {
+  return (
+    <>
+      <Link
+        href={`/home`}
+        className="flex text-text-dark items-center gap-2 p-2"
+      >
+        <PiCity />
+        <p>Home</p>
+      </Link>
+      <Link
+        href={`/explore`}
+        className="flex text-text-dark items-center gap-2 p-2"
+      >
+        <IoEarthOutline />
+        <p>Explore</p>
+      </Link>
+      <Link
+        href={`/account`}
+        className="flex text-text-dark items-center gap-2 p-2"
+      >
+        <HiOutlineUser />
+        <p>My Account</p>
+      </Link>
+      <Link
+        href={`/admin`}
+        className="flex text-text-dark items-center gap-2 p-2"
+      >
+        <GrUserAdmin />
+        <p>Admin</p>
+      </Link>
+    </>
   );
 }
 

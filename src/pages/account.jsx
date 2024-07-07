@@ -15,7 +15,8 @@ import { ROOM_LIMIT } from "@/lib/constants";
 import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
 import { deleteRoomById, getUserRooms } from "@/lib/api";
-import { checkValidUser } from "@/lib/checkValidUser";
+import { signOut } from "firebase/auth";
+import { auth } from "@/firebase/initFirebase";
 
 function AccountPage() {
   const { state, dispatch } = useContextAPI();
@@ -24,6 +25,19 @@ function AccountPage() {
   const router = useRouter();
   const loading = state.loading;
   const [modal, setModal] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      dispatch({ type: "SET_USER", payload: null });
+      localStorage.removeItem("token");
+      toast.success("Logged out successfully!");
+      router.push("/login");
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
 
   const deleteRoom = async (roomId) => {
     try {
@@ -97,12 +111,10 @@ function AccountPage() {
                   </div>
 
                   <button
-                    onClick={() => {
-                      toast.error("Delete feature is under progress!");
-                    }}
-                    className="bg-[#ff000020] w-fit justify-center text-text-light p-3 text-[15px] rounded-lg flex items-center gap-3 hover:text-white mx-auto "
+                    onClick={handleLogout}
+                    className="bg-[#ff000020] w-fit  justify-center text-text-light p-3 pl-8 pr-8 text-[15px] rounded-lg flex items-center gap-3 hover:text-white mx-auto "
                   >
-                    Delete account
+                    Log out
                   </button>
                 </div>
               </div>
@@ -159,7 +171,7 @@ function AccountPage() {
                     ))
                   ) : (
                     <div className="flex w-full h-full items-center justify-center">
-                      <Link href={{ pathname: "/dashboard" }}>
+                      <Link href={{ pathname: "/home" }}>
                         Build your city now!
                       </Link>
                     </div>

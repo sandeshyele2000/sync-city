@@ -16,10 +16,9 @@ import { TbMessages } from "react-icons/tb";
 import { MdPlaylistPlay } from "react-icons/md";
 import Loader from "@/components/common/Loader";
 import { IoArrowBack } from "react-icons/io5";
-import { fetchRoomDetails } from "@/lib/api";
+import { fetchRoomDetails, updateRoomName } from "@/lib/api";
 import Members from "@/components/Members";
-import { FaUser } from "react-icons/fa";
-import { checkValidUser } from "@/lib/checkValidUser";
+import { FaEdit, FaUser } from "react-icons/fa";
 
 function RoomContent({ id }) {
   const [tab, setTab] = useState("chats");
@@ -30,6 +29,23 @@ function RoomContent({ id }) {
   const loading = state.loading;
   const others = useOthers();
   const updateMyPresence = useUpdateMyPresence();
+  const [editMode, setEditMode] = useState(false);
+  const [roomName, setRoomName] = useState("");
+  const [featuresVisibile, setFeatureVisible] = useState(false);
+
+  const handleRoomChange = async (e) => {
+    e.preventDefault();
+    try {
+      let name = e.target.roomName.value;
+      if (name.length == 0) return toast.error("City name cannot be empty!");
+      await updateRoomName(room.id, name);
+      setEditMode(false);
+
+      toast.success("Updated city name successfully!");
+    } catch (error) {
+      toast.error("Error in updating city name");
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -39,6 +55,7 @@ function RoomContent({ id }) {
           const response = await fetchRoomDetails(id);
           dispatch({ type: "SET_CURRENT_ROOM", payload: response.data.room });
           dispatch({ type: "SET_VIDEOS", payload: response.data.room.videos });
+          setRoomName(response.data.room.name);
           updateMyPresence(user);
         } catch (error) {
           toast.error(error.message);
@@ -62,17 +79,37 @@ function RoomContent({ id }) {
         />
         {room ? (
           <div className="text-white w-[80vw] items-center flex h-[85vh] justify-center gap-3 mt-24">
-            <div className="flex w-[70%] flex-col gap-2 overflow-y-auto  pt-1 h-full border-[#1e1e1e] border p-2 rounded-lg bg-[#0b0b0b] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
+            <div className="flex w-full lg:w-[70%] flex-col gap-2 overflow-y-auto  pt-1 h-full border-[#1e1e1e] border p-2 rounded-lg bg-[#474747] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
               <div className="flex w-full justify-between items-center pl-2">
                 <div className="flex gap-3 items-center">
                   <IoArrowBack
                     className="cursor-pointer"
                     color="white"
                     onClick={() => {
-                      router.push("/dashboard");
+                      router.push("/home");
                     }}
                   />
-                  <p className="text-[1.5rem]">{room.name}</p>
+                  {editMode ? (
+                    <form onSubmit={(e) => handleRoomChange(e)}>
+                      <input
+                        type="text"
+                        value={roomName}
+                        id="roomName"
+                        placeholder="Enter new city name..."
+                        onChange={(e) => setRoomName(e.target.value)}
+                        className="bg-transparent text-[18px] w-full  p-3 h-[50px] rounded-lg outline-none border-[#1e1e1e] border"
+                      />
+                    </form>
+                  ) : (
+                    <p className="text-[1.5rem]">{roomName}</p>
+                  )}
+
+                  {room.hostId == user.id && (
+                    <FaEdit
+                      className="cursor-pointer"
+                      onClick={() => setEditMode(!editMode)}
+                    />
+                  )}
                 </div>
 
                 <div className="flex gap-2 flex-col m-2  p-1 rounded-lg ">
@@ -95,8 +132,8 @@ function RoomContent({ id }) {
               <Player roomId={id} />
             </div>
 
-            <div className="flex flex-col w-[30%] h-full border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-[#0b0b0b] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg ">
-              <div className="flex w-full border-gray-400 p-3 gap-3">
+            <div className="flex-col hidden lg:flex w-[30%] h-full border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-[#474747] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg ">
+              <div className="flex w-full border-gray-400 p-3 gap-3 overflow-auto">
                 <div
                   className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
                     tab == "chats"
@@ -133,7 +170,7 @@ function RoomContent({ id }) {
               </div>
               {tab == "chats" && <ChatRoom roomId={id} userId={user.id} />}
               {tab == "playlist" && <Playlist />}
-              {tab == "members" && <Members roomId={id}/>}
+              {tab == "members" && <Members roomId={id} />}
             </div>
           </div>
         ) : (
@@ -141,6 +178,58 @@ function RoomContent({ id }) {
             <Loader size={"100px"} />
           </div>
         )}
+        {
+          <div
+            className={`absolute lg:hidden w-[50px] h-[50px] border rounded-full bottom-[1vh] right-[10vw] translate-x-[50%] cursor-pointer transition-transform ease duration-300 z-[1000] ${featuresVisibile ? "rotate-180":"rotate-0"}`}
+            onClick={() => {
+              setFeatureVisible(!featuresVisibile);
+            }}
+          >
+            <img src="./logo.png" alt="" />
+          </div>
+        }
+        {featuresVisibile && <div className="absolute w-full bg-[#00000051] h-full lg:hidden items-center justify-center flex ">
+           <div className="flex-col flex w-[80vw] h-[85%] translate-y-8 border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-[#474747] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg ">
+              <div className="flex w-full border-gray-400 p-3 gap-3 overflow-auto">
+                <div
+                  className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
+                    tab == "chats"
+                      ? "border-accent text-accent"
+                      : "border-none text-[#5f5f5f]"
+                  }`}
+                  onClick={() => setTab("chats")}
+                >
+                  <TbMessages />
+                  <span>Chats</span>
+                </div>
+                <div
+                  className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
+                    tab == "playlist"
+                      ? "border-accent text-accent"
+                      : "border-none text-[#5f5f5f]"
+                  }`}
+                  onClick={() => setTab("playlist")}
+                >
+                  <MdPlaylistPlay />
+                  <span>Playlist</span>
+                </div>
+                <div
+                  className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
+                    tab == "members"
+                      ? "border-accent text-accent"
+                      : "border-none text-[#5f5f5f]"
+                  }`}
+                  onClick={() => setTab("members")}
+                >
+                  <FaUser />
+                  <span>Citizens</span>
+                </div>
+              </div>
+              {tab == "chats" && <ChatRoom roomId={id} userId={user.id} />}
+              {tab == "playlist" && <Playlist />}
+              {tab == "members" && <Members roomId={id} />}
+            </div>
+        </div>}
         {loading && (
           <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px] ">
             <Loader size={"100px"} />
@@ -157,6 +246,14 @@ export default function Room() {
   const { state } = useContextAPI();
   const user = state.user;
 
+  useEffect(() => {
+    if (!user) {
+      let token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+      }
+    }
+  });
 
   return (
     <>

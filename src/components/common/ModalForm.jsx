@@ -14,7 +14,7 @@ function ModalForm({ isOpen, onClose, user }) {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prevData) => ({ ...prevData, [name]: value.substring(0, 15) }));
   };
 
   const handleSubmit = async (e) => {

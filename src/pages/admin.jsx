@@ -11,7 +11,6 @@ import Loader from "@/components/common/Loader";
 import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
 import { deleteRoomById, getAllRooms, getAllUsers, getUser } from "@/lib/api";
-import { checkValidUser } from "@/lib/checkValidUser";
 import { useRouter } from "next/router";
 
 function AdminPage() {
@@ -140,7 +139,7 @@ function AdminPage() {
       dispatch({ type: "SET_LOADING", payload: false });
     } else {
       if (user && !user.isAdmin) {
-        router.push("/dashboard");
+        router.push("/home");
       }
     }
   }, [user]);
