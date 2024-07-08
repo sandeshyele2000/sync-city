@@ -59,7 +59,7 @@ function Navbar({ tab }) {
 
       {
         <div
-          className={`lg:hidden transition-all duration-200 h-[95%] p-10 ease fixed top-[70px] left-0 w-full bg-[#111111] bg-opacity-80 backdrop-blur-md z-30 flex flex-col justify-between ${
+          className={`lg:hidden transition-all duration-200 h-[95%] p-12 ease fixed top-[70px] left-0 w-full bg-[#111111] bg-opacity-80 backdrop-blur-md z-[110] flex flex-col justify-between ${
             isMenuOpen ? "translate-y-[0%]" : "translate-y-[-150%]"
           }`}
         >

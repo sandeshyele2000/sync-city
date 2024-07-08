@@ -82,7 +82,6 @@ const DashBoardPage = () => {
       fetchData();
     } else {
       if (!checkValidUser()) {
-        console.log("going to login");
         router.push("/login");
       }
     }
@@ -90,7 +89,7 @@ const DashBoardPage = () => {
 
   return (
     <>
-      <div className="bg-background-dark w-full min-h-[100vh] flex flex-col items-center relative overflow-hidden">
+      <div className="bg-background-dark w-full min-h-[100vh] flex flex-col items-center relative overflow-hidden text-[0.9rem] ">
         <Navbar tab={"home"} />
         <img
           src="./logo.png"
@@ -133,7 +132,7 @@ const DashBoardPage = () => {
                   <FaLock
                     size={"15px"}
                     title="Make City Private"
-                    className="cursor-pointer m-3"
+                    className="cursor-pointer m-2"
                     onClick={() => {
                       setIsPrivate(false);
                     }}
@@ -142,7 +141,7 @@ const DashBoardPage = () => {
                   <MdOutlinePublic
                     size={"20px"}
                     title="Make City Public"
-                    className="cursor-pointer m-3"
+                    className="cursor-pointer m-2"
                     onClick={() => {
                       setIsPrivate(true);
                     }}

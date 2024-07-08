@@ -178,9 +178,11 @@ function RoomContent({ id }) {
             <Loader size={"100px"} />
           </div>
         )}
+
+
         {
           <div
-            className={`absolute lg:hidden w-[50px] h-[50px] border rounded-full bottom-[1vh] right-[10vw] translate-x-[50%] cursor-pointer transition-transform ease duration-300 z-[1000] ${featuresVisible ? "rotate-180":"rotate-0"}`}
+            className={`absolute lg:hidden w-[50px] h-[50px] rounded-full bottom-[1vh] right-[10vw] translate-x-[50%] cursor-pointer transition-transform ease duration-300 z-[100] ${featuresVisible ? "rotate-180":"rotate-0"}`}
             onClick={() => {
               setFeatureVisible(!featuresVisible);
             }}
@@ -188,7 +190,7 @@ function RoomContent({ id }) {
             <img src="./logo.png" alt="" />
           </div>
         }
-        {<div className={`absolute  w-full bg-[#00000051] h-full lg:hidden items-center justify-center flex transition-transform ease duration-300 ${featuresVisible? "scale-1 " :"scale-0 translate-x-[50%] translate-y-[50%]"}`}>
+        {<div className={`absolute  w-full bg-[#0b0b0bc8] h-full lg:hidden items-center justify-center flex transition-transform ease duration-300 ${featuresVisible? "scale-1 " :"scale-0 translate-x-[50%] translate-y-[50%]"}`}>
            <div className="flex-col flex w-[80vw] h-[85%] translate-y-8 border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-[#474747] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg text-[0.9rem] md:text-[1rem]">
               <div className="flex w-full border-gray-400 p-3 gap-3 overflow-auto">
                 <div

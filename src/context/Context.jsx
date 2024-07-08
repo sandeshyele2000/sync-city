@@ -92,7 +92,6 @@ export const StateProvider = ({ children }) => {
         if (user) {
           const userData = await getUserByEmail(user.email);
 
-          console.log("from useEffect on auth state changed", userData);
           
           if (userData.data.status) {
             localStorage.setItem("token", userData.data.token);
