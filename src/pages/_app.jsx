@@ -1,7 +1,8 @@
-import Head from 'next/head';
-import './../styles/globals.css';
-import { StateProvider } from '../context/Context';
-import Notification from '@/components/common/Notification';
+import Head from "next/head";
+import "./../styles/globals.css";
+import { StateProvider } from "../context/Context";
+import Notification from "@/components/common/Notification";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -13,6 +14,7 @@ function MyApp({ Component, pageProps }) {
         <Component {...pageProps} />
         <Notification />
       </StateProvider>
+      <SpeedInsights />
     </>
   );
 }
