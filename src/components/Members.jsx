@@ -15,7 +15,7 @@ function Members({ id }) {
   }, [id]);
 
   return (
-    <div className="messages flex flex-1 flex-col space-y-4 p-4  overflow-auto  m-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
+    <div className="messages flex flex-1 flex-col space-y-4 p-4  overflow-auto  m-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg text-text-dark">
       <div className="flex w-full h-full overflow-auto flex-col gap-3">
         {others.map((otherUser) => (
           <div key={otherUser.id} className="flex h-[70px] w-full items-center  border-background-cyanMedium border-b-[1px]  bg-[#0b0b0b] cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200">

@@ -75,7 +75,7 @@ function AccountPage() {
       {user && (
         <>
           <div className="bg-background-dark w-full min-h-[100vh] h-full flex flex-col items-center overflow-auto relative">
-            <Navbar />
+            <Navbar tab={"account"}/>
             <img
               src="./logo.png"
               alt=""

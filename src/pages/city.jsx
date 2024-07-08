@@ -31,7 +31,7 @@ function RoomContent({ id }) {
   const updateMyPresence = useUpdateMyPresence();
   const [editMode, setEditMode] = useState(false);
   const [roomName, setRoomName] = useState("");
-  const [featuresVisibile, setFeatureVisible] = useState(false);
+  const [featuresVisible, setFeatureVisible] = useState(false);
 
   const handleRoomChange = async (e) => {
     e.preventDefault();
@@ -71,7 +71,7 @@ function RoomContent({ id }) {
   return (
     <>
       <div className="bg-[#000] w-full min-h-[100vh] flex flex-col items-center relative">
-        <Navbar />
+        <Navbar tab={"city"}/>
         <img
           src="./logo.png"
           alt=""
@@ -180,16 +180,16 @@ function RoomContent({ id }) {
         )}
         {
           <div
-            className={`absolute lg:hidden w-[50px] h-[50px] border rounded-full bottom-[1vh] right-[10vw] translate-x-[50%] cursor-pointer transition-transform ease duration-300 z-[1000] ${featuresVisibile ? "rotate-180":"rotate-0"}`}
+            className={`absolute lg:hidden w-[50px] h-[50px] border rounded-full bottom-[1vh] right-[10vw] translate-x-[50%] cursor-pointer transition-transform ease duration-300 z-[1000] ${featuresVisible ? "rotate-180":"rotate-0"}`}
             onClick={() => {
-              setFeatureVisible(!featuresVisibile);
+              setFeatureVisible(!featuresVisible);
             }}
           >
             <img src="./logo.png" alt="" />
           </div>
         }
-        {featuresVisibile && <div className="absolute w-full bg-[#00000051] h-full lg:hidden items-center justify-center flex ">
-           <div className="flex-col flex w-[80vw] h-[85%] translate-y-8 border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-[#474747] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg ">
+        {<div className={`absolute  w-full bg-[#00000051] h-full lg:hidden items-center justify-center flex transition-transform ease duration-300 ${featuresVisible? "scale-1 " :"scale-0 translate-x-[50%] translate-y-[50%]"}`}>
+           <div className="flex-col flex w-[80vw] h-[85%] translate-y-8 border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-[#474747] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg text-[0.9rem] md:text-[1rem]">
               <div className="flex w-full border-gray-400 p-3 gap-3 overflow-auto">
                 <div
                   className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
@@ -199,8 +199,8 @@ function RoomContent({ id }) {
                   }`}
                   onClick={() => setTab("chats")}
                 >
-                  <TbMessages />
-                  <span>Chats</span>
+                  <TbMessages size={"1.5rem"}/>
+                  <span className="hidden lg:flex">Chats</span>
                 </div>
                 <div
                   className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
@@ -210,8 +210,8 @@ function RoomContent({ id }) {
                   }`}
                   onClick={() => setTab("playlist")}
                 >
-                  <MdPlaylistPlay />
-                  <span>Playlist</span>
+                  <MdPlaylistPlay  size={"1.6rem"}/>
+                  <span className="hidden lg:flex">Playlist</span>
                 </div>
                 <div
                   className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
@@ -221,8 +221,8 @@ function RoomContent({ id }) {
                   }`}
                   onClick={() => setTab("members")}
                 >
-                  <FaUser />
-                  <span>Citizens</span>
+                  <FaUser size={"1rem"}/>
+                  <span className="hidden lg:flex">Citizens</span>
                 </div>
               </div>
               {tab == "chats" && <ChatRoom roomId={id} userId={user.id} />}

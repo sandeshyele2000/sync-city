@@ -87,7 +87,7 @@ export default function ChatRoom({ roomId, userId }) {
 
   return (
     <>
-      <div className="messages flex flex-1 flex-col space-y-4 p-4  overflow-auto   m-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
+      <div className="messages flex flex-1 flex-col space-y-4 p-4  overflow-auto text-text-dark  m-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
         {isLoading ? (
           <div className="flex w-full h-full relative justify-center items-center">
             <Loader size={"50px"} />
@@ -158,7 +158,7 @@ export default function ChatRoom({ roomId, userId }) {
         </div>
 
         <textarea
-          className="flex w-full p-2  rounded-lg bg-black outline-none border-[1px]  border-[#1e1e1e] h-[45px] min-h-[45px]"
+          className="flex w-full p-2  rounded-lg bg-black outline-none border-[1px]  border-[#1e1e1e] h-[45px] min-h-[45px] text-text-dark"
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}

@@ -11,7 +11,7 @@ import { useContextAPI } from "@/context/Context";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
 
-function Navbar() {
+function Navbar({ tab }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -46,7 +46,7 @@ function Navbar() {
           </Link>
 
           <div className="gap-4 hidden lg:flex">
-            <NavLinks user={user} />
+            <NavLinks tab={tab} user={user} />
           </div>
 
           <div className="lg:hidden">
@@ -64,7 +64,7 @@ function Navbar() {
           }`}
         >
           <div className="flex flex-col items-center py-4 gap-10 ">
-            <NavLinks user={user} />
+            <NavLinks user={user} tab={tab} />
           </div>
           <button
             onClick={handleLogout}
@@ -78,36 +78,52 @@ function Navbar() {
   );
 }
 
-function NavLinks({ user }) {
+function NavLinks({ user, tab }) {
   return (
     <>
       <Link
         href={`/home`}
-        className="flex text-text-dark items-center gap-2 p-2"
+        className={`flex  items-center gap-2 p-2 ${
+          tab == "home" ? "text-accent" : "text-text-dark"
+        }`}
       >
-        <PiCity />
+        <PiCity
+          className={`${tab == "home" ? "text-accent" : "text-text-dark"}`}
+        />
         <p>Home</p>
       </Link>
       <Link
         href={`/explore`}
-        className="flex text-text-dark items-center gap-2 p-2"
+        className={`flex  items-center gap-2 p-2 ${
+          tab == "explore" ? "text-accent" : "text-text-dark"
+        }`}
       >
-        <IoEarthOutline />
+        <IoEarthOutline
+          className={`${tab == "explore" ? "text-accent" : "text-text-dark"}`}
+        />
         <p>Explore</p>
       </Link>
       <Link
         href={`/account`}
-        className="flex text-text-dark items-center gap-2 p-2"
+        className={`flex  items-center gap-2 p-2 ${
+          tab == "account" ? "text-accent" : "text-text-dark"
+        }`}
       >
-        <HiOutlineUser />
+        <HiOutlineUser
+          className={`${tab == "account" ? "text-accent" : "text-text-dark"}`}
+        />
         <p>My Account</p>
       </Link>
       {user?.isAdmin && (
         <Link
           href={`/admin`}
-          className="flex text-text-dark items-center gap-2 p-2"
+          className={`flex  items-center gap-2 p-2 ${
+            tab == "admin" ? "text-accent" : "text-text-dark"
+          }`}
         >
-          <GrUserAdmin />
+          <GrUserAdmin
+            className={`${tab == "admin" ? "text-accent" : "text-text-dark"}`}
+          />
           <p>Admin</p>
         </Link>
       )}

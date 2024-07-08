@@ -153,7 +153,7 @@ function AdminPage() {
       {user && (
         <>
           <div className="bg-background-dark w-full min-h-[100vh] h-full flex flex-col items-center overflow-auto relative">
-            <Navbar />
+            <Navbar tab={"admin"}/>
             <img
               src="./logo.png"
               alt=""

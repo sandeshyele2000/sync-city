@@ -307,7 +307,7 @@ function Player({ roomId }) {
         ref={playerdivRef}
       >
         <div
-          className="w-full h-full relative rounded-lg overflow-hidden"
+          className="w-full h-full relative rounded-lg"
           style={{ paddingTop: "56%" }}
         >
           <Youtube
