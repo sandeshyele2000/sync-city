@@ -89,7 +89,7 @@ const DashBoardPage = () => {
 
   return (
     <>
-      <div className="bg-background-dark w-full min-h-[100vh] flex flex-col items-center relative overflow-hidden text-[0.9rem] ">
+      <div className="bg-background-dark w-full min-h-[100vh] flex flex-col items-center relative overflow-hidden">
         <Navbar tab={"home"} />
         <img
           src="./logo.png"
