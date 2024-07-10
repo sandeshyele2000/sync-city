@@ -3,7 +3,8 @@ const nextConfig = {
     images: {
       domains: [
         'lh3.googleusercontent.com',
-        'i.yt.com'
+        'i.ytimg.com',
+        'media.istockphoto.com'
       ],
     },
 }
