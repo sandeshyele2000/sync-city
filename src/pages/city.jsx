@@ -36,6 +36,7 @@ function RoomContent({ id }) {
   const [roomName, setRoomName] = useState("");
   const [featuresVisible, setFeatureVisible] = useState(false);
   const [initialConnection, setInitialConnection] = useState(true);
+  const othersCount = others.length;
 
   const handleRoomChange = async (e) => {
     e.preventDefault();
@@ -51,21 +52,24 @@ function RoomContent({ id }) {
     }
   };
 
-  useOthersListener(({ type, user, others }) => {
-    if (initialConnection) {
+  useEffect(() => {
+    if (othersCount > 0) {
       setInitialConnection(false);
     }
+  }, [othersCount]);
 
+  useOthersListener(({ type, user, others }) => {
     switch (type) {
       case "enter":
-        if (!initialConnection && user.presence && user.presence.username) {
-          toast.success(`${user.presence.username} entered ${room.name}`);
-          setInitialConnection(false);
+        if (user.presence && user.presence.username) {
+          if (!initialConnection)
+            toast.success(`${user.presence.username} entered ${room.name}`);
         }
         break;
       case "leave":
-        if (!initialConnection) {
-          toast.success(`${user.presence.username} left ${room.name}`);
+        if (user.presence && user.presence.username) {
+          if (!initialConnection)
+            toast.success(`${user.presence.username} left ${room.name}`);
         }
         break;
     }
