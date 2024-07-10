@@ -58,7 +58,7 @@ function RoomContent({ id }) {
 
     switch (type) {
       case "enter":
-        if (!initialConnection) {
+        if (!initialConnection && user.presence && user.presence.username) {
           toast.success(`${user.presence.username} entered ${room.name}`);
           setInitialConnection(false);
         }

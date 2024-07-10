@@ -341,7 +341,6 @@ function Player({ roomId }) {
           <div
             key={video.videoId}
             className="flex flex-col w-full h-fit justify-center bg-[#0b0b0b] border border-[#1e1e1e] cursor-pointer rounded-lg p-4 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
-            onClick={() => setCurrentVideo(video)}
 
           >
             <div className="flex gap-3 h-full flex-col md:flex-row">
@@ -352,6 +351,7 @@ function Player({ roomId }) {
                 src={video.thumbnailImage}
                 alt={video.videoId}
                 className="w-full h-full md:w-[200px] md:h-[100px] rounded-lg"
+                onClick={() => setCurrentVideo(video)}
               />
               <div className="flex flex-col gap-2 w-full">
                 <h2 title={video.title}>
