@@ -10,6 +10,8 @@ import Image from 'next/image';
 
 function Playlist() {
   const { state, dispatch } = useContextAPI();
+
+  const currentVideoId = state.currentVideo;
   const searchBar = useRef();
   const room = useRoom();
   const currentRoom = state.currentRoom;
@@ -85,12 +87,12 @@ function Playlist() {
         placeholder="Search in playlist..."
         className="flex text-sm pt-2 pb-2 m-2 h-[50px]  outline-none border-[1px] border-[#1e1e1e] bg-black rounded-[30px] pl-4"
       />
-      <div className="flex flex-col  ml-1 overflow-auto h-full p-1 w-full text-white">
+      <div className="flex flex-col  ml-1 overflow-auto h-full p-1 w-full text-white gap-2">
         {filteredVideos.length > 0 ? (
           filteredVideos.map((video) => (
             <div
               key={video.id}
-              className="flex flex-wrap lg:flex-nowrap border-background-cyanMedium border-b-[1px]  bg-[#0b0b0b] cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
+              className={`flex flex-wrap lg:flex-nowrap border-background-cyanMedium border-[1px] rounded-lg  bg-[#0b0b0b] cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200 ${currentVideoId==video.videoId? "border-[#0ff] border-2 bg-background-cyanLight animate-pulse":""}`}
             >
              
              <Image
@@ -120,6 +122,7 @@ function Playlist() {
                     <IoMdTrash />
                   </button>
                 </div>
+                {currentVideoId==video.videoId && <p className="text-text-dark text-sm">Now Playing...</p>}
               </div>
             </div>
           ))

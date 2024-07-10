@@ -11,7 +11,13 @@ import {
   getCurrentVideoid,
   updateCurrentVideoId,
 } from "@/lib/api";
-import Image from 'next/image';
+import Image from "next/image";
+import { MdSkipNext } from "react-icons/md";
+import { MdSkipPrevious } from "react-icons/md";
+import { MdPlayArrow } from "react-icons/md";
+import { MdPause } from "react-icons/md";
+import { IoShuffle } from "react-icons/io5";
+import { ImLoop } from "react-icons/im";
 
 function Player({ roomId }) {
   const { state, dispatch } = useContextAPI();
@@ -28,6 +34,10 @@ function Player({ roomId }) {
   const isNewUser = useRef(true);
   const queryVideos = useRef(null);
   const playerdivRef = useRef(null);
+  const playlistVideos = state.videos;
+  const [isLooping, setIsLooping] = useState(false);
+  const [isShuffling, setIsShuffling] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const extractVideoId = (url) => {
     const regExp =
@@ -146,6 +156,7 @@ function Player({ roomId }) {
       const newPlayerState = event.data;
       if (newPlayerState !== playerStateRef.current) {
         playerStateRef.current = newPlayerState;
+        setIsPlaying(newPlayerState === Youtube.PlayerState.PLAYING);
         room.broadcastEvent({
           type: "PLAYER_STATE_CHANGE",
           data: newPlayerState,
@@ -156,12 +167,14 @@ function Player({ roomId }) {
         ) {
           syncPlayback();
         }
+        if (newPlayerState === Youtube.PlayerState.ENDED && isLooping) {
+          playerRef.current.playVideo();
+        }
       }
       isNewUser.current = false;
     },
-    [room, syncPlayback]
+    [room, syncPlayback, isLooping]
   );
-
   const handlePlayerSeek = useCallback(
     (event) => {
       const currentTime = event.target.getCurrentTime();
@@ -230,6 +243,7 @@ function Player({ roomId }) {
           const newState = event.data;
           if (newState !== playerStateRef.current) {
             playerStateRef.current = newState;
+            setIsPlaying(newState === Youtube.PlayerState.PLAYING);
             if (newState === Youtube.PlayerState.PLAYING) {
               player.playVideo();
             } else if (newState === Youtube.PlayerState.PAUSED) {
@@ -264,6 +278,24 @@ function Player({ roomId }) {
           }
           break;
 
+        case "TOGGLE_LOOP":
+          setIsLooping(event.data);
+          break;
+
+        case "TOGGLE_SHUFFLE":
+          setIsShuffling(event.data);
+          break;
+
+        case "VIDEO_PLAY":
+          player.playVideo();
+          setIsPlaying(true);
+          break;
+
+        case "VIDEO_PAUSE":
+          player.pauseVideo();
+          setIsPlaying(false);
+          break;
+
         default:
           break;
       }
@@ -283,6 +315,40 @@ function Player({ roomId }) {
   const savePlayer = (youtubePlayer) => {
     playerRef.current = youtubePlayer;
   };
+
+  const handlePrevious = () => {
+    const currentIndex = playlistVideos.findIndex(
+      (video) => video.videoId === currentVideoId
+    );
+    let newIndex;
+    if (isShuffling) {
+      newIndex = Math.floor(Math.random() * playlistVideos.length);
+    } else {
+      newIndex =
+        (currentIndex - 1 + playlistVideos.length) % playlistVideos.length;
+    }
+    setCurrentVideo(playlistVideos[newIndex]);
+
+  };
+
+  const handleNext = () => {
+    const currentIndex = playlistVideos.findIndex(
+      (video) => video.videoId === currentVideoId
+    );
+    let newIndex;
+    if (isShuffling) {
+      newIndex = Math.floor(Math.random() * playlistVideos.length);
+    } else {
+      newIndex = (currentIndex + 1) % playlistVideos.length;
+    }
+    setCurrentVideo(playlistVideos[newIndex]);
+  };
+
+  const handlePlay = () => {
+    room.broadcastEvent({ type: "VIDEO_PLAY" });
+    playerRef.current.playVideo();
+    setIsPlaying(true);
+  }
 
   return (
     <>
@@ -317,7 +383,7 @@ function Player({ roomId }) {
             iframeClassName="w-full h-full"
             opts={{
               playerVars: {
-                autoplay: 0,
+                autoplay: 1,
                 enablejsapi: 1,
                 origin: window.location.origin,
               },
@@ -327,8 +393,65 @@ function Player({ roomId }) {
             onPlay={syncPlayback}
             onPause={syncPlayback}
             onSeek={handlePlayerSeek}
+            onEnd={handleNext}
           />
         </div>
+      </div>
+
+      <div className="flex border border-[#1e1e1e] rounded-lg justify-center gap-3 items-center p-3">
+        <ImLoop
+          size={"1.5rem"}
+          title="Loop current video"
+          className={`cursor-pointer hover:text-accent w-[50px] ${
+            isLooping ? "text-accent" : ""
+          }`}
+          onClick={() => {
+            setIsLooping(!isLooping);
+            room.broadcastEvent({ type: "TOGGLE_LOOP", data: !isLooping });
+          }}
+        />
+        <MdSkipPrevious
+        title="Previous Video"
+          size={"2rem"}
+          className="cursor-pointer hover:text-accent w-[50px]"
+          onClick={handlePrevious}
+        />
+        {isPlaying ? (
+          <MdPause
+          title="Pause Video"
+            size={"2rem"}
+            className="cursor-pointer hover:text-accent w-[50px]"
+            onClick={() => {
+              room.broadcastEvent({ type: "VIDEO_PAUSE" });
+
+              playerRef.current.pauseVideo();
+              setIsPlaying(false);
+            }}
+          />
+        ) : (
+          <MdPlayArrow
+            title="Play video"
+            size={"2rem"}
+            className="cursor-pointer hover:text-accent w-[50px]"
+            onClick={handlePlay}
+          />
+        )}
+        <MdSkipNext
+        title="Next Video"
+          size={"2rem"}
+          className="cursor-pointer hover:text-accent w-[50px]"
+          onClick={handleNext}
+        />
+        <IoShuffle
+          size={"2rem"}
+          className={`cursor-pointer hover:text-accent w-[50px] ${
+            isShuffling ? "text-accent" : ""
+          }`}
+          onClick={() => {
+            setIsShuffling(!isShuffling);
+            room.broadcastEvent({ type: "TOGGLE_SHUFFLE", data: !isShuffling });
+          }}
+        />
       </div>
 
       <div
@@ -341,11 +464,9 @@ function Player({ roomId }) {
           <div
             key={video.videoId}
             className="flex flex-col w-full h-fit justify-center bg-[#0b0b0b] border border-[#1e1e1e] cursor-pointer rounded-lg p-4 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
-
           >
             <div className="flex gap-3 h-full flex-col md:flex-row">
-              
-            <Image
+              <Image
                 width={128}
                 height={128}
                 src={video.thumbnailImage}
