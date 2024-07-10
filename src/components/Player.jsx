@@ -332,6 +332,8 @@ function Player({ roomId }) {
   };
 
   const handleNext = () => {
+    if(isLooping) return;
+    
     const currentIndex = playlistVideos.findIndex(
       (video) => video.videoId === currentVideoId
     );
