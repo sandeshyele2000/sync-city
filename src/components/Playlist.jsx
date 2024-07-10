@@ -6,6 +6,7 @@ import { IoMdTrash } from "react-icons/io";
 import toast from "react-hot-toast";
 import { MdPlaylistPlay } from "react-icons/md";
 import { deleteFromPlaylist, updateCurrentVideoId } from "@/lib/api";
+import Image from 'next/image';
 
 function Playlist() {
   const { state, dispatch } = useContextAPI();
@@ -91,7 +92,10 @@ function Playlist() {
               key={video.id}
               className="flex flex-wrap lg:flex-nowrap border-background-cyanMedium border-b-[1px]  bg-[#0b0b0b] cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
             >
-              <img
+             
+             <Image
+                width={128}
+                height={128}
                 src={video.thumbnailImage}
                 alt={video.videoId}
                 className="w-36 h-20 rounded-lg"

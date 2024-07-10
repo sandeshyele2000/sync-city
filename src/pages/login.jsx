@@ -7,6 +7,7 @@ import { auth } from "../firebase/initFirebase";
 import Loader from "@/components/common/Loader";
 import { useEffect } from "react";
 import { getUserByEmail, registerUser } from "@/lib/api";
+import Image from "next/image";
 
 function LoginPage() {
   const { state, dispatch } = useContextAPI();
@@ -46,7 +47,7 @@ function LoginPage() {
 
   useEffect(() => {
     if (userData) {
-      router.push("/home")
+      router.push("/home");
     }
   }, [userData]);
 
@@ -59,8 +60,10 @@ function LoginPage() {
         <div className="absolute rounded-full w-[1700px] h-[1700px] border-[1px] border-[#0ff] opacity-10 bg-opacity-10 backdrop-blur-md bg-[#0ff] animate-pulse"></div>
 
         <div className="z-10 gap-4  flex w-[650px] h-[650px] items-center justify-center flex-col  relative rounded-full border-[1px] border-accent shadow-[0px_0px_55px_#006f6f] m-5 outline-double outline-[5px] outline-[#0ff] bg-opacity-40 backdrop-blur-md bg-[#00000081]">
-          <img
-            src="./logo.png"
+          <Image
+            width={500}
+            height={500}
+            src="/logo.png"
             alt=""
             className="w-[230px] h-[230px] opacity-65"
           />

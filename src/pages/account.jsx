@@ -17,6 +17,7 @@ import { MdOutlinePublic } from "react-icons/md";
 import { deleteRoomById, getUserRooms } from "@/lib/api";
 import { signOut } from "firebase/auth";
 import { auth } from "@/firebase/initFirebase";
+import Image from "next/image";
 
 function AccountPage() {
   const { state, dispatch } = useContextAPI();
@@ -37,7 +38,6 @@ function AccountPage() {
       toast.error(error.message);
     }
   };
-
 
   const deleteRoom = async (roomId) => {
     try {
@@ -75,18 +75,23 @@ function AccountPage() {
       {user && (
         <>
           <div className="bg-background-dark w-full min-h-[100vh] h-full flex flex-col items-center overflow-auto relative">
-            <Navbar tab={"account"}/>
-            <img
-              src="./logo.png"
+            <Navbar tab={"account"} />
+
+            <Image
+              width={500}
+              height={500}
+              src="/logo.png"
               alt=""
               className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"
             />
             <div className="text-white w-[80vw] items-center flex h-[85vh] justify-center gap-3 mt-24 flex-col  md:flex-row lg:flex-row relative">
               <div className="left bg-[#0b0b0b] border border-[#1e1e1e]  h-full p-6 flex flex-col gap-8 items-center w-full sm:w-full md:w-full md:flex-col lg:w-[28%] lg:flex-col rounded-lg bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg overflow-y-auto">
                 <div className="flex flex-col items-center justify-center gap-6">
-                  <img
+                  <Image
+                    width={500}
+                    height={500}
                     src={user.profileImage}
-                    className="rounded-lg border border-[#0ff]  w-56 mt-8 md:w-40"
+                    className="rounded-lg border border-[#0ff]  w-56 h-full mt-8 md:w-40"
                   />
                   <div className="flex flex-col w-full items-center gap-2">
                     <p className="text-[1.4rem]">{user.username}</p>

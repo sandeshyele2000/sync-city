@@ -10,6 +10,7 @@ import { auth } from "@/firebase/initFirebase";
 import { useContextAPI } from "@/context/Context";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
+import Image from 'next/image';
 
 function Navbar({ tab }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,7 +40,13 @@ function Navbar({ tab }) {
       <div className="flex h-[70px] w-full justify-center fixed bg-[#111111] bg-opacity-80 backdrop-blur-md z-50">
         <div className="flex w-[80vw] items-center justify-between">
           <Link href={"/home"} className="flex items-center gap-2">
-            <img src="./logo.png" alt="" className="w-8 h-8 items-center" />
+            <Image
+              width={128}
+              height={128}
+              src="/logo.png"
+              alt=""
+              className="w-8 h-8 items-center"
+            />
             <p className="text-accent text-[20px] font-bold cursor-pointer">
               <span className="text-gray-300 font-bold">SYNCITY</span>
             </p>

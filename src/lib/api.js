@@ -19,6 +19,29 @@ export const registerUser = async ({
   }
 };
 
+
+
+export const deleteUser = async (userId) => {
+  try {
+    const token = localStorage.getItem("token");
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    return await axios.post(
+      "/api/user/deleteUser",
+      {
+        userId,
+      },
+      config
+    );
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
+
 export const createRoom = async (roomName, hostId, isPrivate) => {
   try {
     const token = localStorage.getItem("token");

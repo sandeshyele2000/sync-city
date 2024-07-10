@@ -15,6 +15,7 @@ import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
 import { createRoom, getUserRooms } from "@/lib/api";
 import { checkValidUser } from "@/lib/checkValidUser";
+import Image from 'next/image';
 
 const DashBoardPage = () => {
   const { state, dispatch } = useContextAPI();
@@ -45,9 +46,7 @@ const DashBoardPage = () => {
     }
     const roomName = e.target.roomName.value;
     if (roomName.length > 15) {
-      return toast.error(
-        "Room name cannot be greater than 15 characters"
-      );
+      return toast.error("Room name cannot be greater than 15 characters");
     }
     e.target.roomName.value = "";
 
@@ -91,8 +90,11 @@ const DashBoardPage = () => {
     <>
       <div className="bg-background-dark w-full min-h-[100vh] flex flex-col items-center relative overflow-hidden">
         <Navbar tab={"home"} />
-        <img
-          src="./logo.png"
+
+        <Image
+          width={500}
+          height={500}
+          src="/logo.png"
           alt=""
           className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"
         />
@@ -112,9 +114,7 @@ const DashBoardPage = () => {
               <span className="text-accent">Syncing!</span>{" "}
             </p>
 
-            <p className="text-[22px] text-text-dark">
-              Build a city now!
-            </p>
+            <p className="text-[22px] text-text-dark">Build a city now!</p>
             <div className="flex lg:w-[60%] md:w-[50%] sm:w-full">
               <form
                 method="post"

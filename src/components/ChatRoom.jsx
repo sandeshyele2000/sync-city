@@ -7,6 +7,7 @@ import { BsEmojiSmileFill } from "react-icons/bs";
 import { TbMessages } from "react-icons/tb";
 import Loader from "./common/Loader";
 import { DEFAULT_PROFILE } from "@/lib/constants";
+import Image from 'next/image'
 import { fetchMessages, sendMessage } from "@/lib/api";
 
 export default function ChatRoom({ roomId, userId }) {
@@ -18,9 +19,6 @@ export default function ChatRoom({ roomId, userId }) {
   const room = useRoom();
   const messageRef = useRef();
   const [emojiOpen, setEmojiOpen] = useState(false);
-
-  
-  
 
   async function handleSendMessage() {
     setEmojiOpen(false);
@@ -35,7 +33,7 @@ export default function ChatRoom({ roomId, userId }) {
     setMessage("");
 
     try {
-      const savedMessage = await sendMessage(message,roomId,userId);
+      const savedMessage = await sendMessage(message, roomId, userId);
 
       room.broadcastEvent({ type: "NEW_MESSAGE", data: savedMessage });
 
@@ -81,6 +79,14 @@ export default function ChatRoom({ roomId, userId }) {
     return () => unsubscribe();
   }, [room, roomId, user]);
 
+  function formatTime(date) {
+    return new Date(date).toLocaleTimeString('en-US', { 
+      hour: 'numeric', 
+      minute: '2-digit', 
+      hour12: true 
+    });
+  }
+
   useEffect(() => {
     messageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -93,14 +99,16 @@ export default function ChatRoom({ roomId, userId }) {
             <Loader size={"50px"} />
           </div>
         ) : messages.length > 0 ? (
-          messages.map(({ id, user, content }) => (
+          messages.map(({ id, user, content, createdAt }) => (
             <div
               key={id}
               className={`message flex gap-3 ${
                 user.id == userId ? "flex-row-reverse " : ""
               }`}
             >
-              <img
+              <Image
+                width={128}
+                height={128}
                 src={user.profileImage || DEFAULT_PROFILE}
                 alt={user.username}
                 className="user-avatar w-11 h-11 rounded-full"
@@ -112,8 +120,12 @@ export default function ChatRoom({ roomId, userId }) {
                   user.id == userId ? "bg-[#023131]" : "bg-background-cyanLight"
                 }`}
               >
-                <p className="pb-2 text-[#076a6a] text-bold">{user.username}</p>
+                <p className="pb-2 text-[#57c2c2] text-bold">{user.username}</p>
                 {content}
+
+                <div className="flex w-full justify-end mt-2">
+                  {createdAt && <p className="text-xs opacity-80">{formatTime(createdAt)}</p>}
+                </div>
               </div>
             </div>
           ))

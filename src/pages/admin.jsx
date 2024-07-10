@@ -10,8 +10,15 @@ import toast from "react-hot-toast";
 import Loader from "@/components/common/Loader";
 import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
-import { deleteRoomById, getAllRooms, getAllUsers, getUser } from "@/lib/api";
+import {
+  deleteRoomById,
+  deleteUser,
+  getAllRooms,
+  getAllUsers,
+  getUser,
+} from "@/lib/api";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 function AdminPage() {
   const { state, dispatch } = useContextAPI();
@@ -131,6 +138,14 @@ function AdminPage() {
     }
   };
 
+  const handleDeleteUser = async (userId) => {
+    try {
+      await deleteUser(userId);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   useEffect(() => {
     if (user && user.isAdmin) {
       dispatch({ type: "SET_LOADING", payload: true });
@@ -153,9 +168,12 @@ function AdminPage() {
       {user && (
         <>
           <div className="bg-background-dark w-full min-h-[100vh] h-full flex flex-col items-center overflow-auto relative">
-            <Navbar tab={"admin"}/>
-            <img
-              src="./logo.png"
+            <Navbar tab={"admin"} />
+
+            <Image
+              width={500}
+              height={500}
+              src="/logo.png"
               alt=""
               className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"
             />
@@ -209,7 +227,9 @@ function AdminPage() {
                     <>
                       <div className="flex flex-col gap-3 p-3 ">
                         <div className="flex flex-col items-center">
-                          <img
+                          <Image
+                            width={500}
+                            height={500}
                             src={displayUser.profileImage}
                             alt=""
                             className="rounded-lg border border-[#0ff] w-[13rem] h-[13rem]"
@@ -232,9 +252,7 @@ function AdminPage() {
                         </div>
 
                         <button
-                          onClick={() => {
-                            toast.error("Delete feature is under progress!");
-                          }}
+                          onClick={() => handleDeleteUser(displayUser.id)}
                           className="bg-[#ff000020] w-full justify-center text-text-light p-3 text-[15px] rounded-lg flex items-center gap-3 hover:text-white mx-auto"
                         >
                           Delete account

@@ -1,6 +1,8 @@
 import { verifyToken } from "@/lib/auth";
 import prisma from "../../../lib/prisma";
 
+
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
@@ -8,14 +10,13 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Verify token here before proceeding
     verifyToken(req, res, async () => {
       const { message, roomId, userId } = req.body;
 
-      // Validate inputs
       if (!message || !roomId || !userId) {
         return res.status(400).json({ error: "Message, roomId, and userId are required" });
       }
+
 
       const newMessage = await prisma.message.create({
         data: {

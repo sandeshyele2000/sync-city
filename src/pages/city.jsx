@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/common/Navbar";
 import Player from "@/components/Player";
 import ChatRoom from "@/components/ChatRoom";
@@ -11,6 +11,8 @@ import {
   RoomProvider,
   useOthers,
   useUpdateMyPresence,
+  useOthersListener,
+  useRoom,
 } from "@liveblocks/react";
 import { TbMessages } from "react-icons/tb";
 import { MdPlaylistPlay } from "react-icons/md";
@@ -19,6 +21,7 @@ import { IoArrowBack } from "react-icons/io5";
 import { fetchRoomDetails, updateRoomName } from "@/lib/api";
 import Members from "@/components/Members";
 import { FaEdit, FaUser } from "react-icons/fa";
+import Image from "next/image";
 
 function RoomContent({ id }) {
   const [tab, setTab] = useState("chats");
@@ -32,6 +35,7 @@ function RoomContent({ id }) {
   const [editMode, setEditMode] = useState(false);
   const [roomName, setRoomName] = useState("");
   const [featuresVisible, setFeatureVisible] = useState(false);
+  const [initialConnection, setInitialConnection] = useState(true);
 
   const handleRoomChange = async (e) => {
     e.preventDefault();
@@ -47,6 +51,26 @@ function RoomContent({ id }) {
     }
   };
 
+  useOthersListener(({ type, user, others }) => {
+    if (initialConnection) {
+      setInitialConnection(false);
+    }
+
+    switch (type) {
+      case "enter":
+        if (!initialConnection) {
+          toast.success(`${user.presence.username} entered ${room.name}`);
+          setInitialConnection(false);
+        }
+        break;
+      case "leave":
+        if (!initialConnection) {
+          toast.success(`${user.presence.username} left ${room.name}`);
+        }
+        break;
+    }
+  });
+
   useEffect(() => {
     if (id) {
       const getRoomDetails = async () => {
@@ -55,6 +79,7 @@ function RoomContent({ id }) {
           const response = await fetchRoomDetails(id);
           dispatch({ type: "SET_CURRENT_ROOM", payload: response.data.room });
           dispatch({ type: "SET_VIDEOS", payload: response.data.room.videos });
+
           setRoomName(response.data.room.name);
           updateMyPresence(user);
         } catch (error) {
@@ -71,9 +96,12 @@ function RoomContent({ id }) {
   return (
     <>
       <div className="bg-[#000] w-full min-h-[100vh] flex flex-col items-center relative">
-        <Navbar tab={"city"}/>
-        <img
-          src="./logo.png"
+        <Navbar tab={"city"} />
+
+        <Image
+          width={500}
+          height={500}
+          src="/logo.png"
           alt=""
           className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"
         />
@@ -114,17 +142,21 @@ function RoomContent({ id }) {
 
                 <div className="flex gap-2 flex-col m-2  p-1 rounded-lg ">
                   <div className="flex gap-2">
-                    <img
+                    <Image
+                      width={500}
+                      height={500}
                       title="You"
                       className="user-avatar w-9 h-9 rounded-full  border-black border-2 overflow-x-auto"
                       src={user.profileImage}
-                    ></img>
+                    />
                     {others.map((otherUser) => (
-                      <img
+                      <Image
+                        width={500}
+                        height={500}
                         key={otherUser.id}
                         className="user-avatar w-9 h-9 rounded-full"
                         src={otherUser.presence.profileImage}
-                      ></img>
+                      />
                     ))}
                   </div>
                 </div>
@@ -179,19 +211,33 @@ function RoomContent({ id }) {
           </div>
         )}
 
-
         {
           <div
-            className={`absolute lg:hidden w-[50px] h-[50px] rounded-full bottom-[1vh] right-[10vw] translate-x-[50%] cursor-pointer transition-transform ease duration-300 z-[100] ${featuresVisible ? "rotate-180":"rotate-0"}`}
+            className={`absolute lg:hidden w-[50px] h-[50px] rounded-full bottom-[1vh] right-[10vw] translate-x-[50%] cursor-pointer transition-transform ease duration-300 z-[100] ${
+              featuresVisible ? "rotate-180" : "rotate-0"
+            }`}
             onClick={() => {
               setFeatureVisible(!featuresVisible);
             }}
           >
-            <img src="./logo.png" alt="" />
+            <Image
+              width={500}
+              height={500}
+              src="/logo.png"
+              alt=""
+              className="w-[50px] h-[50px]"
+            />
           </div>
         }
-        {<div className={`absolute  w-full bg-[#0b0b0bc8] h-full lg:hidden items-center justify-center flex transition-transform ease duration-300 ${featuresVisible? "scale-1 " :"scale-0 translate-x-[50%] translate-y-[50%]"}`}>
-           <div className="flex-col flex w-[80vw] h-[85%] translate-y-8 border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-[#474747] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg text-[0.9rem] md:text-[1rem]">
+        {
+          <div
+            className={`absolute  w-full bg-transparent h-full lg:hidden items-center justify-center flex transition-transform ease duration-300 ${
+              featuresVisible
+                ? "scale-1 "
+                : "scale-0 translate-x-[50%] translate-y-[50%]"
+            }`}
+          >
+            <div className="flex-col flex w-[80vw] h-[85%] translate-y-8 border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg shadow-lg text-[0.9rem] md:text-[1rem]">
               <div className="flex w-full border-gray-400 p-3 gap-3 overflow-auto">
                 <div
                   className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
@@ -201,7 +247,7 @@ function RoomContent({ id }) {
                   }`}
                   onClick={() => setTab("chats")}
                 >
-                  <TbMessages size={"1.5rem"}/>
+                  <TbMessages size={"1.5rem"} />
                   <span className="hidden lg:flex">Chats</span>
                 </div>
                 <div
@@ -212,7 +258,7 @@ function RoomContent({ id }) {
                   }`}
                   onClick={() => setTab("playlist")}
                 >
-                  <MdPlaylistPlay  size={"1.6rem"}/>
+                  <MdPlaylistPlay size={"1.6rem"} />
                   <span className="hidden lg:flex">Playlist</span>
                 </div>
                 <div
@@ -223,7 +269,7 @@ function RoomContent({ id }) {
                   }`}
                   onClick={() => setTab("members")}
                 >
-                  <FaUser size={"1rem"}/>
+                  <FaUser size={"1rem"} />
                   <span className="hidden lg:flex">Citizens</span>
                 </div>
               </div>
@@ -231,7 +277,8 @@ function RoomContent({ id }) {
               {tab == "playlist" && <Playlist />}
               {tab == "members" && <Members roomId={id} />}
             </div>
-        </div>}
+          </div>
+        }
         {loading && (
           <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px] ">
             <Loader size={"100px"} />

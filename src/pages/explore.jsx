@@ -15,6 +15,7 @@ import { FaLock } from "react-icons/fa";
 import { MdOutlinePublic } from "react-icons/md";
 import { createRoom, getAllRooms, getUserRooms } from "@/lib/api";
 import { checkValidUser } from "@/lib/checkValidUser";
+import Image from "next/image";
 
 const ExplorePage = () => {
   const { state, dispatch } = useContextAPI();
@@ -78,9 +79,12 @@ const ExplorePage = () => {
   return (
     <>
       <div className="bg-background-dark w-full min-h-[100vh] flex flex-col items-center relative overflow-hidden">
-        <Navbar tab={"explore"}/>
-        <img
-          src="./logo.png"
+        <Navbar tab={"explore"} />
+
+        <Image
+          width={500}
+          height={500}
+          src="/logo.png"
           alt=""
           className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"
         />
@@ -88,14 +92,7 @@ const ExplorePage = () => {
           <div
             className={`text-white w-[80vw] items-center flex h-full flex-col justify-center gap-5 relative`}
           >
-            <div className="flex gap-2 text-[35px] mt-28">
-              <span>Welcome, </span>
-              <span className="text-accent">
-                {user ? user.username : "Guest"}
-              </span>
-            </div>
-
-            <p className="text-text-dark text-[22px] opacity-70 text-center">
+            <p className="text-text-dark text-[22px] lg:text-[30px] mt-28 text-center">
               Explore your favorite cities and start{" "}
               <span className="text-accent">Syncing!</span>{" "}
             </p>
@@ -122,7 +119,7 @@ const ExplorePage = () => {
             </form>
 
             <div className="flex w-[90%] gap-4 flex-col lg:flex-row md:flex-col sm:flex-col">
-              <div className="flex flex-col w-full hover:border-accent border-[1px] border-[#1e1e1e] rounded-lg p-4 h-[500px] bg-[#0b0b0b] bg-opacity-10 backdrop-filter backdrop-blur-[45px] shadow-lg">
+              <div className="flex flex-col w-full hover:border-accent border-[1px] border-[#1e1e1e] rounded-lg p-4 h-[550px] bg-[#0b0b0b] bg-opacity-10 backdrop-filter backdrop-blur-[45px] shadow-lg">
                 <div className="flex justify-between flex-col lg:flex-row">
                   <p className="text-text-dark p-3">Explore other cities</p>
                   <input
@@ -134,7 +131,7 @@ const ExplorePage = () => {
                     className="flex  p-3 h-[50px] bg-transparent outline-none border-b-[#1e1e1e] border-b-[1px]"
                   />
                 </div>
-                <div className="flex flex-col gap-3 overflow-auto">
+                <div className="flex flex-col gap-3 overflow-auto mt-2">
                   {filteredRooms &&
                     filteredRooms
                       .filter(
