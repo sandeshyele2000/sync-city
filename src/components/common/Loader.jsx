@@ -7,7 +7,7 @@ function Loader({ size }) {
       className={`animate-spin absolute`}
       style={{ width: size, height: size }}
     >
-      <Image width={10} height={10} src="/logo.png" className="opacity-60 w-full h-full" />
+      <Image width={500} height={500} src="/logo.png" className="opacity-60 w-full h-full" />
     </div>
   );
 }

@@ -179,46 +179,63 @@ function AdminPage() {
             />
             <div className="text-white w-[80vw] items-center flex h-[85vh] justify-center gap-3 mt-24 flex-col md:flex-row lg:flex-row relative">
               <div className="left bg-[#0b0b0b] border border-[#1e1e1e] h-full flex flex-col gap-2 items-center w-full sm:w-full md:w-full lg:w-[28%] rounded-lg bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg overflow-hidden">
-                <input
-                  type="text"
-                  name="userSearch"
-                  id="userSearch"
-                  placeholder="Search User..."
-                  onChange={handleUserSearch}
-                  className="flex w-full p-3 h-[50px] bg-transparent outline-none border-b-[#1e1e1e] border-b-[1px]"
-                />
-                <div className="overflow-y-auto flex flex-col gap-2 items-center w-full sm:w-full md:w-full lg:w-full min-h-[40%]">
-                  {filteredUsers.length > 0 &&
-                    filteredUsers.map((userItem) => (
-                      <div
-                        key={userItem.id}
-                        className="flex items-center cursor-pointer w-[90%] justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e] rounded-lg m-2 hover:bg-[#08262654]"
-                        onClick={() => handleLoadUser(userItem)}
-                      >
-                        {userItem.username}
-                      </div>
-                    ))}
-                </div>
+                <div className="flex flex-col w-full h-[50%] gap-3 items-center justify-center">
+                  <div className="flex w-full justify-between p-3">
+                    <p>All users</p>
+                    <p className="border border-[#1e1e1e] rounded-lg p-1 w-7 h-7 flex items-center justify-center">
+                      {allUsers.length}
+                    </p>
+                  </div>
 
-                <input
-                  type="text"
-                  name="roomSearch"
-                  id="roomSearch"
-                  placeholder="Search City..."
-                  onChange={handleRoomSearch}
-                  className="flex w-full p-3 h-[50px] bg-transparent outline-none border-b-[#1e1e1e] border-b-[1px]"
-                />
-                <div className="overflow-y-auto flex flex-col gap-2 items-center w-full sm:w-full md:w-full lg:w-full">
-                  {filteredRooms.length > 0 &&
-                    filteredRooms.map((room) => (
-                      <div
-                        key={room.id}
-                        className="flex items-center cursor-pointer w-[90%] justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e] rounded-lg m-2 hover:bg-[#08262654]"
-                        onClick={() => handleLoadRoom(room)}
-                      >
-                        {room.name}
-                      </div>
-                    ))}
+                  <input
+                    type="text"
+                    name="userSearch"
+                    id="userSearch"
+                    placeholder="Search User..."
+                    onChange={handleUserSearch}
+                    className="flex w-[95%] p-3 h-[50px] bg-transparent outline-none border-[#1e1e1e] border rounded-[30px] "
+                  />
+                  <div className="overflow-y-auto flex flex-col gap-2 items-center w-full sm:w-full md:w-full lg:w-full min-h-[40%]">
+                    {filteredUsers.length > 0 &&
+                      filteredUsers.map((userItem) => (
+                        <div
+                          key={userItem.id}
+                          className="flex items-center cursor-pointer w-[90%] justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e] rounded-lg m-2 hover:bg-[#08262654]"
+                          onClick={() => handleLoadUser(userItem)}
+                        >
+                          {userItem.username}
+                        </div>
+                      ))}
+                  </div>
+                </div>
+                <div className="flex flex-col w-full h-[50%] gap-3 items-center justify-center">
+                  <div className="flex w-full justify-between p-3 items-center">
+                    <p>All Cities</p>
+                    <p className="border border-[#1e1e1e] rounded-lg p-1 w-7 h-7 flex items-center justify-center">
+                      {allRooms.length}
+                    </p>
+                  </div>
+
+                  <input
+                    type="text"
+                    name="roomSearch"
+                    id="roomSearch"
+                    placeholder="Search City..."
+                    onChange={handleRoomSearch}
+                    className="flex w-[95%] p-3 h-[50px] bg-transparent outline-none border-[#1e1e1e] border rounded-[30px] "
+                  />
+                  <div className="overflow-y-auto flex flex-col gap-2 items-center w-full sm:w-full md:w-full lg:w-full">
+                    {filteredRooms.length > 0 &&
+                      filteredRooms.map((room) => (
+                        <div
+                          key={room.id}
+                          className="flex items-center cursor-pointer w-[90%] justify-between p-3 bg-[#111] border-[1px] border-[#1e1e1e] rounded-lg m-2 hover:bg-[#08262654]"
+                          onClick={() => handleLoadRoom(room)}
+                        >
+                          {room.name}
+                        </div>
+                      ))}
+                  </div>
                 </div>
               </div>
               <div className="right flex bg-[#0b0b0b] border gap-3 border-[#1e1e1e] rounded-lg h-full p-4 w-full sm:w-full md:w-full flex-col lg:flex-row lg:w-[92%] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg overflow-hidden overflow-y-auto">
