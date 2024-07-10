@@ -38,7 +38,7 @@ function Navbar({ tab }) {
   return (
     <>
       <div className="flex h-[70px] w-full justify-center fixed bg-[#111111] bg-opacity-80 backdrop-blur-md z-50">
-        <div className="flex w-[80vw] items-center justify-between">
+        <div className="flex w-[90vw] items-center justify-between">
           <Link href={"/home"} className="flex items-center gap-2">
             <Image
               width={128}

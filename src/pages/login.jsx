@@ -60,31 +60,35 @@ function LoginPage() {
         <div className="absolute rounded-full w-[1700px] h-[1700px] border-[1px] border-[#0ff] opacity-10 bg-opacity-10 backdrop-blur-md bg-[#0ff] animate-pulse"></div>
 
         <div className="z-10 gap-4  flex w-[650px] h-[650px] items-center justify-center flex-col  relative rounded-full border-[1px] border-accent shadow-[0px_0px_55px_#006f6f] m-5 outline-double outline-[5px] outline-[#0ff] bg-opacity-40 backdrop-blur-md bg-[#00000081]">
+          
+          
           <Image
             width={500}
             height={500}
             src="/logo.png"
             alt=""
-            className="w-[230px] h-[230px] opacity-65"
+            className="w-[180px] h-[180px] opacity-85"
           />
-          <h1 className="text-[#c6c6c6aa] text-center font-bold text-[35px] sm:text-[45px] md:text-[50px] lg:text-[60px] rounded-lg hover:text-background-dark text-outline cursor-pointer ">
+          <h1 className="text-[#c6c6c6aa] text-center font-bold text-[35px] sm:text-[45px] md:text-[50px] lg:text-[65px] rounded-lg hover:text-background-dark text-outline cursor-pointer ">
             SYNCITY
           </h1>
-          <p className="text-accent pl-5 pr-5 text-center opacity-50 text-[12px]  sm:text-[12px] md:text-[15px] lg:text-[18px]">
+          <hr className="border border-[#00ffff93] w-[80%]"/>
+          <p className="text-accent pl-5 pr-5 text-center opacity-80 text-[13px]  sm:text-[13px] md:text-[15px] lg:text-[18px]">
             Watch videos and chat with your friends in realtime!
           </p>
 
           <button
-            className="pt-3 pb-3 pr-4 pl-4 mt-4  text-accent text-[12px] sm:text-[12px] md:text-[15px] lg:text-[20px] rounded-[35px] border-[1px] border-background-light flex items-center gap-3 shadow-[0px_0px_5px_#0ff] hover:bg-[rgba(0,0,0,0.3)]"
+            className="pt-3 pb-3 pr-4 pl-4 mt-4  text-accent text-[14px] sm:text-[14px] md:text-[15px] lg:text-[20px] rounded-[35px] border-[1px] border-background-light flex items-center gap-3 shadow-[0px_0px_5px_#0ff] hover:bg-[rgba(0,0,0,0.3)]"
             onClick={handleLogin}
           >
             <FcGoogle />
             Login with Google
           </button>
+          
         </div>
         {loading && (
           <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px]">
-            <Loader size={"100px"} />
+            <Loader size={"80px"} />
           </div>
         )}
       </div>

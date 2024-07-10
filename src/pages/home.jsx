@@ -100,16 +100,16 @@ const DashBoardPage = () => {
         />
         {user && (
           <div
-            className={`text-white w-[80vw] items-center flex h-full flex-col justify-center gap-4 relative`}
+            className={`text-white w-[90vw] items-center flex h-full flex-col justify-center gap-4 relative`}
           >
-            <div className="flex gap-2 text-[35px] mt-28">
+            <div className="flex gap-2 text-[35px] mt-24 flex-wrap justify-center">
               <span>Welcome, </span>
               <span className="text-accent">
                 {user ? user.username : "Guest"}
               </span>
             </div>
 
-            <p className="text-text-dark text-[22px] opacity-70 text-center">
+            <p className="text-text-dark text-[20px] opacity-70 text-center">
               Enter into your favorite city and start{" "}
               <span className="text-accent">Syncing!</span>{" "}
             </p>
@@ -130,7 +130,7 @@ const DashBoardPage = () => {
                 />
                 {isPrivate ? (
                   <FaLock
-                    size={"15px"}
+                    size={"22px"}
                     title="Make City Private"
                     className="cursor-pointer m-2"
                     onClick={() => {
@@ -139,7 +139,7 @@ const DashBoardPage = () => {
                   />
                 ) : (
                   <MdOutlinePublic
-                    size={"20px"}
+                    size={"26px"}
                     title="Make City Public"
                     className="cursor-pointer m-2"
                     onClick={() => {
@@ -159,7 +159,7 @@ const DashBoardPage = () => {
               </form>
             </div>
 
-            <div className="flex w-[90%] gap-4 flex-col lg:flex-row md:flex-col sm:flex-col">
+            <div className="flex w-[95%] gap-4 flex-col lg:flex-row md:flex-col sm:flex-col">
               <div className="flex flex-col w-full hover:border-accent border-[1px] border-[#1e1e1e] rounded-lg p-4 h-[500px] bg-[#0b0b0b] bg-opacity-10 backdrop-filter backdrop-blur-[45px] shadow-lg">
                 <div className="flex items-center gap-2 p-3">
                   <FaLock size={"15px"} className="cursor-pointer" />
@@ -247,7 +247,7 @@ const DashBoardPage = () => {
         )}
         {loading && (
           <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px] translate-y-[5%]">
-            <Loader size={"100px"} />
+            <Loader size={"80px"} />
           </div>
         )}
       </div>

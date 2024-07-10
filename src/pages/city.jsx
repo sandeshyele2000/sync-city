@@ -58,7 +58,7 @@ function RoomContent({ id }) {
     }
   }, [othersCount]);
 
-  useOthersListener(({ type, user, others }) => {
+  useOthersListener(({ type, user }) => {
     switch (type) {
       case "enter":
         if (user.presence && user.presence.username) {
@@ -95,7 +95,7 @@ function RoomContent({ id }) {
 
       getRoomDetails();
     }
-  }, [id, tab]);
+  }, [id, tab,featuresVisible]);
 
   return (
     <>
@@ -110,8 +110,8 @@ function RoomContent({ id }) {
           className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"
         />
         {room ? (
-          <div className="text-white w-[80vw] items-center flex h-[85vh] justify-center gap-3 mt-24">
-            <div className="flex w-full lg:w-[70%] flex-col gap-2 overflow-y-auto  pt-1 h-full border-[#1e1e1e] border p-2 rounded-lg bg-[#474747] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
+          <div className="text-white w-[90vw] flex h-[90vh] items-center justify-center gap-3 mt-[5rem]">
+            <div className="flex w-full lg:w-[65%] flex-col gap-2 overflow-y-auto  h-full border-[#1e1e1e] border p-2 rounded-lg bg-[#474747] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg">
               <div className="flex w-full justify-between items-center pl-2">
                 <div className="flex gap-3 items-center">
                   <IoArrowBack
@@ -168,7 +168,7 @@ function RoomContent({ id }) {
               <Player roomId={id} />
             </div>
 
-            <div className="flex-col hidden lg:flex w-[30%] h-full border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-[#474747] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg ">
+            <div className="flex-col hidden lg:flex w-[35%] h-full border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-[#474747] bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg ">
               <div className="flex w-full border-gray-400 p-3 gap-3 overflow-auto">
                 <div
                   className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
@@ -204,20 +204,20 @@ function RoomContent({ id }) {
                   <span>Citizens</span>
                 </div>
               </div>
-              {tab == "chats" && <ChatRoom roomId={id} userId={user.id} />}
+              {tab == "chats" && <ChatRoom currentRoom={room} roomId={id} userId={user.id} />}
               {tab == "playlist" && <Playlist />}
               {tab == "members" && <Members roomId={id} />}
             </div>
           </div>
         ) : (
           <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px]">
-            <Loader size={"100px"} />
+            <Loader size={"80px"} />
           </div>
         )}
 
         {
           <div
-            className={`absolute lg:hidden w-[50px] h-[50px] rounded-full bottom-[1vh] right-[10vw] translate-x-[50%] cursor-pointer transition-transform ease duration-300 z-[100] ${
+            className={`absolute lg:hidden w-[50px] h-[50px] rounded-full bottom-0 right-[6vw] translate-x-[50%] cursor-pointer transition-transform ease duration-300 z-[100] ${
               featuresVisible ? "rotate-180" : "rotate-0"
             }`}
             onClick={() => {
@@ -241,7 +241,7 @@ function RoomContent({ id }) {
                 : "scale-0 translate-x-[50%] translate-y-[50%]"
             }`}
           >
-            <div className="flex-col flex w-[80vw] h-[85%] translate-y-8 border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg shadow-lg text-[0.9rem] md:text-[1rem]">
+            <div className="flex-col flex w-[90vw] h-[85%] translate-y-8 border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg shadow-lg text-[0.9rem] md:text-[1rem]">
               <div className="flex w-full border-gray-400 p-3 gap-3 overflow-auto">
                 <div
                   className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
@@ -277,7 +277,7 @@ function RoomContent({ id }) {
                   <span className="hidden lg:flex">Citizens</span>
                 </div>
               </div>
-              {tab == "chats" && <ChatRoom roomId={id} userId={user.id} />}
+              {tab == "chats" && <ChatRoom currentRoom={room} roomId={id} userId={user.id} />}
               {tab == "playlist" && <Playlist />}
               {tab == "members" && <Members roomId={id} />}
             </div>
@@ -285,7 +285,7 @@ function RoomContent({ id }) {
         }
         {loading && (
           <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px] ">
-            <Loader size={"100px"} />
+            <Loader size={"80px"} />
           </div>
         )}
       </div>

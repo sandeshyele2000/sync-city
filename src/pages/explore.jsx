@@ -90,7 +90,7 @@ const ExplorePage = () => {
         />
         {user && (
           <div
-            className={`text-white w-[80vw] items-center flex h-full flex-col justify-center gap-5 relative`}
+            className={`text-white w-[90vw] items-center flex h-full flex-col justify-center gap-5 relative`}
           >
             <p className="text-text-dark text-[22px] lg:text-[30px] mt-28 text-center">
               Explore your favorite cities and start{" "}
@@ -173,7 +173,7 @@ const ExplorePage = () => {
         )}
         {loading && (
           <div className="flex w-full h-full items-center justify-center absolute backdrop-blur-[1px] translate-y-[5%]">
-            <Loader size={"100px"} />
+            <Loader size={"80px"} />
           </div>
         )}
       </div>

@@ -9,8 +9,10 @@ import Loader from "./common/Loader";
 import { DEFAULT_PROFILE } from "@/lib/constants";
 import Image from 'next/image'
 import { fetchMessages, sendMessage } from "@/lib/api";
+import { FaCrown } from "react-icons/fa6";
 
-export default function ChatRoom({ roomId, userId }) {
+
+export default function ChatRoom({ currentRoom,roomId, userId }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -120,8 +122,11 @@ export default function ChatRoom({ roomId, userId }) {
                   user.id == userId ? "bg-[#023131]" : "bg-background-cyanLight"
                 }`}
               >
-                <p className="pb-2 text-[#57c2c2] text-bold">{user.username}</p>
-                {content}
+                <div className="pb-2 text-[#57c2c2] text-bold flex gap-2 items-center">
+                  {user.username}
+                  {user.id==currentRoom?.hostId && <FaCrown color="#2effffb2" size={"1rem"} className="mb-1"/>}
+                  </div>
+                 {content}
 
                 <div className="flex w-full justify-end mt-2">
                   {createdAt && <p className="text-xs opacity-80">{formatTime(createdAt)}</p>}
