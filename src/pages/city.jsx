@@ -241,8 +241,8 @@ function RoomContent({ id }) {
                 : "scale-0 translate-x-[50%] translate-y-[50%]"
             }`}
           >
-            <div className="flex-col flex w-[90vw] h-[85%] translate-y-8 border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg shadow-lg text-[0.9rem] md:text-[1rem]">
-              <div className="flex w-full border-gray-400 p-3 gap-3 overflow-auto">
+            <div className="flex-col flex w-[90vw] h-[90vh] translate-y-8 border-[1px] overflow-hidden rounded-lg border-[#1e1e1e] bg-black bg-opacity-50 backdrop-filter backdrop-blur-lg shadow-lg text-[0.9rem] md:text-[1rem]">
+              <div className="flex w-full border-gray-400 p-3 gap-3 h-fit">
                 <div
                   className={`p-2 border-b-[1px] h-[40px] cursor-pointer flex  items-center gap-2 ${
                     tab == "chats"

@@ -18,6 +18,7 @@ import { MdPlayArrow } from "react-icons/md";
 import { MdPause } from "react-icons/md";
 import { IoShuffle } from "react-icons/io5";
 import { ImLoop } from "react-icons/im";
+import { FaPlay } from "react-icons/fa6";
 
 function Player({ roomId }) {
   const { state, dispatch } = useContextAPI();
@@ -328,12 +329,11 @@ function Player({ roomId }) {
         (currentIndex - 1 + playlistVideos.length) % playlistVideos.length;
     }
     setCurrentVideo(playlistVideos[newIndex]);
-
   };
 
   const handleNext = () => {
-    if(isLooping) return;
-    
+    if (isLooping) return;
+
     const currentIndex = playlistVideos.findIndex(
       (video) => video.videoId === currentVideoId
     );
@@ -350,7 +350,7 @@ function Player({ roomId }) {
     room.broadcastEvent({ type: "VIDEO_PLAY" });
     playerRef.current.playVideo();
     setIsPlaying(true);
-  }
+  };
 
   return (
     <>
@@ -370,9 +370,9 @@ function Player({ roomId }) {
           <IoSearch color={"gray"} size={"20px"} />
         </button>
       </form>
-
+ 
       <div
-        className="flex w-full flex-col p-3 h-full justify-between items-center border-[1px] border-[#1e1e1e] rounded-lg"
+        className="flex w-full p-3 h-full justify-between items-center border-[1px] border-[#1e1e1e] rounded-lg"
         ref={playerdivRef}
       >
         <div
@@ -398,13 +398,13 @@ function Player({ roomId }) {
             onEnd={handleNext}
           />
         </div>
+        
       </div>
-
-      <div className="flex border border-[#1e1e1e] rounded-lg justify-center gap-3 items-center p-3">
+      <div className="flex  h-full  border border-[#1e1e1e] rounded-lg justify-center gap-8 items-center p-3">
         <ImLoop
           size={"1.5rem"}
           title="Loop current video"
-          className={`cursor-pointer hover:text-accent w-[50px] ${
+          className={`cursor-pointer opacity-70 rounded-full h-[35px] p-2 border hover:text-accent w-[35px] ${
             isLooping ? "text-accent" : ""
           }`}
           onClick={() => {
@@ -413,16 +413,16 @@ function Player({ roomId }) {
           }}
         />
         <MdSkipPrevious
-        title="Previous Video"
+          title="Previous Video"
           size={"2rem"}
-          className="cursor-pointer hover:text-accent w-[50px]"
+          className="cursor-pointer opacity-70 rounded-full h-[35px] p-1 border hover:text-accent w-[35px]"
           onClick={handlePrevious}
         />
         {isPlaying ? (
           <MdPause
-          title="Pause Video"
+            title="Pause Video"
             size={"2rem"}
-            className="cursor-pointer hover:text-accent w-[50px]"
+            className="cursor-pointer opacity-70 rounded-full h-[35px] p-1 border hover:text-accent w-[35px]"
             onClick={() => {
               room.broadcastEvent({ type: "VIDEO_PAUSE" });
 
@@ -434,19 +434,19 @@ function Player({ roomId }) {
           <MdPlayArrow
             title="Play video"
             size={"2rem"}
-            className="cursor-pointer hover:text-accent w-[50px]"
+            className="cursor-pointer opacity-70 rounded-full h-[35px] p-1 border hover:text-accent w-[35px]"
             onClick={handlePlay}
           />
         )}
         <MdSkipNext
-        title="Next Video"
+          title="Next Video"
           size={"2rem"}
-          className="cursor-pointer hover:text-accent w-[50px]"
+          className="cursor-pointer opacity-70 rounded-full h-[35px] p-1 border hover:text-accent w-[35px]"
           onClick={handleNext}
         />
         <IoShuffle
           size={"2rem"}
-          className={`cursor-pointer hover:text-accent w-[50px] ${
+          className={`cursor-pointer opacity-70 rounded-full h-[35px] p-1 border hover:text-accent w-[35px] ${
             isShuffling ? "text-accent" : ""
           }`}
           onClick={() => {
@@ -455,6 +455,8 @@ function Player({ roomId }) {
           }}
         />
       </div>
+
+      
 
       <div
         ref={queryVideos}
@@ -468,14 +470,23 @@ function Player({ roomId }) {
             className="flex flex-col w-full h-fit justify-center bg-[#0b0b0b] border border-[#1e1e1e] cursor-pointer rounded-lg p-4 gap-3 hover:bg-background-cyanLight transition-all ease duration-200"
           >
             <div className="flex gap-3 h-full flex-col md:flex-row">
-              <Image
-                width={128}
-                height={128}
-                src={video.thumbnailImage}
-                alt={video.videoId}
-                className="w-full h-full md:w-[200px] md:h-[100px] rounded-lg"
-                onClick={() => setCurrentVideo(video)}
-              />
+              <div className="flex relative w-full h-full justify-center md:w-[200px] md:h-[100px]">
+                <Image
+                  width={128}
+                  height={128}
+                  src={video.thumbnailImage}
+                  alt={video.videoId}
+                  className="w-full h-full  rounded-lg opacity-55"
+                />
+                {currentVideoId != video.videoId && (
+                  <div
+                    className="flex rounded-full absolute w-full h-full justify-center items-center"
+                    onClick={() => setCurrentVideo(video)}
+                  >
+                    <FaPlay className="w-8 h-8 " />
+                  </div>
+                )}
+              </div>
               <div className="flex flex-col gap-2 w-full">
                 <h2 title={video.title}>
                   {video.title.substring(0, 60) +

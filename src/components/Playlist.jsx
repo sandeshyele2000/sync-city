@@ -6,7 +6,8 @@ import { IoMdTrash } from "react-icons/io";
 import toast from "react-hot-toast";
 import { MdPlaylistPlay } from "react-icons/md";
 import { deleteFromPlaylist, updateCurrentVideoId } from "@/lib/api";
-import Image from 'next/image';
+import Image from "next/image";
+import { FaPlay } from "react-icons/fa6";
 
 function Playlist() {
   const { state, dispatch } = useContextAPI();
@@ -19,7 +20,7 @@ function Playlist() {
   const [filteredVideos, setFilteredVideos] = useState(videos);
 
   const setCurrentVideo = async (video) => {
-    await updateCurrentVideoId(video,currentRoom.id);
+    await updateCurrentVideoId(video, currentRoom.id);
     dispatch({ type: "SET_CURRENT_VIDEO", payload: video.videoId });
     room.broadcastEvent({ type: "SET_CURRENT_VIDEO", data: video.videoId });
   };
@@ -32,8 +33,7 @@ function Playlist() {
         dispatch({ type: "SET_CURRENT_ROOM", payload: response.data.room });
         toast.success("Video deleted from playlist successfully.");
       }
-  
-      
+
       dispatch({ type: "REMOVE_VIDEO_FROM_PLAYLIST", payload: video.id });
       room.broadcastEvent({
         type: "REMOVE_VIDEO_FROM_PLAYLIST",
@@ -92,18 +92,30 @@ function Playlist() {
           filteredVideos.map((video) => (
             <div
               key={video.id}
-              className={`flex flex-wrap lg:flex-nowrap border-background-cyanMedium border-[1px] rounded-lg  bg-[#0b0b0b] cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200 ${currentVideoId==video.videoId? "border-[#0ff] border-2 bg-background-cyanLight animate-pulse":""}`}
+              className={`flex flex-wrap md:flex-nowrap border-background-cyanMedium border-[1px] rounded-lg  bg-[#0b0b0b] cursor-pointer  p-3 gap-3 hover:bg-background-cyanLight transition-all ease duration-200 ${
+                currentVideoId == video.videoId
+                  ? "border-[#0ff] border-2 bg-background-cyanLight animate-pulse"
+                  : ""
+              }`}
             >
-             
-             <Image
-                width={128}
-                height={128}
-                src={video.thumbnailImage}
-                alt={video.videoId}
-                className="w-36 h-20 rounded-lg"
-                onClick={() => setCurrentVideo(video)}
-              />
-              <div className="flex flex-col gap-1 w-full">
+              <div className="flex relative w-[200px] h-[100px] justify-center">
+                <Image
+                  width={500}
+                  height={500}
+                  src={video.thumbnailImage}
+                  alt={video.videoId}
+                  className=" w-full h-full rounded-lg opacity-55"
+                />
+                {currentVideoId != video.videoId && (
+                  <div
+                    className="flex rounded-full absolute w-full h-full justify-center items-center"
+                    onClick={() => setCurrentVideo(video)}
+                  >
+                    <FaPlay className="w-8 h-8 " />
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col gap-1 w-full lg:w-[70%]">
                 <h2 title={video.title} className="text-sm">
                   {video.title.substring(0, 60) +
                     (video.title.length > 60 ? "..." : "")}
@@ -122,7 +134,9 @@ function Playlist() {
                     <IoMdTrash />
                   </button>
                 </div>
-                {currentVideoId==video.videoId && <p className="text-text-dark text-sm">Now Playing...</p>}
+                {currentVideoId == video.videoId && (
+                  <p className="text-text-dark text-sm">Now Playing...</p>
+                )}
               </div>
             </div>
           ))
