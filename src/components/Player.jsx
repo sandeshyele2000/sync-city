@@ -400,7 +400,7 @@ function Player({ roomId }) {
         </div>
         
       </div>
-      <div className="flex  h-full  border border-[#1e1e1e] rounded-lg justify-center gap-8 items-center p-3">
+      <div className="flex   border border-[#1e1e1e] rounded-lg justify-center gap-8 items-center p-3">
         <ImLoop
           size={"1.5rem"}
           title="Loop current video"

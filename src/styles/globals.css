@@ -14,7 +14,6 @@
   text-shadow: 0 0px 1px #00ffff, 0 0 2px #00ffff;
 }
 
-
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
@@ -31,4 +30,23 @@
   cursor: grab;
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 255, 255, 0.177) #00000034;
+}
 
+*::-moz-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+*::-moz-scrollbar-track {
+  background: #00000034;
+  border-radius: 10px;
+}
+
+*::-moz-scrollbar-thumb {
+  background: rgba(0, 255, 255, 0.177); 
+  border-radius: 10px; 
+  cursor: grab;
+}
