@@ -170,9 +170,7 @@ function AdminPage() {
           <div className="bg-background-dark w-full min-h-[100vh] h-full flex flex-col items-center overflow-auto relative">
             <Navbar tab={"admin"} />
 
-            <Image
-              width={500}
-              height={500}
+            <img
               src="/logo.png"
               alt=""
               className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"
@@ -244,9 +242,7 @@ function AdminPage() {
                     <>
                       <div className="flex flex-col gap-3 p-3 ">
                         <div className="flex flex-col items-center">
-                          <Image
-                            width={500}
-                            height={500}
+                          <img
                             src={displayUser.profileImage}
                             alt=""
                             className="rounded-lg border border-[#0ff] w-[13rem] h-[13rem]"

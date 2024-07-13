@@ -81,9 +81,7 @@ const ExplorePage = () => {
       <div className="bg-background-dark w-full min-h-[100vh] flex flex-col items-center relative overflow-hidden">
         <Navbar tab={"explore"} />
 
-        <Image
-          width={500}
-          height={500}
+        <img
           src="/logo.png"
           alt=""
           className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"

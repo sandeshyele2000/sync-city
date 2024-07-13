@@ -62,9 +62,7 @@ function LoginPage() {
         <div className="z-10 gap-4  flex w-[650px] h-[650px] items-center justify-center flex-col  relative rounded-full border-[1px] border-accent shadow-[0px_0px_55px_#006f6f] m-5 outline-double outline-[5px] outline-[#0ff] bg-opacity-40 backdrop-blur-md bg-[#00000081]">
           
           
-          <Image
-            width={500}
-            height={500}
+          <img
             src="/logo.png"
             alt=""
             className="w-[180px] h-[180px] opacity-85"

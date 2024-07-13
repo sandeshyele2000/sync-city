@@ -99,9 +99,7 @@ function Playlist() {
               }`}
             >
               <div className="flex relative w-[200px] h-[100px] justify-center">
-                <Image
-                  width={500}
-                  height={500}
+                <img
                   src={video.thumbnailImage}
                   alt={video.videoId}
                   className=" w-full h-full rounded-lg opacity-55"

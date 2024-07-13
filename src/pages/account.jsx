@@ -77,9 +77,7 @@ function AccountPage() {
           <div className="bg-background-dark w-full min-h-[100vh] h-full flex flex-col items-center overflow-auto relative">
             <Navbar tab={"account"} />
 
-            <Image
-              width={500}
-              height={500}
+            <img
               src="/logo.png"
               alt=""
               className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"
@@ -87,9 +85,7 @@ function AccountPage() {
             <div className="text-white w-[90vw] items-center flex h-[85vh] justify-center gap-3 mt-24 flex-col  md:flex-row lg:flex-row relative">
               <div className="left bg-[#0b0b0b] border border-[#1e1e1e]  h-full p-6 flex flex-col gap-8 items-center w-full sm:w-full md:w-full md:flex-col lg:w-[28%] lg:flex-col rounded-lg bg-opacity-10 backdrop-filter backdrop-blur-lg shadow-lg overflow-y-auto">
                 <div className="flex flex-col items-center justify-center gap-6">
-                  <Image
-                    width={500}
-                    height={500}
+                  <img
                     src={user.profileImage}
                     className="rounded-lg border border-[#0ff]  w-56 h-full mt-8 md:w-40"
                   />

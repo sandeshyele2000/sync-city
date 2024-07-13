@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 
 import { useOthers, useUpdateMyPresence } from "@liveblocks/react";
 import { useContextAPI } from "@/context/Context";
-import Image from 'next/image';
 
 function Members({ id }) {
   const others = useOthers();
@@ -21,9 +20,7 @@ function Members({ id }) {
         {others.map((otherUser) => (
           <div key={otherUser.id} className="flex h-[70px] w-full items-center  border-background-cyanMedium border-b-[1px]  bg-[#0b0b0b] cursor-pointer  p-5 gap-3 hover:bg-background-cyanLight transition-all ease duration-200">
               
-              <Image
-                width={128}
-                height={128}
+              <img
                 key={otherUser.id}
                 className="user-avatar w-9 h-9 rounded-full"
                 src={otherUser.presence.profileImage}

@@ -102,9 +102,7 @@ function RoomContent({ id }) {
       <div className="bg-[#000] w-full min-h-[100vh] flex flex-col items-center relative">
         <Navbar tab={"city"} />
 
-        <Image
-          width={500}
-          height={500}
+        <img
           src="/logo.png"
           alt=""
           className="w-[40vw] h-[40vw] absolute z-[0] opacity-[10%] blur-[1px] top-[50%] translate-y-[-45%]"
@@ -146,17 +144,13 @@ function RoomContent({ id }) {
 
                 <div className="flex gap-2 flex-col m-2  p-1 rounded-lg ">
                   <div className="flex gap-2">
-                    <Image
-                      width={500}
-                      height={500}
+                    <img
                       title="You"
                       className="user-avatar w-9 h-9 rounded-full  border-black border-2 overflow-x-auto"
                       src={user.profileImage}
                     />
                     {others.map((otherUser) => (
-                      <Image
-                        width={500}
-                        height={500}
+                      <img
                         key={otherUser.id}
                         className="user-avatar w-9 h-9 rounded-full"
                         src={otherUser.presence.profileImage}
@@ -224,9 +218,7 @@ function RoomContent({ id }) {
               setFeatureVisible(!featuresVisible);
             }}
           >
-            <Image
-              width={500}
-              height={500}
+            <img
               src="/logo.png"
               alt=""
               className="w-[50px] h-[50px]"

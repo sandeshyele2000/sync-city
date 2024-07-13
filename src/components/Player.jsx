@@ -471,9 +471,7 @@ function Player({ roomId }) {
           >
             <div className="flex gap-3 h-full flex-col md:flex-row">
               <div className="flex relative w-full h-full justify-center md:w-[200px] md:h-[100px]">
-                <Image
-                  width={128}
-                  height={128}
+                <img
                   src={video.thumbnailImage}
                   alt={video.videoId}
                   className="w-full h-full  rounded-lg opacity-55"

@@ -108,9 +108,7 @@ export default function ChatRoom({ currentRoom,roomId, userId }) {
                 user.id == userId ? "flex-row-reverse " : ""
               }`}
             >
-              <Image
-                width={128}
-                height={128}
+              <img
                 src={user.profileImage || DEFAULT_PROFILE}
                 alt={user.username}
                 className="user-avatar w-11 h-11 rounded-full"
