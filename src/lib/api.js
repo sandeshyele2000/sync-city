@@ -204,7 +204,8 @@ export async function fetchMessages(roomId) {
   }
 }
 
-export const sendMessage = async (message, roomId, userId) => {
+
+export const sendMessage = async (message, roomId, userId, replyToId) => {
   try {
     const token = localStorage.getItem("token");
     const config = {
@@ -219,6 +220,7 @@ export const sendMessage = async (message, roomId, userId) => {
         message,
         roomId,
         userId,
+        replyToId,
       },
       config
     );
@@ -229,6 +231,7 @@ export const sendMessage = async (message, roomId, userId) => {
     throw error;
   }
 };
+
 
 export const addToPlaylist = async (video, roomId) => {
   try {

@@ -1,8 +1,6 @@
 import { verifyToken } from "@/lib/auth";
 import prisma from "../../../lib/prisma";
 
-
-
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", ["POST"]);
@@ -11,18 +9,18 @@ export default async function handler(req, res) {
 
   try {
     verifyToken(req, res, async () => {
-      const { message, roomId, userId } = req.body;
+      const { message, roomId, userId, replyToId } = req.body;
 
       if (!message || !roomId || !userId) {
         return res.status(400).json({ error: "Message, roomId, and userId are required" });
       }
-
 
       const newMessage = await prisma.message.create({
         data: {
           content: message,
           roomId,
           userId,
+          replyToId: replyToId || null,
         },
         include: {
           user: {
@@ -31,6 +29,18 @@ export default async function handler(req, res) {
               username: true,
               nickname: true,
               profileImage: true,
+            },
+          },
+          replyTo: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  username: true,
+                  nickname: true,
+                  profileImage: true,
+                },
+              },
             },
           },
         },
@@ -46,6 +56,18 @@ export default async function handler(req, res) {
           nickname: newMessage.user.nickname,
           profileImage: newMessage.user.profileImage,
         },
+        replyTo: newMessage.replyTo
+          ? {
+              id: newMessage.replyTo.id,
+              content: newMessage.replyTo.content,
+              user: {
+                id: newMessage.replyTo.user.id,
+                username: newMessage.replyTo.user.username,
+                nickname: newMessage.replyTo.user.nickname,
+                profileImage: newMessage.replyTo.user.profileImage,
+              },
+            }
+          : null,
       };
 
       res.status(201).json(formattedMessage);

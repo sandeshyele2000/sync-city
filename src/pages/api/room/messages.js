@@ -6,7 +6,6 @@ export default async function handler(req, res) {
 
   if (req.method === "GET") {
     try {
-      // Verify token here before proceeding
       verifyToken(req, res, async () => {
         const messages = await prisma.message.findMany({
           where: { roomId },
@@ -17,6 +16,18 @@ export default async function handler(req, res) {
                 username: true,
                 nickname: true,
                 profileImage: true,
+              },
+            },
+            replyTo: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    nickname: true,
+                    profileImage: true,
+                  },
+                },
               },
             },
           },
@@ -35,6 +46,18 @@ export default async function handler(req, res) {
             nickname: message.user.nickname,
             profileImage: message.user.profileImage,
           },
+          replyTo: message.replyTo
+            ? {
+                id: message.replyTo.id,
+                content: message.replyTo.content,
+                user: {
+                  id: message.replyTo.user.id,
+                  username: message.replyTo.user.username,
+                  nickname: message.replyTo.user.nickname,
+                  profileImage: message.replyTo.user.profileImage,
+                },
+              }
+            : null,
         }));
 
         res.status(200).json(formattedMessages);

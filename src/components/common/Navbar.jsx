@@ -10,7 +10,6 @@ import { auth } from "@/firebase/initFirebase";
 import { useContextAPI } from "@/context/Context";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import Image from 'next/image';
 
 function Navbar({ tab }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
