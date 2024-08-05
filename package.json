@@ -20,6 +20,7 @@
     "emoji-picker-react": "^4.11.0",
     "express": "^4.19.2",
     "firebase": "^10.12.2",
+    "friendly-username-generator": "^2.0.4",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "mediasoup": "^3.14.8",

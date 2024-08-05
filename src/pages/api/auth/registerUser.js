@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
 import { sign } from "jsonwebtoken";
+import { generateUsername } from 'friendly-username-generator';
+
 
 export default async function handler(req, res) {
   try {
@@ -11,6 +13,9 @@ export default async function handler(req, res) {
         .json({ msg: "All fields required", status: false });
     }
 
+    let nickname = generateUsername();
+
+
     let user = await prisma.user.findUnique({ where: { email } });
 
     if (!user) {
@@ -19,7 +24,7 @@ export default async function handler(req, res) {
           email,
           firebaseId,
           username,
-          nickname: "nickname",
+          nickname,
           profileImage,
           isAdmin: false,
         },

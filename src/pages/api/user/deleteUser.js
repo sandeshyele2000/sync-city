@@ -1,3 +1,4 @@
+import { deleteRoomById } from "@/lib/api";
 import { verifyToken } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
@@ -5,58 +6,41 @@ export default async function handler(req, res) {
   verifyToken(req, res, async () => {
     const { userId } = req.body;
 
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
     try {
-      const rooms = await prisma.room.findMany({
-        where: {
-          hostId: userId,
-        },
+      // Fetch the user to check if they exist
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
       });
 
-      const roomIds = rooms.map((room) => room.id);
-
-      console.log(roomIds);
-
-      for (const roomId of roomIds) {
-        const videos = await prisma.video.findMany({
-          where: {
-            roomIds: {
-              has: roomId,
-            },
-          },
-        });
-
-        for (const video of videos) {
-          await prisma.video.update({
-            where: {
-              id: video.id,
-            },
-            data: {
-              roomIds: video.roomIds.filter((id) => id !== roomId),
-            },
-          });
-        }
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
       }
 
-      await prisma.room.deleteMany({
-        where: {
-          id: {
-            in: roomIds,
-          },
-        },
+      // Fetch rooms created by the user
+      const userRooms = await prisma.room.findMany({
+        where: { hostId: userId },
       });
 
+      for (const room of userRooms) {
+        await deleteRoomById(room.id);
+        console.log(room);
+      }
+      /*
+      // Delete the user
       await prisma.user.delete({
-        where: {
-          id: userId,
-        },
-      });
+        where: { id: userId },
+      });*/
 
-      res
+      return res
         .status(200)
-        .json({ message: "User and associated data deleted successfully" });
+        .json({ message: "User and their rooms deleted successfully" });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: error.message });
+      console.error("Error deleting user and related data:", error);
+      return res.status(500).json({ error: "Internal server error" });
     }
   });
 }
