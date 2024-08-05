@@ -2,6 +2,7 @@
   "name": "sync-city",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -17,9 +18,12 @@
     "@vercel/speed-insights": "^1.0.12",
     "axios": "^1.7.2",
     "emoji-picker-react": "^4.11.0",
+    "express": "^4.19.2",
     "firebase": "^10.12.2",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
+    "mediasoup": "^3.14.8",
+    "mediasoup-client": "^3.7.12",
     "next": "14.2.4",
     "prisma": "^5.16.1",
     "react": "^18",
@@ -27,7 +31,9 @@
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",
     "react-icons": "^5.2.1",
-    "react-youtube": "^10.1.0"
+    "react-youtube": "^10.1.0",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5"
   },
   "devDependencies": {
     "eslint": "^8",
