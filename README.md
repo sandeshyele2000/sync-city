@@ -20,10 +20,9 @@ No endless chats, no coordination headaches — just seamless social syncing.
 ## Tech Stack
 
 * **Next.js** – Full-stack React framework
-* **React** – UI library
 * **Tailwind CSS** – Styling
-* **TypeScript** – Strong typing and reliability
 * **Liveblocks** (optional/experimental) – Real-time sync functionality
+* **MongoDB** - Database
 * **Vercel** – Hosting & deployment (recommended)
 
 
